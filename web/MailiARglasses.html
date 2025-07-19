@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AR烹饪助手</title>
+    
+    <!-- Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js Libraries from CDN -->
+    <script async src="https://unpkg.com/es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <style>
+        /* Custom scrollbar for a more polished look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1E1E1E; }
+        ::-webkit-scrollbar-thumb { background: #4A5568; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+        /* Custom style for M3 switch */
+        .switch input { display: none; }
+        .switch .slider {
+            width: 52px; height: 32px; background-color: #4A5568;
+            border-radius: 16px; transition: .4s; position: relative; cursor: pointer;
+        }
+        .switch .slider:before {
+            content: ""; position: absolute; height: 24px; width: 24px;
+            left: 4px; bottom: 4px; background-color: #CBD5E0;
+            border-radius: 50%; transition: .4s;
+        }
+        .switch input:checked + .slider { background-color: #2563EB; }
+        .switch input:checked + .slider:before { transform: translateX(20px); background-color: white; }
+
+        /* Animation for list items */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+-         }
+         .fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+.chat-message {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+.chat-message img {
+    transition: all 0.3s ease;
+}
+.chat-message img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        /* Page transition styles */
+        main { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
+        .page-hidden { display: none !important; }
+
+        /* Modal transition styles */
+        .modal-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .modal-visible .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 font-sans antialiased">
+
+    <!-- Main App Container - Now responsive for larger screens -->
+    <div id="app-container" class="max-w-md lg:max-w-6xl mx-auto bg-[#121212] min-h-screen flex flex-col shadow-2xl overflow-x-hidden">
+        
+        <div class="flex-grow pb-20 lg:pb-0"> <!-- Remove padding on desktop, nav bar is on the side -->
+
+            <!-- On desktop, navigation is a sidebar -->
+            <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-20 bg-[#1E1E1E] border-t border-gray-700 flex justify-around items-center z-20
+                        lg:mx-0 lg:left-0 lg:top-0 lg:max-w-none lg:w-20 lg:h-screen lg:flex-col lg:justify-start lg:border-t-0 lg:border-r">
+                <div class="hidden lg:block text-blue-400 p-4 my-4">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v1.073a8.005 8.005 0 015.634 5.634H18a1 1 0 01.954 1.265l-2.162 6.485A1 1 0 0116 17H4a1 1 0 01-.792-1.538L1.046 8.974A1 1 0 012 8h.927A8.005 8.005 0 018.56 2.366V2a1 1 0 011.265-.954l1.47.368zM10 10a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" /></svg>
+                </div>
+                <button data-page="home-page" class="nav-btn flex flex-col items-center justify-center text-blue-400 transition-colors w-full h-full lg:w-full lg:h-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
+                    <span class="text-xs mt-1">首页</span>
+                </button>
+                <button data-page="recipes-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 16c1.255 0 2.443-.29 3.5-.804V4.804zM14.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 0114.5 16c1.255 0 2.443-.29 3.5-.804v-10A7.968 7.968 0 0014.5 4z" /></svg>
+                    <span class="text-xs mt-1">菜谱</span>
+                </button>
+                <button data-page="device-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H9V3a1 1 0 00-1-1H7zM5 8h10v8H5V8zm2 2a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
+                <span class="text-xs mt-1">设备</span>
+            </button>
+            <button data-page="chat-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.702A9 9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                <span class="text-xs mt-1">麦粒</span>
+            </button>
+        </nav>
+
+        <!-- ================================================== -->
+        <!-- ============== CHAT PAGE ========================= -->
+        <!-- ================================================== -->
+        <main id="chat-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-100">麦粒聊天记录</h1>
+                <div class="flex space-x-2">
+                    <button id="refresh-chats" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        刷新
+                    </button>
+                    <button id="clear-chats" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        清空
+                    </button>
+                </div>
+            </div>
+            <div id="chat-container" class="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg max-h-[calc(100vh-200px)] overflow-y-auto space-y-6">
+                <!-- Chat messages will be loaded here -->
+                <div class="text-center text-gray-500 py-10" id="loading-chats">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <p>正在加载聊天记录...</p>
+                </div>
+                <div id="no-chats" class="text-center text-gray-500 py-10 hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
+                    <p>暂无聊天记录</p>
+                </div>
+                <div id="chat-messages" class="space-y-4 hidden"></div>
+            </div>
+        </main><div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-gray-800 border-t border-gray-700 p-3 lg:hidden z-10">
+    <div class="flex items-end gap-2">
+        <input type="file" id="image-upload" accept="image/*" class="hidden"/>
+        <button id="image-btn" class="p-2 text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </button>
+        <div class="flex-grow relative">
+            <input type="text" id="chat-input" placeholder="输入消息..." class="w-full bg-gray-700 border border-gray-600 rounded-full py-2 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"/>
+            <button id="send-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="lg:absolute lg:bottom-8 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-full max-w-md">
+    <div class="flex items-end gap-2">
+        <input type="file" id="image-upload-lg" accept="image/*" class="hidden"/>
+        <button id="image-btn-lg" class="p-2 text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </button>
+        <div class="flex-grow relative">
+            <input type="text" id="chat-input-lg" placeholder="输入消息..." class="w-full bg-gray-700 border border-gray-600 rounded-full py-2 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"/>
+            <button id="send-btn-lg" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            </button>
+        </div>
+    </div>
+</div><div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-gray-800 border-t border-gray-700 p-3 lg:hidden z-10">
+    <div class="flex items-end gap-2">
+        <input type="file" id="image-upload" accept="image/*" class="hidden"/>
+        <button id="image-btn" class="p-2 text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </button>
+        <div class="flex-grow relative">
+            <input type="text" id="chat-input" placeholder="输入消息..." class="w-full bg-gray-700 border border-gray-600 rounded-full py-2 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"/>
+            <button id="send-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-blue-700"></button>
+        </div>
+    </div>
+</div>
+
+<div class="lg:absolute lg:bottom-8 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-full max-w-md">
+    <div class="flex items-end gap-2">
+        <input type="file" id="image-upload-lg" accept="image/*" class="hidden"/>
+        <button id="image-btn-lg" class="p-2 text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </button>
+        <div class="flex-grow relative">
+            <input type="text" id="chat-input-lg" placeholder="输入消息..." class="w-full bg-gray-700 border border-gray-600 rounded-full py-2 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-100"/>
+            <button id="send-btn-lg" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+            <div class="lg:pl-20"> <!-- Offset content for the desktop sidebar -->
+                <!-- ================================================== -->
+                <!-- ============== HOME PAGE ========================= -->
+                <!-- ================================================== -->
+                <main id="home-page" class="p-4 lg:p-8 space-y-6">
+                    <!-- Content is now rendered by JS -->
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============== RECIPES PAGE ====================== -->
+                <!-- ================================================== -->
+                <main id="recipes-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <!-- Content is now rendered by JS -->
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============ RECIPE DETAIL PAGE ================== -->
+                <!-- ================================================== -->
+                <main id="recipe-detail-page" class="page-hidden">
+                    <!-- Content is now rendered by JS -->
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============== DEVICE PAGE ======================= -->
+                <!-- ================================================== -->
+                <main id="device-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <!-- Content is now rendered by JS -->
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlays and Modals -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 modal-overlay modal-hidden">
+        <div class="bg-gray-800 text-white p-6 rounded-lg flex items-center gap-4 modal-content">
+            <svg class="animate-spin h-6 w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span>正在发送...</span>
+        </div>
+    </div>
+
+    <div id="brightness-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 modal-overlay modal-hidden">
+        <div class="bg-gray-800 text-white p-6 rounded-xl shadow-2xl w-11/12 max-w-sm space-y-4 modal-content">
+            <h3 class="text-lg font-semibold">调整亮度</h3>
+            <input id="brightness-slider" type="range" min="0" max="100" value="70" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <button id="close-modal-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">完成</button>
+        </div>
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- ============ JAVASCRIPT LOGIC ==================== -->
+    <!-- ================================================== -->
+    <script type="module">
+let ws;
+
+function connectWebSocket() {
+    ws = new WebSocket('ws://' + window.location.hostname + ':6006/ws');
+
+    ws.onopen = () => {
+        console.log('WebSocket连接已建立');
+        document.getElementById('chat-page').classList.add('connected');
+    };
+
+    ws.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.tag === 'response') {
+                console.log('收到服务器响应:', data);
+                loadChatHistory(); // 收到响应后刷新聊天记录
+            }
+        } catch (error) {
+            console.error('解析WebSocket消息失败:', error);
+        }
+    };
+
+    ws.onclose = () => {
+        console.log('WebSocket连接已关闭，正在重连...');
+        document.getElementById('chat-page').classList.remove('connected');
+        setTimeout(connectWebSocket, 3000);
+    };
+
+    ws.onerror = (error) => {
+        console.error('WebSocket错误:', error);
+    };
+}
+
+async function sendChatMessage(text, imageFile = null) {
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+        alert('WebSocket连接未建立，请稍后重试');
+        return;
+    }
+
+    if (!text && !imageFile) return;
+
+    showLoadingOverlay();
+
+    try {
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const arrayBuffer = e.target.result;
+                const hexArray = Array.from(new Uint8Array(arrayBuffer))
+                    .map(byte => byte.toString(16).padStart(2, '0'));
+                const payloadHex = hexArray.join('');
+
+                ws.send(JSON.stringify({
+                    tag: 'photo',
+                    question: text,
+                    payload_hex: payloadHex,
+                    filename: new Date().toISOString().replace(/[^0-9]/g, '')
+                }));
+            };
+            reader.readAsArrayBuffer(imageFile);
+        } else {
+            ws.send(JSON.stringify({
+                tag: 'text',
+                question: text
+            }));
+        }
+
+        // 清空输入框
+        document.getElementById('chat-input').value = '';
+        document.getElementById('chat-input-lg').value = '';
+
+        // 短暂延迟后刷新聊天记录
+        setTimeout(() => {
+            loadChatHistory();
+            hideLoadingOverlay();
+        }, 1500);
+    } catch (error) {
+        console.error('发送消息失败:', error);
+        hideLoadingOverlay();
+    }
+}
+
+function showLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.remove('modal-hidden');
+    document.getElementById('loading-overlay').classList.add('modal-visible');
+}
+
+function hideLoadingOverlay() {
+    document.getElementById('loading-overlay').classList.remove('modal-visible');
+    document.getElementById('loading-overlay').classList.add('modal-hidden');
+}
+
+// 页面加载时连接WebSocket
+window.addEventListener('load', () => {
+    // 为聊天页面添加WebSocket连接
+    const chatPage = document.getElementById('chat-page');
+    if (chatPage) {
+        connectWebSocket();
+
+        // 绑定发送按钮事件
+        document.getElementById('send-btn').addEventListener('click', () => {
+            const text = document.getElementById('chat-input').value.trim();
+            sendChatMessage(text);
+        });
+
+        document.getElementById('send-btn-lg').addEventListener('click', () => {
+            const text = document.getElementById('chat-input-lg').value.trim();
+            sendChatMessage(text);
+        });
+
+        // 绑定回车键发送
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = document.getElementById('chat-input').value.trim();
+                sendChatMessage(text);
+            }
+        });
+
+        document.getElementById('chat-input-lg').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = document.getElementById('chat-input-lg').value.trim();
+                sendChatMessage(text);
+            }
+        });
+
+        // 绑定图片上传按钮事件
+        document.getElementById('image-btn').addEventListener('click', () => {
+            document.getElementById('image-upload').click();
+        });
+
+        document.getElementById('image-btn-lg').addEventListener('click', () => {
+            document.getElementById('image-upload-lg').click();
+        });
+
+        // 处理图片选择
+        document.getElementById('image-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const text = document.getElementById('chat-input').value.trim();
+                sendChatMessage(text, file);
+                e.target.value = ''; // 重置文件输入
+            }
+        });
+
+        document.getElementById('image-upload-lg').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const text = document.getElementById('chat-input-lg').value.trim();
+                sendChatMessage(text, file);
+                e.target.value = ''; // 重置文件输入
+            }
+        });
+    }
+});
+
+// 当切换到聊天页面时连接WebSocket
+navButtons.forEach(btn => {
+    if (btn.dataset.page === 'chat-page') {
+        btn.addEventListener('click', () => {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                connectWebSocket();
+            }
+        });
+    }
+});
+        // Import Three.js and essential addons
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+        /**
+         * @description Central data store for the application prototype.
+         * Now expanded with more data for a richer desktop experience.
+         */
+        const DEMO_DATA = {
+            userProfile: { name: "Alex" },
+            dailyPlan: {
+                title: "今日膳食计划",
+                meals: [
+                    { name: "早餐", recipeId: 2, status: "已完成" },
+                    { name: "午餐", recipeId: 1, status: "计划中" },
+                    { name: "晚餐", recipeId: 4, status: "未开始" },
+                ]
+            },
+            quickActions: [
+                { name: "扫描食材", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>` },
+                { name: "创建新菜谱", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" /></svg>` },
+            ],
+            nutrition: {
+                daily: {
+                    totalCalories: 29,
+                    nutrients: [
+                        { name: "蛋白质", value: 15, total: 60, unit: "g", color: "#3B82F6" },
+                        { name: "碳水化合物", value: 5, total: 130, unit: "g", color: "#10B981" },
+                        { name: "脂肪", value: 9, total: 50, unit: "g", color: "#F59E0B" },
+                        { name: "纤维", value: 12, total: 30, unit: "g", color: "#8B5CF6" },
+                    ]
+                },
+                weekly: { totalCalories: 1850, nutrients: [ { name: "蛋白质", value: 400, total: 420, unit: "g", color: "#3B82F6" }, { name: "碳水化合物", value: 850, total: 910, unit: "g", color: "#10B981" }, { name: "脂肪", value: 600, total: 350, unit: "g", color: "#F59E0B" } ] },
+                monthly: { totalCalories: 7500, nutrients: [ { name: "蛋白质", value: 1600, total: 1800, unit: "g", color: "#3B82F6" }, { name: "碳水化合物", value: 3500, total: 3900, unit: "g", color: "#10B981" }, { name: "脂肪", value: 2400, total: 1500, unit: "g", color: "#F59E0B" } ] }
+            },
+            recipes: [
+                { id: 1, name: "番茄炒蛋", time: 15, calories: 280, image: "https://placehold.co/400x300/f87171/white?text=番茄炒蛋", description: "一道简单快手的家常菜，营养丰富，老少皆宜。", difficulty: "简单", tags: ["家常菜", "快手菜"], ingredients: ["番茄 2个", "鸡蛋 3个", "葱 1根", "盐 适量"], steps: ["鸡蛋打散，番茄切块。", "热油炒鸡蛋，盛出。", "再热油炒番茄，加入鸡蛋。", "加盐调味，撒上葱花。"] },
+                { id: 2, name: "清炒西兰花", time: 10, calories: 150, image: "https://placehold.co/400x300/4ade80/white?text=清炒西兰花", description: "保持蔬菜原有的鲜味和营养，健康饮食的首选。", difficulty: "简单", tags: ["素食", "健康"], ingredients: ["西兰花 1颗", "大蒜 2瓣", "盐 适量"], steps: ["西兰花掰成小块，洗净。", "大蒜切片。", "热油爆香大蒜，放入西兰花翻炒。", "加少许水焖熟，加盐调味。"] },
+                { id: 3, name: "可乐鸡翅", time: 25, calories: 450, image: "https://placehold.co/400x300/ca8a04/white?text=可乐鸡翅", description: "甜咸可口，色泽诱人，是孩子们的最爱。", difficulty: "中等", tags: ["荤菜", "下饭菜"], ingredients: ["鸡翅中 8个", "可乐 1罐", "姜 3片", "酱油 适量"], steps: ["鸡翅焯水，捞出。", "热油煎鸡翅至两面金黄。", "加入姜片、酱油和可乐。", "大火烧开，转小火慢炖至汤汁浓稠。"] },
+                { id: 4, name: "蒜蓉粉丝虾", time: 20, calories: 320, image: "https://placehold.co/400x300/60a5fa/white?text=蒜蓉粉丝虾", description: "鲜美的虾与蒜蓉的香味完美结合，宴客佳品。", difficulty: "中等", tags: ["海鲜", "宴客菜"], ingredients: ["大虾 8只", "粉丝 1把", "大蒜 1头", "小米椒 2个"], steps: ["粉丝泡软，铺在盘底。", "大虾开背去虾线，放在粉丝上。", "蒜蓉、小米椒、酱油、油混合，淋在虾上。", "上锅蒸10分钟即可。"] },
+            ],
+            chatHistory: [
+                { timestamp: "2025-07-17 20:43:10", question: "莫斯科你好", answer: "你好！很高兴能为你提供帮助。有什么我可以帮你吗？" },
+                { timestamp: "2025-07-17 20:43:35", question: "莫斯科你好请拍照", answer: "好的，请告诉我您需要拍摄什么内容？", photo: "photos/20250717_204333.jpg" },
+                { timestamp: "2025-07-17 21:02:36", question: "莫斯科及拍照", answer: "这是一张模糊的照片，显示了一个办公环境。可以看到一个桌子，上面放着一些物品，如一个黑色的鼠标、一个绿色的瓶子和一个红色的外套挂在椅子上。背景中有一个电脑显示器，显示器前面有一个人的部分身体，但无法看清具体细节。整体环境看起来像是一个办公室或学习空间。由于照片模糊，无法提供更详细的描述。", photo: "photos/20250717_210231.jpg" },
+                { timestamp: "2025-07-17 21:03:07", question: "莫斯科请拍照", answer: "好的，我已经拍到了这张图片。请问您需要我做什么呢？", photo: "photos/20250717_210305.jpg" },
+                { timestamp: "2025-07-17 21:03:27", question: "莫斯科请拍照", answer: "好的，我会尽力帮助您拍照。请告诉我您需要拍摄的具体内容或场景，我会根据您的要求进行拍照。", photo: "photos/20250717_210326.jpg" }
+            ],
+            device: {
+                name: "智能烹饪眼镜X1",
+                isConnected: true,
+                battery: 85,
+                firmware: "v1.2.5",
+                settings: {
+                    brightness: 70, 
+                    notifications: true,
+                    hapticFeedback: "中", // 新增
+                    displayProfile: "标准" // 新增
+                }
+            }
+        };
+
+        // --- DOM Element Selectors ---
+        const pages = document.querySelectorAll('main');
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const overlays = {
+            loading: document.getElementById('loading-overlay'),
+            brightnessModal: document.getElementById('brightness-modal'),
+        };
+
+        let threeScene = null; // To hold the Three.js scene context
+
+        /**
+         * @description Animates a numerical value in a DOM element.
+         */
+        function animateValue(el, target, duration = 500) {
+            if (!el) return;
+            let start = parseInt(el.textContent) || 0;
+            let startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                el.textContent = Math.floor(progress * (target - start) + start);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        /**
+         * @description Handles single-page navigation with transitions.
+         */
+        /**
+         * Loads chat history from server and renders messages
+         */
+        async function loadChatHistory() {
+    // 使用相对路径访问资源
+    console.log('Using relative paths for resource access');
+            const chatContainer = document.getElementById('chat-messages');
+            const loadingIndicator = document.getElementById('loading-chats');
+            const noChatsIndicator = document.getElementById('no-chats');
+
+            // Show loading state
+            chatContainer.classList.add('hidden');
+            noChatsIndicator.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            try {
+                // Fetch list of history files from server
+                const historyUrl = '../history/';
+    console.log('Fetching history list from:', historyUrl);
+    const response = await fetch(historyUrl);
+    console.log('History fetch response:', response.url, response.status);
+                if (!response.ok) throw new Error('Failed to fetch file list');
+                const html = await response.text();
+
+                // Parse HTML to extract .txt files (simplified parser)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a[href$=".txt"]'))
+                    .map(a => a.href.split('/').pop())
+                    .sort((a, b) => new Date(b.split('_')[1].replace('.txt','')) - new Date(a.split('_')[1].replace('.txt','')));
+
+                if (links.length === 0) {
+                    loadingIndicator.classList.add('hidden');
+                    noChatsIndicator.classList.remove('hidden');
+                    return;
+                }
+
+                // Clear existing messages
+                chatContainer.innerHTML = '';
+
+                // Load and parse each chat file
+                for (const filename of links) {
+                    const chatUrl = `../history/${filename}`;
+    console.log('Fetching chat file from:', chatUrl);
+    const chatResponse = await fetch(chatUrl);
+    console.log('Chat file fetch response:', chatResponse.url, chatResponse.status);
+                    if (!chatResponse.ok) continue;
+                    const content = await chatResponse.text();
+
+                    // Parse chat content
+                    const lines = content.split('\n').filter(line => line.trim() !== '');
+                    if (lines.length < 2) continue;
+
+                    const question = lines[0].replace('Q: ', '').trim();
+                    const answer = lines[1].replace('A: ', '').trim();
+                    let photo = null;
+                    if (lines.length >= 3 && lines[2].startsWith('Photo: ')) {
+                        photo = lines[2].replace('Photo: ', '').trim();
+                    }
+
+                    // Extract timestamp from filename (response_YYYYMMDD_HHMMSS.txt)
+                    const timestampStr = filename.match(/response_(\d{8})_(\d{6})\.txt/);
+                    if (!timestampStr) continue;
+
+                    const date = new Date(`${timestampStr[1].slice(0,4)}-${timestampStr[1].slice(4,6)}-${timestampStr[1].slice(6,8)}T${timestampStr[2].slice(0,2)}:${timestampStr[2].slice(2,4)}:${timestampStr[2].slice(4,6)}`);
+                    const formattedTime = date.toLocaleString('zh-CN', { 
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                    // Create chat message element
+                    const messageEl = document.createElement('div');
+                    messageEl.className = 'chat-message fade-in-up opacity-0';
+                    messageEl.style.animationDelay = `${links.indexOf(filename) * 0.1}s`;
+
+                    messageEl.innerHTML = `
+                        <div class="text-xs text-gray-500 mb-2">${formattedTime}</div>
+                        <div class="flex items-start mb-2">
+                            <div class="bg-blue-600 rounded-full p-2 mr-3 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="bg-gray-700 rounded-lg rounded-tl-none p-4 max-w-[80%]">
+                                <p class="text-gray-100">${question}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-gray-600 rounded-full p-2 mr-3 flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <div class="bg-gray-800 rounded-lg rounded-tl-none p-4 max-w-[80%]">
+                                <p class="text-gray-100">${answer}</p>
+                                ${photo ? `<div class="mt-3 rounded-lg overflow-hidden border border-gray-700 transition-transform hover:scale-[1.02]">
+                                    <img src="../photos/${photo.split('/').pop()}" alt="聊天图片" class="w-full h-auto object-cover" loading="lazy" onError="this.src='https://via.placeholder.com/300x200?text=图片加载失败'; console.error('Failed to load image:', '../photos/${photo.split('/').pop()}');">
+                                </div>` : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    chatContainer.appendChild(messageEl);
+
+                    // Trigger animation after render
+                    setTimeout(() => messageEl.classList.remove('opacity-0'), 10);
+                }
+
+                // Show chat messages
+                loadingIndicator.classList.add('hidden');
+                chatContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+                loadingIndicator.classList.add('hidden');
+                noChatsIndicator.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>加载聊天记录失败</p>
+                `;
+                noChatsIndicator.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Clears all chat messages
+         */
+        function clearChatHistory() {
+            const chatContainer = document.getElementById('chat-messages');
+            const noChatsIndicator = document.getElementById('no-chats');
+
+            // Add fade out animation
+            chatContainer.classList.add('opacity-0');
+            setTimeout(() => {
+                chatContainer.innerHTML = '';
+                chatContainer.classList.add('hidden');
+                chatContainer.classList.remove('opacity-0');
+                noChatsIndicator.classList.remove('hidden');
+            }, 300);
+        }
+
+        function navigateTo(pageId) {
+            const targetPage = document.getElementById(pageId);
+            if (!targetPage) return;
+
+            pages.forEach(page => page.classList.add('page-hidden'));
+            targetPage.classList.remove('page-hidden');
+            
+            navButtons.forEach(btn => {
+                const isActive = btn.dataset.page === pageId;
+                btn.classList.toggle('text-blue-400', isActive);
+                btn.classList.toggle('bg-gray-700', isActive);
+                btn.classList.toggle('text-gray-400', !isActive);
+            });
+            
+            window.scrollTo(0, 0);
+
+            if (pageId === 'device-page') {
+                setTimeout(() => {
+                    if (!threeScene) initThreeJS();
+                }, 50);
+            }
+        }
+
+        /**
+         * @description Renders the home page dashboard.
+         */
+        function renderHomePage(period = 'daily') {
+            const pageEl = document.getElementById('home-page');
+            const nutritionData = DEMO_DATA.nutrition[period];
+            if (!nutritionData) return;
+
+            pageEl.innerHTML = `
+                <header class="flex justify-between items-center">
+                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-100">你好, ${DEMO_DATA.userProfile.name}</h1>
+                    <div id="period-selector" class="flex bg-gray-800 rounded-full p-1" role="group">
+                        <button data-period="daily" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'daily' ? 'bg-blue-600 text-white' : 'text-gray-300'}">日</button>
+                        <button data-period="weekly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'weekly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">周</button>
+                        <button data-period="monthly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'monthly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">月</button>
+                    </div>
+                </header>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                            <h2 class="text-lg font-semibold text-gray-200 mb-4">营养素摄入分析</h2>
+                            <div class="flex flex-col md:flex-row items-center gap-6">
+                                <div class="relative w-48 h-48 mx-auto flex-shrink-0">
+                                    <svg id="nutrition-chart" class="w-full h-full" viewBox="0 0 100 100"></svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span id="total-calories" class="text-4xl font-bold text-white">0</span>
+                                        <span class="text-sm text-gray-400">总摄入 (Kcal)</span>
+                                    </div>
+                                </div>
+                                <div id="nutrition-legend" class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm w-full"></div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                             <h2 class="text-lg font-semibold text-gray-200 mb-4">详细数据</h2>
+                             <div id="nutrition-details" class="space-y-4"></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                            <h2 class="text-lg font-semibold text-gray-200 mb-4">${DEMO_DATA.dailyPlan.title}</h2>
+                            <ul id="meal-plan-list" class="space-y-3"></ul>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                            <h2 class="text-lg font-semibold text-gray-200 mb-4">快捷操作</h2>
+                            <div id="quick-actions-list" class="grid grid-cols-2 gap-4"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            animateValue(pageEl.querySelector('#total-calories'), nutritionData.totalCalories);
+
+            const chartSVG = pageEl.querySelector('#nutrition-chart');
+            const legendEl = pageEl.querySelector('#nutrition-legend');
+            legendEl.innerHTML = '';
+            const radius = 45, circumference = 2 * Math.PI * radius;
+            let offset = 0;
+            const totalValue = nutritionData.nutrients.reduce((sum, n) => sum + n.value, 0);
+            nutritionData.nutrients.forEach(n => {
+                const percentage = totalValue > 0 ? n.value / totalValue : 0;
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                // FIX: Use setAttribute for SVG elements
+                circle.setAttribute("cx", "50");
+                circle.setAttribute("cy", "50");
+                circle.setAttribute("r", String(radius));
+                circle.setAttribute("fill", "transparent");
+                circle.setAttribute("stroke", n.color);
+                circle.setAttribute("stroke-width", "10");
+                circle.setAttribute("stroke-dasharray", `${percentage * circumference} ${circumference}`);
+                circle.setAttribute("stroke-dashoffset", String(-offset));
+                circle.setAttribute("transform", "rotate(-90 50 50)");
+                chartSVG.appendChild(circle);
+                offset += percentage * circumference;
+                legendEl.innerHTML += `<div class="flex items-center"><span class="w-3 h-3 rounded-full mr-3" style="background-color: ${n.color};"></span><span>${n.name}</span></div>`;
+            });
+
+            const detailsEl = pageEl.querySelector('#nutrition-details');
+            detailsEl.innerHTML = '';
+            nutritionData.nutrients.forEach((n, i) => {
+                const percentage = n.total > 0 ? (n.value / n.total) * 100 : 0;
+                const item = document.createElement('div');
+                item.className = 'fade-in-up';
+                item.style.animationDelay = `${i * 100}ms`;
+                item.style.opacity = 0;
+                item.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-semibold text-gray-200">${n.name}</span>
+                        <span class="text-sm text-gray-400">${n.value}${n.unit} / ${n.total}${n.unit}</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="h-2.5 rounded-full" style="width: ${percentage}%; background-color: ${n.color};"></div></div>
+                `;
+                detailsEl.appendChild(item);
+            });
+
+            const mealPlanList = pageEl.querySelector('#meal-plan-list');
+            mealPlanList.innerHTML = '';
+            DEMO_DATA.dailyPlan.meals.forEach(meal => {
+                const recipe = DEMO_DATA.recipes.find(r => r.id === meal.recipeId);
+                mealPlanList.innerHTML += `
+                    <li class="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition cursor-pointer">
+                        <div>
+                            <span class="font-semibold text-gray-200">${meal.name}</span>
+                            <p class="text-sm text-gray-400">${recipe.name}</p>
+                        </div>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full ${meal.status === '已完成' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}">${meal.status}</span>
+                    </li>`;
+            });
+
+            const quickActionsList = pageEl.querySelector('#quick-actions-list');
+            quickActionsList.innerHTML = '';
+            DEMO_DATA.quickActions.forEach(action => {
+                quickActionsList.innerHTML += `
+                    <button class="bg-gray-700/50 rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:bg-gray-700 transition">
+                        ${action.icon}
+                        <span class="text-sm text-gray-300">${action.name}</span>
+                    </button>`;
+            });
+
+            pageEl.querySelector('#period-selector').addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') renderHomePage(e.target.dataset.period);
+            });
+        }
+
+        /**
+         * @description Renders the recipe cards on the Recipes page.
+         */
+        function renderRecipesPage() {
+            const pageEl = document.getElementById('recipes-page');
+            pageEl.innerHTML = `
+                <header class="flex items-center gap-4">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></div>
+                        <input type="search" class="w-full bg-gray-800 border border-gray-700 rounded-full py-3 pl-12 pr-4 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="搜索 ${DEMO_DATA.recipes.length} 道菜谱...">
+                    </div>
+                    <button class="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 active:scale-95 transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></button>
+                </header>
+                <div id="recipes-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+            `;
+
+            const gridEl = pageEl.querySelector('#recipes-grid');
+            DEMO_DATA.recipes.forEach((recipe, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:ring-2 ring-blue-500 transition-all active:scale-95 fade-in-up';
+                card.style.animationDelay = `${index * 75}ms`;
+                card.style.opacity = 0;
+                card.dataset.recipeId = recipe.id;
+                card.innerHTML = `
+                    <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-32 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-gray-100 truncate">${recipe.name}</h3>
+                        <p class="text-xs text-gray-400 mb-2">${recipe.time} 分钟 · ${recipe.calories} Kcal</p>
+                        <p class="hidden lg:block text-sm text-gray-400 mt-2 h-10 overflow-hidden">${recipe.description}</p>
+                        <div class="hidden lg:flex items-center gap-2 mt-3">
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-500/20 text-blue-400">${recipe.difficulty}</span>
+                            ${recipe.tags.map(tag => `<span class="text-xs font-semibold px-2 py-1 rounded-full bg-gray-700/60 text-gray-300">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    renderRecipeDetailPage(recipe.id);
+                    navigateTo('recipe-detail-page');
+                });
+                gridEl.appendChild(card);
+            });
+        }
+
+        /**
+         * @description Renders the content of the recipe detail page.
+         */
+        function renderRecipeDetailPage(recipeId) {
+            const pageEl = document.getElementById('recipe-detail-page');
+            const recipe = DEMO_DATA.recipes.find(r => r.id === recipeId);
+            if (!recipe) return;
+
+            pageEl.innerHTML = `
+                <button id="back-to-recipes" class="absolute top-6 left-6 z-10 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition lg:left-28">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <img src="${recipe.image}" alt="菜谱图片" class="w-full h-64 lg:h-80 object-cover">
+                <div class="p-4 lg:p-8">
+                    <h1 class="text-3xl lg:text-4xl font-bold text-white">${recipe.name}</h1>
+                    <p class="text-gray-400 mt-2 lg:max-w-2xl">${recipe.description}</p>
+                    
+                    <div class="hidden lg:grid grid-cols-5 gap-8 mt-8">
+                        <div class="col-span-2">
+                            <h2 class="text-xl font-semibold text-white mb-4">食材清单</h2>
+                            <ul id="ingredients-list-desktop" class="space-y-3"></ul>
+                        </div>
+                        <div class="col-span-3">
+                            <h2 class="text-xl font-semibold text-white mb-4">烹饪步骤</h2>
+                            <ol id="steps-list-desktop" class="space-y-4 list-decimal list-inside text-gray-300"></ol>
+                        </div>
+                    </div>
+
+                    <div class="lg:hidden mt-6">
+                        <div class="border-b border-gray-700">
+                            <nav id="recipe-tabs" class="-mb-px flex space-x-6" aria-label="Tabs">
+                                <button data-tab="ingredients" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-400">食材清单</button>
+                                <button data-tab="steps" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500">烹饪步骤</button>
+                            </nav>
+                        </div>
+                        <div id="ingredients-content-mobile" class="tab-content py-4"></div>
+                        <div id="steps-content-mobile" class="tab-content hidden py-4"></div>
+                    </div>
+                </div>
+                <div class="sticky bottom-20 lg:bottom-8 p-4 lg:px-8 bg-transparent">
+                     <button id="send-to-glasses-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-blue-700 active:scale-95 transition shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" /></svg>
+                        <span>发送到眼镜并开始烹饪</span>
+                    </button>
+                </div>
+            `;
+
+            const ingredientsHTML = `<ul class="space-y-3">${recipe.ingredients.map(ing => `<li class="flex items-center"><label class="flex items-center text-gray-300 cursor-pointer"><input type="checkbox" class="form-checkbox h-5 w-5 bg-gray-700 border-gray-600 text-blue-600 rounded focus:ring-blue-500"><span class="ml-3">${ing}</span></label></li>`).join('')}</ul>`;
+            const stepsHTML = `<ol class="space-y-4 list-decimal list-inside text-gray-300">${recipe.steps.map(step => `<li>${step}</li>`).join('')}</ol>`;
+            
+            pageEl.querySelector('#ingredients-list-desktop').innerHTML = ingredientsHTML;
+            pageEl.querySelector('#steps-list-desktop').innerHTML = stepsHTML;
+            pageEl.querySelector('#ingredients-content-mobile').innerHTML = ingredientsHTML;
+            pageEl.querySelector('#steps-content-mobile').innerHTML = stepsHTML;
+            
+            pageEl.querySelector('#back-to-recipes').addEventListener('click', () => navigateTo('recipes-page'));
+            pageEl.querySelector('#send-to-glasses-btn').addEventListener('click', () => {
+                toggleModal(overlays.loading, true);
+                setTimeout(() => {
+                    toggleModal(overlays.loading, false);
+                    navigateTo('device-page');
+                }, 2000);
+            });
+            pageEl.querySelectorAll('.recipe-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    pageEl.querySelectorAll('.recipe-tab').forEach(t => { 
+                        const isSelected = t === tab;
+                        t.classList.toggle('border-blue-500', isSelected); t.classList.toggle('text-blue-400', isSelected);
+                        t.classList.toggle('border-transparent', !isSelected); t.classList.toggle('text-gray-400', !isSelected);
+                    });
+                    pageEl.querySelector('#ingredients-content-mobile').classList.toggle('hidden', tab.dataset.tab !== 'ingredients');
+                    pageEl.querySelector('#steps-content-mobile').classList.toggle('hidden', tab.dataset.tab !== 'steps');
+                });
+            });
+        }
+        
+        /**
+         * @description Renders the device information on the Device page.
+         */
+        function renderDevicePage() {
+            const pageEl = document.getElementById('device-page');
+            const device = DEMO_DATA.device;
+            pageEl.innerHTML = `
+                <header><h1 class="text-2xl lg:text-3xl font-bold text-gray-100">我的设备</h1></header>
+                <div class="bg-gray-800 rounded-xl shadow-lg p-4 lg:p-6 flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-1/2 lg:w-2/5 h-64 md:h-96 bg-gray-900 rounded-lg flex items-center justify-center p-4">
+                        <canvas id="device-canvas"></canvas>
+                    </div>
+                    <div class="flex-grow space-y-4 text-gray-300">
+                        <h3 class="text-xl font-bold text-white">${device.name}</h3>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ${device.isConnected ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'}"></span><span class="text-sm">${device.isConnected ? '已连接' : '已断开'}</span></div>
+                        <div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg><span>电量: ${device.battery}%</span></div>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5 mt-1"><div class="bg-green-500 h-2.5 rounded-full" style="width: ${device.battery}%"></div></div>
+                        <button class="w-full mt-4 bg-red-600/80 text-white font-semibold py-3 rounded-lg hover:bg-red-600 transition">断开连接</button>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-gray-300 px-2">眼镜端设置</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div id="setting-brightness" class="bg-gray-800 rounded-xl p-4 flex justify-between items-center hover:bg-gray-700/80 cursor-pointer transition">
+                            <div><h4 class="font-semibold text-gray-200">显示亮度</h4><p class="text-sm text-gray-400">调整眼镜镜片亮度</p></div>
+                            <div class="flex items-center gap-2 text-gray-400"><span id="brightness-value">${device.settings.brightness}%</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center">
+                             <div><h4 class="font-semibold text-gray-200">通知管理</h4><p class="text-sm text-gray-400">允许App发送通知</p></div>
+                            <label class="switch"><input type="checkbox" ${device.settings.notifications ? 'checked' : ''}><span class="slider"></span></label>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center">
+                             <div><h4 class="font-semibold text-gray-200">触觉反馈</h4><p class="text-sm text-gray-400">调整操作震动强度</p></div>
+                             <span class="font-medium text-gray-300">${device.settings.hapticFeedback}</span>
+                        </div>
+                         <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center hover:bg-gray-700/80 cursor-pointer transition">
+                             <div><h4 class="font-semibold text-gray-200">显示模式</h4><p class="text-sm text-gray-400">选择不同的显示预设</p></div>
+                             <span class="font-medium text-blue-400">${device.settings.displayProfile}</span>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center col-span-1 md:col-span-2 hover:bg-gray-700/80 cursor-pointer transition">
+                             <div><h4 class="font-semibold text-gray-200">固件更新</h4><p class="text-sm text-gray-400">检查并安装最新固件</p></div>
+                            <div class="flex items-center gap-2 text-gray-400"><span id="firmware-version">${device.firmware}</span><button class="text-sm font-semibold text-blue-400 hover:underline">检查更新</button></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pageEl.querySelector('#setting-brightness').addEventListener('click', () => {
+                const modal = document.getElementById('brightness-modal');
+                modal.querySelector('#brightness-slider').value = DEMO_DATA.device.settings.brightness;
+                toggleModal(modal, true);
+            });
+        }
+
+        /**
+         * @description Initializes the Three.js scene.
+         */
+        function initThreeJS() {
+            const canvas = document.getElementById('device-canvas');
+            if (!canvas || threeScene) return;
+
+            const scene = new THREE.Scene();
+            // 加载FBX模型
+            const loader = new FBXLoader();
+            loader.load('glass.fbx', (object) => {
+                // 调整模型大小和位置
+                object.scale.set(0.01, 0.01, 0.01);
+                object.position.set(0, -0.5, 0);
+                scene.add(object);
+            }, undefined, (error) => {
+                console.error('加载FBX模型时出错:', error);
+            });
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+            directionalLight.position.set(5, 10, 7.5);
+            scene.add(directionalLight);
+
+            const camera = new THREE.PerspectiveCamera(50, canvas.parentElement.clientWidth / canvas.parentElement.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = false;
+            controls.enablePan = false;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 2.5;
+
+            let animationFrameId;
+            function animate() {
+                animationFrameId = requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            
+            const resizeObserver = new ResizeObserver(() => {
+                const parent = canvas.parentElement;
+                if (parent.clientWidth === 0) return;
+                camera.aspect = parent.clientWidth / parent.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(parent.clientWidth, parent.clientHeight);
+            });
+            resizeObserver.observe(canvas.parentElement);
+
+            threeScene = {
+                destroy: () => {
+                    cancelAnimationFrame(animationFrameId);
+                    resizeObserver.disconnect();
+                    renderer.dispose();
+                    threeScene = null;
+                }
+            };
+            animate();
+        }
+
+        /**
+         * @description Toggles the visibility of a modal with transitions.
+         */
+        function toggleModal(modalEl, show) {
+            if (show) {
+                modalEl.classList.remove('modal-hidden');
+                void modalEl.offsetWidth; // Trigger reflow
+                modalEl.classList.add('modal-visible');
+            } else {
+                modalEl.classList.remove('modal-visible');
+                modalEl.addEventListener('transitionend', () => {
+                    modalEl.classList.add('modal-hidden');
+                }, { once: true });
+            }
+        }
+
+        // --- Initial Application Setup ---
+        function initApp() {
+            // Initialize chat page
+            document.getElementById('refresh-chats').addEventListener('click', loadChatHistory);
+            document.getElementById('clear-chats').addEventListener('click', clearChatHistory);
+
+            // Load chat history when chat page is navigated to
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (btn.dataset.page === 'chat-page') {
+                        loadChatHistory();
+                    }
+                });
+            });
+            // Initial page renders
+            renderHomePage();
+            renderRecipesPage();
+            renderDevicePage();
+            
+            // Setup navigation
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+            });
+
+            // Setup brightness modal listeners
+            const brightnessModal = document.getElementById('brightness-modal');
+            brightnessModal.querySelector('#close-modal-btn').addEventListener('click', () => toggleModal(brightnessModal, false));
+            brightnessModal.querySelector('#brightness-slider').addEventListener('input', (e) => {
+                const value = e.target.value;
+                DEMO_DATA.device.settings.brightness = value;
+                const brightnessValueEl = document.getElementById('brightness-value');
+                if(brightnessValueEl) brightnessValueEl.textContent = `${value}%`;
+            });
+
+            // Set initial page
+            navigateTo('home-page');
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+
+</body>
+</html>

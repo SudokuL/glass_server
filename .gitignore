@@ -1,0 +1,15 @@
+# 忽略模型和缓存
+qwen_7b_vl_offline/
+model/
+__pycache__/
+
+# 忽略音频和输出
+*.pt
+*.gz
+
+# 忽略 IDE 配置文件
+.idea/
+*.iml
+
+# 忽略其他临时文件
+*.log
