@@ -20,86 +20,339 @@
     </script>
 
     <style>
-        /* Custom scrollbar for a more polished look */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #1E1E1E; }
-        ::-webkit-scrollbar-thumb { background: #4A5568; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #718096; }
+        /* 毛玻璃背景效果 */
+        .glass-effect {
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card {
+            backdrop-filter: blur(15px) saturate(150%);
+            background: rgba(55, 65, 81, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-nav {
+            backdrop-filter: blur(25px) saturate(200%);
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-        /* Custom style for M3 switch */
+        /* 渐变背景 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-bg-dark {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { 
+            background: rgba(30, 30, 30, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        /* 高级开关样式 */
         .switch input { display: none; }
         .switch .slider {
-            width: 52px; height: 32px; background-color: #4A5568;
-            border-radius: 16px; transition: .4s; position: relative; cursor: pointer;
+            width: 52px; height: 32px;
+            background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+            border-radius: 16px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .switch .slider:before {
             content: ""; position: absolute; height: 24px; width: 24px;
-            left: 4px; bottom: 4px; background-color: #CBD5E0;
-            border-radius: 50%; transition: .4s;
+            left: 4px; bottom: 4px; background: #CBD5E0;
+            border-radius: 50%; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-        .switch input:checked + .slider { background-color: #2563EB; }
-        .switch input:checked + .slider:before { transform: translateX(20px); background-color: white; }
+        .switch input:checked + .slider { 
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .switch input:checked + .slider:before { 
+            transform: translateX(20px); 
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
 
-        /* Animation for list items */
+        /* 高级动画效果 */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
         }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: calc(200px + 100%) 0;
+            }
+        }
+        
         .fade-in-up {
-    animation: fadeInUp 0.5s ease-out forwards;
-}
-.chat-message {
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
-}
-.chat-message img {
-    transition: all 0.3s ease;
-}
-.chat-message img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-}
-
-.chat-container { width: 100%; box-sizing: border-box; }
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .pulse-hover:hover {
+            animation: pulse 1s infinite;
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 200px 100%;
+            animation: shimmer 2s infinite;
         }
 
-        /* Page transition styles */
-        main { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
-        .page-hidden { display: none !important; }
+        /* 聊天消息样式增强 */
+        .chat-message {
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+        }
+        
+        .chat-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .chat-message img {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+        }
+        
+        .chat-message img:hover {
+            transform: scale(1.08) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+        }
 
-        /* Modal transition styles */
+        /* 按钮增强效果 */
+        .btn-enhanced {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-enhanced:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-enhanced:hover:before {
+            left: 100%;
+        }
+        
+        .btn-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-enhanced:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-hover:hover .card-glow {
+            opacity: 1;
+        }
+        
+        .card-glow {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            filter: blur(8px);
+        }
+
+        /* 页面过渡效果 */
+        main { 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .page-hidden { 
+            display: none !important; 
+        }
+        
+        .page-enter {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        
+        .page-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 模态框增强效果 */
         .modal-overlay {
-            transition: opacity 0.3s ease-in-out;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
         }
+        
         .modal-hidden {
             opacity: 0;
             pointer-events: none;
         }
+        
         .modal-visible {
             opacity: 1;
             pointer-events: auto;
         }
+        
         .modal-content {
-            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            transform: scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.9) translateY(20px);
             opacity: 0;
         }
+        
         .modal-visible .modal-content {
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             opacity: 1;
+        }
+        
+        /* 导航栏增强 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2));
+        }
+        
+        .nav-btn.active:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #3B82F6, #9333EA);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* 加载动画增强 */
+        .loading-enhanced {
+            position: relative;
+        }
+        
+        .loading-enhanced:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        
+        /* 容器样式 */
+        .chat-container, .meeting-container { 
+            width: 100%; 
+            box-sizing: border-box;
         }
     </style>
 </head>
-<body class="bg-gray-900 font-sans antialiased">
+<body class="gradient-bg-dark font-sans antialiased overflow-x-hidden">
 
     <!-- Main App Container - Now responsive for larger screens -->
-    <div id="app-container" class="max-w-md lg:max-w-6xl mx-auto bg-[#121212] min-h-screen flex flex-col shadow-2xl overflow-x-hidden">
+    <div id="app-container" class="max-w-md lg:max-w-6xl mx-auto glass-effect min-h-screen flex flex-col shadow-2xl overflow-x-hidden relative">
+        <!-- 背景装饰元素 -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-pink-600/20 rounded-full blur-3xl"></div>
+        </div>
         
         <div class="flex-grow pb-20 lg:pb-0"> <!-- Remove padding on desktop, nav bar is on the side -->
 
             <!-- On desktop, navigation is a sidebar -->
-            <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-20 bg-[#1E1E1E] border-t border-gray-700 flex justify-around items-center z-20
-                        lg:mx-0 lg:left-0 lg:top-0 lg:max-w-none lg:w-20 lg:h-screen lg:flex-col lg:justify-start lg:border-t-0 lg:border-r">
+            <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-20 glass-nav border-t border-white/10 flex justify-around items-center z-20
+                        lg:mx-0 lg:left-0 lg:top-0 lg:max-w-none lg:w-20 lg:h-screen lg:flex-col lg:justify-start lg:border-t-0 lg:border-r lg:border-white/10">
                 <div class="hidden lg:block text-blue-400 p-4 my-4">
                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v1.073a8.005 8.005 0 015.634 5.634H18a1 1 0 01.954 1.265l-2.162 6.485A1 1 0 0116 17H4a1 1 0 01-.792-1.538L1.046 8.974A1 1 0 012 8h.927A8.005 8.005 0 018.56 2.366V2a1 1 0 011.265-.954l1.47.368zM10 10a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" /></svg>
                 </div>
@@ -115,42 +368,17 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H9V3a1 1 0 00-1-1H7zM5 8h10v8H5V8zm2 2a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
                 <span class="text-xs mt-1">设备</span>
             </button>
-            <button data-page="chat-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.702A9 9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                <span class="text-xs mt-1">麦粒</span>
-            </button>
+            <button data-page="meeting-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    <span class="text-xs mt-1">会议</span>
+                </button>
+                <button data-page="chat-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.702A9 9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                    <span class="text-xs mt-1">麦粒</span>
+                </button>
         </nav>
 
-        <!-- ================================================== -->
-        <!-- ============== CHAT PAGE ========================= -->
-        <!-- ================================================== -->
-        <main id="chat-page" class="p-4 lg:p-8 space-y-6 page-hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-100">麦粒聊天记录</h1>
-                <div class="flex space-x-2">
-                    <button id="refresh-chats" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                        刷新
-                    </button>
-                    <button id="clear-chats" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        清空
-                    </button>
-                </div>
-            </div>
-            <div id="chat-container" class="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg max-h-[calc(100vh-200px)] overflow-y-auto space-y-6 w-full box-border">
-                <!-- Chat messages will be loaded here -->
-                <div class="text-center text-gray-500 py-10" id="loading-chats">
-                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                    <p>正在加载聊天记录...</p>
-                </div>
-                <div id="no-chats" class="text-center text-gray-500 py-10 hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
-                    <p>暂无聊天记录</p>
-                </div>
-                <div id="chat-messages" class="space-y-4 hidden"></div>
-            </div>
-        </main>
+
 
             <div class="lg:pl-20"> <!-- Offset content for the desktop sidebar -->
                 <!-- ================================================== -->
@@ -179,6 +407,68 @@
                 <!-- ================================================== -->
                 <main id="device-page" class="p-4 lg:p-8 space-y-6 page-hidden">
                     <!-- Content is now rendered by JS -->
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============== MEETING PAGE ====================== -->
+                <!-- ================================================== -->
+                <main id="meeting-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-100">会议记录</h1>
+                        <div class="flex space-x-2">
+                            <button id="refresh-meetings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                刷新
+                            </button>
+                            <button id="clear-meetings" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                清空
+                            </button>
+                        </div>
+                    </div>
+                    <div id="meeting-container" class="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg max-h-[calc(100vh-200px)] overflow-y-auto space-y-6 w-full box-border">
+                        <!-- Meeting records will be loaded here -->
+                        <div class="text-center text-gray-500 py-10" id="loading-meetings">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                            <p>正在加载会议记录...</p>
+                        </div>
+                        <div id="no-meetings" class="text-center text-gray-500 py-10 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                            <p>暂无会议记录</p>
+                        </div>
+                        <div id="meeting-list" class="space-y-4 hidden"></div>
+                    </div>
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============== CHAT PAGE ========================= -->
+                <!-- ================================================== -->
+                <main id="chat-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-100">麦粒聊天记录</h1>
+                        <div class="flex space-x-2">
+                            <button id="refresh-chats" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                刷新
+                            </button>
+                            <button id="clear-chats" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                清空
+                            </button>
+                        </div>
+                    </div>
+                    <div id="chat-container" class="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg max-h-[calc(100vh-200px)] overflow-y-auto space-y-6 w-full box-border">
+                        <!-- Chat messages will be loaded here -->
+                        <div class="text-center text-gray-500 py-10" id="loading-chats">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                            <p>正在加载聊天记录...</p>
+                        </div>
+                        <div id="no-chats" class="text-center text-gray-500 py-10 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
+                            <p>暂无聊天记录</p>
+                        </div>
+                        <div id="chat-messages" class="space-y-4 hidden"></div>
+                    </div>
                 </main>
             </div>
         </div>
@@ -298,6 +588,179 @@
          * @description Handles single-page navigation with transitions.
          */
         /**
+         * Loads meeting records from server and renders them
+         */
+        async function loadMeetingRecords() {
+            const meetingContainer = document.getElementById('meeting-list');
+            const loadingIndicator = document.getElementById('loading-meetings');
+            const noMeetingsIndicator = document.getElementById('no-meetings');
+
+            // Show loading state
+            meetingContainer.classList.add('hidden');
+            noMeetingsIndicator.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            try {
+                // Fetch list of meeting files from server
+                const meetingUrl = '../meeting_recording/';
+                console.log('Fetching meeting list from:', meetingUrl);
+                const response = await fetch(meetingUrl);
+                console.log('Meeting fetch response:', response.url, response.status);
+                if (!response.ok) throw new Error('Failed to fetch meeting file list');
+                const html = await response.text();
+
+                // Parse HTML to extract .txt files (simplified parser)
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a[href$="_meeting.txt"]'))
+                    .map(a => a.href.split('/').pop())
+                    .sort((a, b) => new Date(b.split('_')[1]) - new Date(a.split('_')[1]));
+
+                if (links.length === 0) {
+                    loadingIndicator.classList.add('hidden');
+                    noMeetingsIndicator.classList.remove('hidden');
+                    return;
+                }
+
+                // Clear existing meetings
+                meetingContainer.innerHTML = '';
+
+                // Load and parse each meeting file
+                for (const filename of links) {
+                    const meetingFileUrl = `../meeting_recording/${filename}`;
+                    console.log('Fetching meeting file from:', meetingFileUrl);
+                    const meetingResponse = await fetch(meetingFileUrl);
+                    console.log('Meeting file fetch response:', meetingResponse.url, meetingResponse.status);
+                    if (!meetingResponse.ok) continue;
+                    const content = await meetingResponse.text();
+
+                    // Extract timestamp from filename (YYYYMMDD_HHMMSS_meeting.txt)
+                    const timestampStr = filename.match(/(\d{8})_(\d{6})_meeting\.txt/);
+                    if (!timestampStr) continue;
+
+                    const date = new Date(`${timestampStr[1].slice(0,4)}-${timestampStr[1].slice(4,6)}-${timestampStr[1].slice(6,8)}T${timestampStr[2].slice(0,2)}:${timestampStr[2].slice(2,4)}:${timestampStr[2].slice(4,6)}`);
+                    const formattedTime = date.toLocaleString('zh-CN', { 
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+
+                    // Extract meeting duration and content preview
+                    const lines = content.split('\n').filter(line => line.trim() !== '');
+                    const contentLines = lines.filter(line => line.startsWith('[') && line.includes(']'));
+                    const duration = contentLines.length > 0 ? `${contentLines.length} 条记录` : '无记录';
+                    const preview = contentLines.slice(0, 3).map(line => line.replace(/^\[\d{2}:\d{2}:\d{2}\]\s*/, '')).join(' | ');
+
+                    // Create meeting record element
+                    const meetingEl = document.createElement('div');
+                    meetingEl.className = 'meeting-record fade-in-up opacity-0 bg-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-600 transition-colors';
+                    meetingEl.style.animationDelay = `${links.indexOf(filename) * 0.1}s`;
+                    meetingEl.dataset.filename = filename;
+
+                    meetingEl.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-semibold text-gray-100">会议记录</h3>
+                            <span class="text-xs text-gray-400">${formattedTime}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-blue-400">${duration}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                        <p class="text-sm text-gray-300 truncate">${preview || '点击查看详细内容'}</p>
+                    `;
+
+                    // Add click event to show meeting details
+                    meetingEl.addEventListener('click', () => showMeetingDetail(filename, content, formattedTime));
+
+                    meetingContainer.appendChild(meetingEl);
+
+                    // Trigger animation after render
+                    setTimeout(() => meetingEl.classList.remove('opacity-0'), 10);
+                }
+
+                // Show meeting list
+                loadingIndicator.classList.add('hidden');
+                meetingContainer.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading meeting records:', error);
+                loadingIndicator.classList.add('hidden');
+                noMeetingsIndicator.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p>加载会议记录失败</p>
+                `;
+                noMeetingsIndicator.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Shows meeting detail in a modal or detailed view
+         */
+        function showMeetingDetail(filename, content, formattedTime) {
+            // Create modal for meeting detail
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                    <div class="flex justify-between items-center p-6 border-b border-gray-700">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-100">会议记录详情</h2>
+                            <p class="text-sm text-gray-400">${formattedTime}</p>
+                        </div>
+                        <button class="close-modal text-gray-400 hover:text-gray-200 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                        <pre class="text-gray-300 text-sm whitespace-pre-wrap font-mono bg-gray-900 p-4 rounded-lg">${content}</pre>
+                    </div>
+                </div>
+            `;
+
+            // Add close functionality
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        /**
+         * Clears all meeting records
+         */
+        function clearMeetingRecords() {
+            const meetingContainer = document.getElementById('meeting-list');
+            const noMeetingsIndicator = document.getElementById('no-meetings');
+
+            // Add fade out animation
+            meetingContainer.classList.add('opacity-0');
+            setTimeout(() => {
+                meetingContainer.innerHTML = '';
+                meetingContainer.classList.add('hidden');
+                meetingContainer.classList.remove('opacity-0');
+                noMeetingsIndicator.classList.remove('hidden');
+            }, 300);
+        }
+
+        /**
+         * @description Renders the meeting page content.
+         */
+        function renderMeetingPage() {
+            // Meeting page content is already in HTML, just ensure it's properly initialized
+            console.log('Meeting page rendered');
+        }
+
+        /**
          * Loads chat history from server and renders messages
          */
         async function loadChatHistory() {
@@ -326,7 +789,7 @@
                 const doc = parser.parseFromString(html, 'text/html');
                 const links = Array.from(doc.querySelectorAll('a[href$=".txt"]'))
                     .map(a => a.href.split('/').pop())
-                    .sort((a, b) => new Date(b.split('_')[1].replace('.txt','')) - new Date(a.split('_')[1].replace('.txt','')));
+                    .sort((a, b) => new Date(a.split('_')[1].replace('.txt','')) - new Date(b.split('_')[1].replace('.txt','')));
 
                 if (links.length === 0) {
                     loadingIndicator.classList.add('hidden');
@@ -399,7 +862,7 @@
                         </div>
                     `;
 
-                    chatContainer.appendChild(messageEl);
+                    chatContainer.insertBefore(messageEl, chatContainer.firstChild);
 
                     // Trigger animation after render
                     setTimeout(() => messageEl.classList.remove('opacity-0'), 10);
@@ -844,11 +1307,18 @@
             document.getElementById('refresh-chats').addEventListener('click', loadChatHistory);
             document.getElementById('clear-chats').addEventListener('click', clearChatHistory);
 
+            // Initialize meeting page
+            document.getElementById('refresh-meetings').addEventListener('click', loadMeetingRecords);
+            document.getElementById('clear-meetings').addEventListener('click', clearMeetingRecords);
+
             // Load chat history when chat page is navigated to
+            // Load meeting records when meeting page is navigated to
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     if (btn.dataset.page === 'chat-page') {
                         loadChatHistory();
+                    } else if (btn.dataset.page === 'meeting-page') {
+                        loadMeetingRecords();
                     }
                 });
             });
@@ -856,6 +1326,7 @@
             renderHomePage();
             renderRecipesPage();
             renderDevicePage();
+            renderMeetingPage();
             
             // Setup navigation
             navButtons.forEach(btn => {

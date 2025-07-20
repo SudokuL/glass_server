@@ -35,7 +35,7 @@ print("[Srv] Qwen2.5-VL ready on", qwen.device)
 
 def query_qwen(messages):
     """调用 Qwen，messages 前注入系统 Prompt"""
-    system_prompt = { "role": "system", "content": "你叫“莫斯科”，是我的私人语音助手。" }
+    system_prompt = { "role": "system", "content": "你叫“麦粒”，嵌入在我的智能眼镜中，是我的私人语音助手。同时你是用户的私人营养师，精通各种营养学知识。你的目的是帮助用户健康的饮食，提出建议等。用户的文字很可能包含错别字，如果你理解不通顺请按照发音异议理解。" }
     all_msgs = [system_prompt] + messages
     text = processor.apply_chat_template(all_msgs, tokenize=False, add_generation_prompt=True)
     imgs, vids = process_vision_info(all_msgs)
@@ -55,8 +55,8 @@ MODEL_PATH  = "model/vosk-model-cn-0.22"
 SAMPLE_RATE = 16000
 vosk_model = Model(MODEL_PATH)
 
-PHOTO_DIR = "photos"; VIDEO_DIR = "video_frames"
-os.makedirs(PHOTO_DIR, exist_ok=True); os.makedirs(VIDEO_DIR, exist_ok=True)
+PHOTO_DIR = "photos"; VIDEO_DIR = "video_frames"; MEETING_DIR = "meeting_recording"
+os.makedirs(PHOTO_DIR, exist_ok=True); os.makedirs(VIDEO_DIR, exist_ok=True); os.makedirs(MEETING_DIR, exist_ok=True)
 
 
 def save_photo(img: bytes) -> str:
@@ -72,6 +72,32 @@ def save_frame(img: bytes):
     path = os.path.join(VIDEO_DIR, fn)
     with open(path, "wb") as f: f.write(img)
 
+def start_meeting_recording():
+    """开始会议记录"""
+    fn = datetime.now().strftime("%Y%m%d_%H%M%S_meeting.txt")
+    path = os.path.join(MEETING_DIR, fn)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(f"会议记录开始时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write("=" * 50 + "\n")
+    print(f"[Srv] 会议记录开始: {fn}")
+    return path
+
+def append_meeting_text(meeting_file: str, text: str):
+    """追加会议记录内容"""
+    if meeting_file and os.path.exists(meeting_file):
+        with open(meeting_file, "a", encoding="utf-8") as f:
+            timestamp = datetime.now().strftime("%H:%M:%S")
+            f.write(f"[{timestamp}] {text}\n")
+        print(f"[Srv] 会议记录追加: {text}")
+
+def end_meeting_recording(meeting_file: str):
+    """结束会议记录"""
+    if meeting_file and os.path.exists(meeting_file):
+        with open(meeting_file, "a", encoding="utf-8") as f:
+            f.write("=" * 50 + "\n")
+            f.write(f"会议记录结束时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        print(f"[Srv] 会议记录结束: {meeting_file}")
+
 async def ws_handler(ws):
     print("[Srv] ? new conn", ws.remote_address)
     rec = KaldiRecognizer(vosk_model, SAMPLE_RATE)
@@ -82,6 +108,9 @@ async def ws_handler(ws):
     last_partial = ""
     pending_text = ""
     awaiting_photo_model = False
+    # 会议记录相关变量
+    meeting_recording = False
+    meeting_file = None
 
     async for chunk in ws:
         if isinstance(chunk, bytes):
@@ -90,8 +119,29 @@ async def ws_handler(ws):
                 if result:
                     print(f"[FINAL] {result}")
                     pending_text = result
+                    
+                    # 会议记录控制逻辑
+                    if "会议记录开始" in result:
+                        if not meeting_recording:
+                            meeting_file = start_meeting_recording()
+                            meeting_recording = True
+                            print("[Srv] 会议记录模式已开启")
+                        continue
+                    elif "会议记录结束" in result or "会议识别结束" in result:
+                        if meeting_recording:
+                            end_meeting_recording(meeting_file)
+                            meeting_recording = False
+                            meeting_file = None
+                            print("[Srv] 会议记录模式已关闭")
+                        continue
+                    
+                    # 会议记录模式下，记录所有语音内容，不处理AI唤醒
+                    if meeting_recording:
+                        append_meeting_text(meeting_file, result)
+                        continue
+                    
                     # 唤醒词和拍照逻辑
-                    if "莫斯科" in result:
+                    if "麦粒" in result:
                         if "拍照" in result:
                             if time.time() - last_photo_ts > 3:
                                 await ws.send(json.dumps({"cmd": "photo"}))
@@ -144,7 +194,7 @@ async def ws_handler(ws):
             if tag == "photo":
                 img_bytes = bytes.fromhex(data["payload_hex"])
                 photo_path = save_photo(img_bytes)
-                if awaiting_photo_model and "莫斯科" in pending_text and "拍照" in pending_text:
+                if awaiting_photo_model and "麦粒" in pending_text and "拍照" in pending_text:
                     # 图文调用
                     print("[info] 触发 Qwen2.5-VL 图文推理 …")
                     resp = query_qwen([{
