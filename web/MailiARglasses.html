@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="gbk">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARçƒ¹é¥ªåŠ©æ‰‹</title>
+    <title>ARÅëâ¿ÖúÊÖ</title>
     
     <!-- Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,7 @@
     </script>
 
     <style>
-        /* æ¯›ç»ç’ƒèƒŒæ™¯æ•ˆæœ */
+        /* Ã«²£Á§±³¾°Ğ§¹û */
         .glass-effect {
             backdrop-filter: blur(20px) saturate(180%);
             background: rgba(30, 30, 30, 0.8);
@@ -40,7 +40,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* æ¸å˜èƒŒæ™¯ */
+        /* ½¥±ä±³¾° */
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -56,7 +56,7 @@
             background-clip: text;
         }
 
-        /* è‡ªå®šä¹‰æ»šåŠ¨æ¡ */
+        /* ×Ô¶¨Òå¹ö¶¯Ìõ */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { 
             background: rgba(30, 30, 30, 0.3);
@@ -71,7 +71,7 @@
             background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         }
 
-        /* é«˜çº§å¼€å…³æ ·å¼ */
+        /* ¸ß¼¶¿ª¹ØÑùÊ½ */
         .switch input { display: none; }
         .switch .slider {
             width: 52px; height: 32px;
@@ -96,7 +96,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        /* é«˜çº§åŠ¨ç”»æ•ˆæœ */
+        /* ¸ß¼¶¶¯»­Ğ§¹û */
         @keyframes fadeInUp {
             from { 
                 opacity: 0; 
@@ -157,7 +157,7 @@
             animation: shimmer 2s infinite;
         }
 
-        /* èŠå¤©æ¶ˆæ¯æ ·å¼å¢å¼º */
+        /* ÁÄÌìÏûÏ¢ÑùÊ½ÔöÇ¿ */
         .chat-message {
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -180,7 +180,7 @@
             border-radius: 16px;
         }
 
-        /* æŒ‰é’®å¢å¼ºæ•ˆæœ */
+        /* °´Å¥ÔöÇ¿Ğ§¹û */
         .btn-enhanced {
             position: relative;
             overflow: hidden;
@@ -213,7 +213,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* å¡ç‰‡æ‚¬åœæ•ˆæœ */
+        /* ¿¨Æ¬ĞüÍ£Ğ§¹û */
         .card-hover {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -242,7 +242,7 @@
             filter: blur(8px);
         }
 
-        /* é¡µé¢è¿‡æ¸¡æ•ˆæœ */
+        /* Ò³Ãæ¹ı¶ÉĞ§¹û */
         main { 
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -261,7 +261,7 @@
             transform: translateX(0);
         }
 
-        /* æ¨¡æ€æ¡†å¢å¼ºæ•ˆæœ */
+        /* Ä£Ì¬¿òÔöÇ¿Ğ§¹û */
         .modal-overlay {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
@@ -288,7 +288,7 @@
             opacity: 1;
         }
         
-        /* å¯¼èˆªæ å¢å¼º */
+        /* µ¼º½À¸ÔöÇ¿ */
         .nav-btn {
             position: relative;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -315,7 +315,7 @@
             opacity: 0.1;
         }
 
-        /* åŠ è½½åŠ¨ç”»å¢å¼º */
+        /* ¼ÓÔØ¶¯»­ÔöÇ¿ */
         .loading-enhanced {
             position: relative;
         }
@@ -331,10 +331,184 @@
             animation: shimmer 1.5s infinite;
         }
         
-        /* å®¹å™¨æ ·å¼ */
+        /* ÈİÆ÷ÑùÊ½ */
         .chat-container, .meeting-container { 
             width: 100%; 
             box-sizing: border-box;
+        }
+        
+        /* ÖĞ¹úÉÅÊ³±¦ËşÑùÊ½ - Èı½ÇĞÎ½ø¶ÈÌõ°æ±¾ */
+        .nutrition-pyramid {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin: 20px auto;
+        }
+        
+        .pyramid-layer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .pyramid-layer:hover {
+            transform: translateX(-50%) scale(1.02);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        
+        .pyramid-layer-1 {
+            top: 20px;
+            width: 60%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .pyramid-layer-2 {
+            top: 80px;
+            width: 70%;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .pyramid-layer-3 {
+            top: 140px;
+            width: 80%;
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .pyramid-layer-4 {
+            top: 200px;
+            width: 90%;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .pyramid-layer-5 {
+            top: 260px;
+            width: 100%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        
+        .layer-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: inherit;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+        
+        /* ³¬³öÏŞÖÆÊ±µÄ¶¯»­Ğ§¹û */
+        .layer-progress.overflow {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+            animation: overflow-pulse 2s infinite;
+        }
+        
+        .pyramid-layer.overflow {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .pyramid-layer.overflow::after {
+            content: '??';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            z-index: 3;
+            animation: warning-bounce 1s infinite;
+        }
+        
+        @keyframes overflow-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, 0); }
+            25% { transform: translate(calc(-50% - 2px), 0); }
+            75% { transform: translate(calc(-50% + 2px), 0); }
+        }
+        
+        @keyframes warning-bounce {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.2); }
+        }
+        
+        .layer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0 16px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .layer-name {
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .layer-value {
+            font-weight: 700;
+            color: white;
+            font-size: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* Ê³Æ·ÏîÄ¿ÑùÊ½ */
+        .food-item {
+            background: rgba(55, 65, 81, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .food-item:hover {
+            background: rgba(75, 85, 99, 0.8);
+            border-color: rgba(96, 165, 250, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .food-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .food-item-name {
+            font-weight: 600;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .food-item-time {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .food-item-confidence {
+            font-size: 12px;
+            color: #60a5fa;
+            font-weight: 500;
+        }
+        
+        .food-item-calories {
+            font-size: 12px;
+            color: #fbbf24;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -342,7 +516,7 @@
 
     <!-- Main App Container - Now responsive for larger screens -->
     <div id="app-container" class="max-w-md lg:max-w-6xl mx-auto glass-effect min-h-screen flex flex-col shadow-2xl overflow-x-hidden relative">
-        <!-- èƒŒæ™¯è£…é¥°å…ƒç´  -->
+        <!-- ±³¾°×°ÊÎÔªËØ -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-pink-600/20 rounded-full blur-3xl"></div>
@@ -358,27 +532,27 @@
                 </div>
                 <button data-page="home-page" class="nav-btn flex flex-col items-center justify-center text-blue-400 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
-                    <span class="text-xs mt-1">é¦–é¡µ</span>
+                    <span class="text-xs mt-1">Ê×Ò³</span>
                 </button>
                 <button data-page="recipes-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 16c1.255 0 2.443-.29 3.5-.804V4.804zM14.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 0114.5 16c1.255 0 2.443-.29 3.5-.804v-10A7.968 7.968 0 0014.5 4z" /></svg>
-                    <span class="text-xs mt-1">èœè°±</span>
+                    <span class="text-xs mt-1">²ËÆ×</span>
                 </button>
                 <button data-page="device-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H9V3a1 1 0 00-1-1H7zM5 8h10v8H5V8zm2 2a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>
-                <span class="text-xs mt-1">è®¾å¤‡</span>
+                <span class="text-xs mt-1">Éè±¸</span>
             </button>
             <button data-page="meeting-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                    <span class="text-xs mt-1">ä¼šè®®</span>
+                    <span class="text-xs mt-1">»áÒé</span>
                 </button>
                 <button data-page="food-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16l3-3m-3 3l-3-3" /></svg>
-                    <span class="text-xs mt-1">é£Ÿå“</span>
+                    <span class="text-xs mt-1">Ê³Æ·</span>
                 </button>
                 <button data-page="chat-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.702A9 9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                    <span class="text-xs mt-1">éº¦ç²’</span>
+                    <span class="text-xs mt-1">ÂóÁ£</span>
                 </button>
         </nav>
 
@@ -418,15 +592,15 @@
                 <!-- ================================================== -->
                 <main id="meeting-page" class="p-4 lg:p-8 space-y-6 page-hidden">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold text-gray-100">ä¼šè®®è®°å½•</h1>
+                        <h1 class="text-2xl font-bold text-gray-100">»áÒé¼ÇÂ¼</h1>
                         <div class="flex space-x-2">
                             <button id="refresh-meetings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                åˆ·æ–°
+                                Ë¢ĞÂ
                             </button>
                             <button id="clear-meetings" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                æ¸…ç©º
+                                Çå¿Õ
                             </button>
                         </div>
                     </div>
@@ -434,11 +608,11 @@
                         <!-- Meeting records will be loaded here -->
                         <div class="text-center text-gray-500 py-10" id="loading-meetings">
                             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                            <p>æ­£åœ¨åŠ è½½ä¼šè®®è®°å½•...</p>
+                            <p>ÕıÔÚ¼ÓÔØ»áÒé¼ÇÂ¼...</p>
                         </div>
                         <div id="no-meetings" class="text-center text-gray-500 py-10 hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                            <p>æš‚æ— ä¼šè®®è®°å½•</p>
+                            <p>ÔİÎŞ»áÒé¼ÇÂ¼</p>
                         </div>
                         <div id="meeting-list" class="space-y-4 hidden"></div>
                     </div>
@@ -449,15 +623,15 @@
                 <!-- ================================================== -->
                 <main id="chat-page" class="p-4 lg:p-8 space-y-6 page-hidden">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold text-gray-100">éº¦ç²’èŠå¤©è®°å½•</h1>
+                        <h1 class="text-2xl font-bold text-gray-100">ÂóÁ£ÁÄÌì¼ÇÂ¼</h1>
                         <div class="flex space-x-2">
                             <button id="refresh-chats" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                åˆ·æ–°
+                                Ë¢ĞÂ
                             </button>
                             <button id="clear-chats" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                æ¸…ç©º
+                                Çå¿Õ
                             </button>
                         </div>
                     </div>
@@ -465,15 +639,113 @@
                         <!-- Chat messages will be loaded here -->
                         <div class="text-center text-gray-500 py-10" id="loading-chats">
                             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                            <p>æ­£åœ¨åŠ è½½èŠå¤©è®°å½•...</p>
+                            <p>ÕıÔÚ¼ÓÔØÁÄÌì¼ÇÂ¼...</p>
                         </div>
                         <div id="no-chats" class="text-center text-gray-500 py-10 hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
-                            <p>æš‚æ— èŠå¤©è®°å½•</p>
+                            <p>ÔİÎŞÁÄÌì¼ÇÂ¼</p>
                         </div>
                         <div id="chat-messages" class="space-y-4 hidden"></div>
                     </div>
                 </main>
+
+                <!-- ================================================== -->
+                <!-- ============== FOOD PAGE ========================= -->
+                <!-- ================================================== -->
+                <main id="food-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-100">Ê³Æ·¼ÇÂ¼</h1>
+                        <div class="flex space-x-2">
+                            <button id="refresh-foods" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                Ë¢ĞÂ
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- ÈÕÆÚÑ¡ÔñÆ÷ -->
+                    <div class="bg-gray-800 rounded-xl p-4 mb-6">
+                        <div class="flex items-center justify-between">
+                            <button id="prev-day" class="text-gray-400 hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                            </button>
+                            <h2 id="current-date" class="text-lg font-semibold text-white">2025Äê7ÔÂ21ÈÕ</h2>
+                            <button id="next-day" class="text-gray-400 hover:text-white transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ²Í´Î·ÖÀà -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div id="breakfast-section" class="bg-gray-800 rounded-xl p-4">
+                            <h3 class="text-lg font-semibold text-orange-400 mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                                Ôç²Í
+                            </h3>
+                            <div id="breakfast-items" class="space-y-2">
+                                <!-- Ôç²ÍÏîÄ¿½«ÔÚÕâÀïÏÔÊ¾ -->
+                            </div>
+                        </div>
+                        
+                        <div id="lunch-section" class="bg-gray-800 rounded-xl p-4">
+                            <h3 class="text-lg font-semibold text-yellow-400 mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                                Îç²Í
+                            </h3>
+                            <div id="lunch-items" class="space-y-2">
+                                <!-- Îç²ÍÏîÄ¿½«ÔÚÕâÀïÏÔÊ¾ -->
+                            </div>
+                        </div>
+                        
+                        <div id="dinner-section" class="bg-gray-800 rounded-xl p-4">
+                            <h3 class="text-lg font-semibold text-purple-400 mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                                Íí²Í
+                            </h3>
+                            <div id="dinner-items" class="space-y-2">
+                                <!-- Íí²ÍÏîÄ¿½«ÔÚÕâÀïÏÔÊ¾ -->
+                            </div>
+                        </div>
+                        
+                        <div id="snack-section" class="bg-gray-800 rounded-xl p-4">
+                            <h3 class="text-lg font-semibold text-blue-400 mb-3 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                                ÏüÒ¹
+                            </h3>
+                            <div id="snack-items" class="space-y-2">
+                                <!-- ÏüÒ¹ÏîÄ¿½«ÔÚÕâÀïÏÔÊ¾ -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ¼ÓÔØ×´Ì¬ -->
+                    <div class="text-center text-gray-500 py-10" id="loading-foods">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                        <p>ÕıÔÚ¼ÓÔØÊ³Æ·¼ÇÂ¼...</p>
+                    </div>
+                    
+                    <!-- ÎŞÊı¾İ×´Ì¬ -->
+                    <div id="no-foods" class="text-center text-gray-500 py-10 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16l3-3m-3 3l-3-3" /></svg>
+                        <p>½ñÈÕÔİÎŞÊ³Æ·¼ÇÂ¼</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ê³Æ·ÏêÇéÄ£Ì¬¿ò -->
+    <div id="food-detail-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 modal-overlay modal-hidden">
+        <div class="bg-gray-800 text-white p-6 rounded-xl shadow-2xl w-11/12 max-w-2xl max-h-[90vh] overflow-y-auto modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Ê³Æ·ÏêÇé</h3>
+                <button id="close-food-detail" class="text-gray-400 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div id="food-detail-content">
+                <!-- Ê³Æ·ÏêÇéÄÚÈİ½«ÔÚÕâÀïÏÔÊ¾ -->
             </div>
         </div>
     </div>
@@ -482,15 +754,15 @@
     <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 modal-overlay modal-hidden">
         <div class="bg-gray-800 text-white p-6 rounded-lg flex items-center gap-4 modal-content">
             <svg class="animate-spin h-6 w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            <span>æ­£åœ¨å‘é€...</span>
+            <span>ÕıÔÚ·¢ËÍ...</span>
         </div>
     </div>
 
     <div id="brightness-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 modal-overlay modal-hidden">
         <div class="bg-gray-800 text-white p-6 rounded-xl shadow-2xl w-11/12 max-w-sm space-y-4 modal-content">
-            <h3 class="text-lg font-semibold">è°ƒæ•´äº®åº¦</h3>
+            <h3 class="text-lg font-semibold">µ÷ÕûÁÁ¶È</h3>
             <input id="brightness-slider" type="range" min="0" max="100" value="70" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500">
-            <button id="close-modal-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">å®Œæˆ</button>
+            <button id="close-modal-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">Íê³É</button>
         </div>
     </div>
 
@@ -511,53 +783,53 @@
         const DEMO_DATA = {
             userProfile: { name: "Alex" },
             dailyPlan: {
-                title: "ä»Šæ—¥è†³é£Ÿè®¡åˆ’",
+                title: "½ñÈÕÉÅÊ³¼Æ»®",
                 meals: [
-                    { name: "æ—©é¤", recipeId: 2, status: "å·²å®Œæˆ" },
-                    { name: "åˆé¤", recipeId: 1, status: "è®¡åˆ’ä¸­" },
-                    { name: "æ™šé¤", recipeId: 4, status: "æœªå¼€å§‹" },
+                    { name: "Ôç²Í", recipeId: 2, status: "ÒÑÍê³É" },
+                    { name: "Îç²Í", recipeId: 1, status: "¼Æ»®ÖĞ" },
+                    { name: "Íí²Í", recipeId: 4, status: "Î´¿ªÊ¼" },
                 ]
             },
             quickActions: [
-                { name: "æ‰«æé£Ÿæ", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>` },
-                { name: "åˆ›å»ºæ–°èœè°±", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" /></svg>` },
+                { name: "É¨ÃèÊ³²Ä", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>` },
+                { name: "´´½¨ĞÂ²ËÆ×", icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z" /></svg>` },
             ],
             nutrition: {
                 daily: {
                     totalCalories: 29,
                     nutrients: [
-                        { name: "è›‹ç™½è´¨", value: 15, total: 60, unit: "g", color: "#3B82F6" },
-                        { name: "ç¢³æ°´åŒ–åˆç‰©", value: 5, total: 130, unit: "g", color: "#10B981" },
-                        { name: "è„‚è‚ª", value: 9, total: 50, unit: "g", color: "#F59E0B" },
-                        { name: "çº¤ç»´", value: 12, total: 30, unit: "g", color: "#8B5CF6" },
+                        { name: "µ°°×ÖÊ", value: 15, total: 60, unit: "g", color: "#3B82F6" },
+                        { name: "Ì¼Ë®»¯ºÏÎï", value: 5, total: 130, unit: "g", color: "#10B981" },
+                        { name: "Ö¬·¾", value: 9, total: 50, unit: "g", color: "#F59E0B" },
+                        { name: "ÏËÎ¬", value: 12, total: 30, unit: "g", color: "#8B5CF6" },
                     ]
                 },
-                weekly: { totalCalories: 1850, nutrients: [ { name: "è›‹ç™½è´¨", value: 400, total: 420, unit: "g", color: "#3B82F6" }, { name: "ç¢³æ°´åŒ–åˆç‰©", value: 850, total: 910, unit: "g", color: "#10B981" }, { name: "è„‚è‚ª", value: 600, total: 350, unit: "g", color: "#F59E0B" } ] },
-                monthly: { totalCalories: 7500, nutrients: [ { name: "è›‹ç™½è´¨", value: 1600, total: 1800, unit: "g", color: "#3B82F6" }, { name: "ç¢³æ°´åŒ–åˆç‰©", value: 3500, total: 3900, unit: "g", color: "#10B981" }, { name: "è„‚è‚ª", value: 2400, total: 1500, unit: "g", color: "#F59E0B" } ] }
+                weekly: { totalCalories: 1850, nutrients: [ { name: "µ°°×ÖÊ", value: 400, total: 420, unit: "g", color: "#3B82F6" }, { name: "Ì¼Ë®»¯ºÏÎï", value: 850, total: 910, unit: "g", color: "#10B981" }, { name: "Ö¬·¾", value: 600, total: 350, unit: "g", color: "#F59E0B" } ] },
+                monthly: { totalCalories: 7500, nutrients: [ { name: "µ°°×ÖÊ", value: 1600, total: 1800, unit: "g", color: "#3B82F6" }, { name: "Ì¼Ë®»¯ºÏÎï", value: 3500, total: 3900, unit: "g", color: "#10B981" }, { name: "Ö¬·¾", value: 2400, total: 1500, unit: "g", color: "#F59E0B" } ] }
             },
             recipes: [
-                { id: 1, name: "ç•ªèŒ„ç‚’è›‹", time: 15, calories: 280, image: "https://placehold.co/400x300/f87171/white?text=ç•ªèŒ„ç‚’è›‹", description: "ä¸€é“ç®€å•å¿«æ‰‹çš„å®¶å¸¸èœï¼Œè¥å…»ä¸°å¯Œï¼Œè€å°‘çš†å®œã€‚", difficulty: "ç®€å•", tags: ["å®¶å¸¸èœ", "å¿«æ‰‹èœ"], ingredients: ["ç•ªèŒ„ 2ä¸ª", "é¸¡è›‹ 3ä¸ª", "è‘± 1æ ¹", "ç› é€‚é‡"], steps: ["é¸¡è›‹æ‰“æ•£ï¼Œç•ªèŒ„åˆ‡å—ã€‚", "çƒ­æ²¹ç‚’é¸¡è›‹ï¼Œç››å‡ºã€‚", "å†çƒ­æ²¹ç‚’ç•ªèŒ„ï¼ŒåŠ å…¥é¸¡è›‹ã€‚", "åŠ ç›è°ƒå‘³ï¼Œæ’’ä¸Šè‘±èŠ±ã€‚"] },
-                { id: 2, name: "æ¸…ç‚’è¥¿å…°èŠ±", time: 10, calories: 150, image: "https://placehold.co/400x300/4ade80/white?text=æ¸…ç‚’è¥¿å…°èŠ±", description: "ä¿æŒè”¬èœåŸæœ‰çš„é²œå‘³å’Œè¥å…»ï¼Œå¥åº·é¥®é£Ÿçš„é¦–é€‰ã€‚", difficulty: "ç®€å•", tags: ["ç´ é£Ÿ", "å¥åº·"], ingredients: ["è¥¿å…°èŠ± 1é¢—", "å¤§è’œ 2ç“£", "ç› é€‚é‡"], steps: ["è¥¿å…°èŠ±æ°æˆå°å—ï¼Œæ´—å‡€ã€‚", "å¤§è’œåˆ‡ç‰‡ã€‚", "çƒ­æ²¹çˆ†é¦™å¤§è’œï¼Œæ”¾å…¥è¥¿å…°èŠ±ç¿»ç‚’ã€‚", "åŠ å°‘è®¸æ°´ç„–ç†Ÿï¼ŒåŠ ç›è°ƒå‘³ã€‚"] },
-                { id: 3, name: "å¯ä¹é¸¡ç¿…", time: 25, calories: 450, image: "https://placehold.co/400x300/ca8a04/white?text=å¯ä¹é¸¡ç¿…", description: "ç”œå’¸å¯å£ï¼Œè‰²æ³½è¯±äººï¼Œæ˜¯å­©å­ä»¬çš„æœ€çˆ±ã€‚", difficulty: "ä¸­ç­‰", tags: ["è¤èœ", "ä¸‹é¥­èœ"], ingredients: ["é¸¡ç¿…ä¸­ 8ä¸ª", "å¯ä¹ 1ç½", "å§œ 3ç‰‡", "é…±æ²¹ é€‚é‡"], steps: ["é¸¡ç¿…ç„¯æ°´ï¼Œæå‡ºã€‚", "çƒ­æ²¹ç…é¸¡ç¿…è‡³ä¸¤é¢é‡‘é»„ã€‚", "åŠ å…¥å§œç‰‡ã€é…±æ²¹å’Œå¯ä¹ã€‚", "å¤§ç«çƒ§å¼€ï¼Œè½¬å°ç«æ…¢ç‚–è‡³æ±¤æ±æµ“ç¨ ã€‚"] },
-                { id: 4, name: "è’œè“‰ç²‰ä¸è™¾", time: 20, calories: 320, image: "https://placehold.co/400x300/60a5fa/white?text=è’œè“‰ç²‰ä¸è™¾", description: "é²œç¾çš„è™¾ä¸è’œè“‰çš„é¦™å‘³å®Œç¾ç»“åˆï¼Œå®´å®¢ä½³å“ã€‚", difficulty: "ä¸­ç­‰", tags: ["æµ·é²œ", "å®´å®¢èœ"], ingredients: ["å¤§è™¾ 8åª", "ç²‰ä¸ 1æŠŠ", "å¤§è’œ 1å¤´", "å°ç±³æ¤’ 2ä¸ª"], steps: ["ç²‰ä¸æ³¡è½¯ï¼Œé“ºåœ¨ç›˜åº•ã€‚", "å¤§è™¾å¼€èƒŒå»è™¾çº¿ï¼Œæ”¾åœ¨ç²‰ä¸ä¸Šã€‚", "è’œè“‰ã€å°ç±³æ¤’ã€é…±æ²¹ã€æ²¹æ··åˆï¼Œæ·‹åœ¨è™¾ä¸Šã€‚", "ä¸Šé”…è’¸10åˆ†é’Ÿå³å¯ã€‚"] },
+                { id: 1, name: "·¬ÇÑ³´µ°", time: 15, calories: 280, image: "https://placehold.co/400x300/f87171/white?text=·¬ÇÑ³´µ°", description: "Ò»µÀ¼òµ¥¿ìÊÖµÄ¼Ò³£²Ë£¬ÓªÑø·á¸»£¬ÀÏÉÙ½ÔÒË¡£", difficulty: "¼òµ¥", tags: ["¼Ò³£²Ë", "¿ìÊÖ²Ë"], ingredients: ["·¬ÇÑ 2¸ö", "¼¦µ° 3¸ö", "´Ğ 1¸ù", "ÑÎ ÊÊÁ¿"], steps: ["¼¦µ°´òÉ¢£¬·¬ÇÑÇĞ¿é¡£", "ÈÈÓÍ³´¼¦µ°£¬Ê¢³ö¡£", "ÔÙÈÈÓÍ³´·¬ÇÑ£¬¼ÓÈë¼¦µ°¡£", "¼ÓÑÎµ÷Î¶£¬ÈöÉÏ´Ğ»¨¡£"] },
+                { id: 2, name: "Çå³´Î÷À¼»¨", time: 10, calories: 150, image: "https://placehold.co/400x300/4ade80/white?text=Çå³´Î÷À¼»¨", description: "±£³ÖÊß²ËÔ­ÓĞµÄÏÊÎ¶ºÍÓªÑø£¬½¡¿µÒûÊ³µÄÊ×Ñ¡¡£", difficulty: "¼òµ¥", tags: ["ËØÊ³", "½¡¿µ"], ingredients: ["Î÷À¼»¨ 1¿Å", "´óËâ 2°ê", "ÑÎ ÊÊÁ¿"], steps: ["Î÷À¼»¨êş³ÉĞ¡¿é£¬Ï´¾»¡£", "´óËâÇĞÆ¬¡£", "ÈÈÓÍ±¬Ïã´óËâ£¬·ÅÈëÎ÷À¼»¨·­³´¡£", "¼ÓÉÙĞíË®ìËÊì£¬¼ÓÑÎµ÷Î¶¡£"] },
+                { id: 3, name: "¿ÉÀÖ¼¦³á", time: 25, calories: 450, image: "https://placehold.co/400x300/ca8a04/white?text=¿ÉÀÖ¼¦³á", description: "ÌğÏÌ¿É¿Ú£¬É«ÔóÓÕÈË£¬ÊÇº¢×ÓÃÇµÄ×î°®¡£", difficulty: "ÖĞµÈ", tags: ["»ç²Ë", "ÏÂ·¹²Ë"], ingredients: ["¼¦³áÖĞ 8¸ö", "¿ÉÀÖ 1¹Ş", "½ª 3Æ¬", "½´ÓÍ ÊÊÁ¿"], steps: ["¼¦³áìÌË®£¬ÀÌ³ö¡£", "ÈÈÓÍ¼å¼¦³áÖÁÁ½Ãæ½ğ»Æ¡£", "¼ÓÈë½ªÆ¬¡¢½´ÓÍºÍ¿ÉÀÖ¡£", "´ó»ğÉÕ¿ª£¬×ªĞ¡»ğÂıìÀÖÁÌÀÖ­Å¨³í¡£"] },
+                { id: 4, name: "ËâÈØ·ÛË¿Ïº", time: 20, calories: 320, image: "https://placehold.co/400x300/60a5fa/white?text=ËâÈØ·ÛË¿Ïº", description: "ÏÊÃÀµÄÏºÓëËâÈØµÄÏãÎ¶ÍêÃÀ½áºÏ£¬Ñç¿Í¼ÑÆ·¡£", difficulty: "ÖĞµÈ", tags: ["º£ÏÊ", "Ñç¿Í²Ë"], ingredients: ["´óÏº 8Ö»", "·ÛË¿ 1°Ñ", "´óËâ 1Í·", "Ğ¡Ã×½· 2¸ö"], steps: ["·ÛË¿ÅİÈí£¬ÆÌÔÚÅÌµ×¡£", "´óÏº¿ª±³È¥ÏºÏß£¬·ÅÔÚ·ÛË¿ÉÏ¡£", "ËâÈØ¡¢Ğ¡Ã×½·¡¢½´ÓÍ¡¢ÓÍ»ìºÏ£¬ÁÜÔÚÏºÉÏ¡£", "ÉÏ¹øÕô10·ÖÖÓ¼´¿É¡£"] },
             ],
             chatHistory: [
-                { timestamp: "2025-07-17 20:43:10", question: "è«æ–¯ç§‘ä½ å¥½", answer: "ä½ å¥½ï¼å¾ˆé«˜å…´èƒ½ä¸ºä½ æä¾›å¸®åŠ©ã€‚æœ‰ä»€ä¹ˆæˆ‘å¯ä»¥å¸®ä½ å—ï¼Ÿ" },
-                { timestamp: "2025-07-17 20:43:35", question: "è«æ–¯ç§‘ä½ å¥½è¯·æ‹ç…§", answer: "å¥½çš„ï¼Œè¯·å‘Šè¯‰æˆ‘æ‚¨éœ€è¦æ‹æ‘„ä»€ä¹ˆå†…å®¹ï¼Ÿ", photo: "photos/20250717_204333.jpg" },
-                { timestamp: "2025-07-17 21:02:36", question: "è«æ–¯ç§‘åŠæ‹ç…§", answer: "è¿™æ˜¯ä¸€å¼ æ¨¡ç³Šçš„ç…§ç‰‡ï¼Œæ˜¾ç¤ºäº†ä¸€ä¸ªåŠå…¬ç¯å¢ƒã€‚å¯ä»¥çœ‹åˆ°ä¸€ä¸ªæ¡Œå­ï¼Œä¸Šé¢æ”¾ç€ä¸€äº›ç‰©å“ï¼Œå¦‚ä¸€ä¸ªé»‘è‰²çš„é¼ æ ‡ã€ä¸€ä¸ªç»¿è‰²çš„ç“¶å­å’Œä¸€ä¸ªçº¢è‰²çš„å¤–å¥—æŒ‚åœ¨æ¤…å­ä¸Šã€‚èƒŒæ™¯ä¸­æœ‰ä¸€ä¸ªç”µè„‘æ˜¾ç¤ºå™¨ï¼Œæ˜¾ç¤ºå™¨å‰é¢æœ‰ä¸€ä¸ªäººçš„éƒ¨åˆ†èº«ä½“ï¼Œä½†æ— æ³•çœ‹æ¸…å…·ä½“ç»†èŠ‚ã€‚æ•´ä½“ç¯å¢ƒçœ‹èµ·æ¥åƒæ˜¯ä¸€ä¸ªåŠå…¬å®¤æˆ–å­¦ä¹ ç©ºé—´ã€‚ç”±äºç…§ç‰‡æ¨¡ç³Šï¼Œæ— æ³•æä¾›æ›´è¯¦ç»†çš„æè¿°ã€‚", photo: "photos/20250717_210231.jpg" },
-                { timestamp: "2025-07-17 21:03:07", question: "è«æ–¯ç§‘è¯·æ‹ç…§", answer: "å¥½çš„ï¼Œæˆ‘å·²ç»æ‹åˆ°äº†è¿™å¼ å›¾ç‰‡ã€‚è¯·é—®æ‚¨éœ€è¦æˆ‘åšä»€ä¹ˆå‘¢ï¼Ÿ", photo: "photos/20250717_210305.jpg" },
-                { timestamp: "2025-07-17 21:03:27", question: "è«æ–¯ç§‘è¯·æ‹ç…§", answer: "å¥½çš„ï¼Œæˆ‘ä¼šå°½åŠ›å¸®åŠ©æ‚¨æ‹ç…§ã€‚è¯·å‘Šè¯‰æˆ‘æ‚¨éœ€è¦æ‹æ‘„çš„å…·ä½“å†…å®¹æˆ–åœºæ™¯ï¼Œæˆ‘ä¼šæ ¹æ®æ‚¨çš„è¦æ±‚è¿›è¡Œæ‹ç…§ã€‚", photo: "photos/20250717_210326.jpg" }
+                { timestamp: "2025-07-17 20:43:10", question: "ÄªË¹¿ÆÄãºÃ", answer: "ÄãºÃ£¡ºÜ¸ßĞËÄÜÎªÄãÌá¹©°ïÖú¡£ÓĞÊ²Ã´ÎÒ¿ÉÒÔ°ïÄãÂğ£¿" },
+                { timestamp: "2025-07-17 20:43:35", question: "ÄªË¹¿ÆÄãºÃÇëÅÄÕÕ", answer: "ºÃµÄ£¬Çë¸æËßÎÒÄúĞèÒªÅÄÉãÊ²Ã´ÄÚÈİ£¿", photo: "photos/20250717_204333.jpg" },
+                { timestamp: "2025-07-17 21:02:36", question: "ÄªË¹¿Æ¼°ÅÄÕÕ", answer: "ÕâÊÇÒ»ÕÅÄ£ºıµÄÕÕÆ¬£¬ÏÔÊ¾ÁËÒ»¸ö°ì¹«»·¾³¡£¿ÉÒÔ¿´µ½Ò»¸ö×À×Ó£¬ÉÏÃæ·Å×ÅÒ»Ğ©ÎïÆ·£¬ÈçÒ»¸öºÚÉ«µÄÊó±ê¡¢Ò»¸öÂÌÉ«µÄÆ¿×ÓºÍÒ»¸öºìÉ«µÄÍâÌ×¹ÒÔÚÒÎ×ÓÉÏ¡£±³¾°ÖĞÓĞÒ»¸öµçÄÔÏÔÊ¾Æ÷£¬ÏÔÊ¾Æ÷Ç°ÃæÓĞÒ»¸öÈËµÄ²¿·ÖÉíÌå£¬µ«ÎŞ·¨¿´Çå¾ßÌåÏ¸½Ú¡£ÕûÌå»·¾³¿´ÆğÀ´ÏñÊÇÒ»¸ö°ì¹«ÊÒ»òÑ§Ï°¿Õ¼ä¡£ÓÉÓÚÕÕÆ¬Ä£ºı£¬ÎŞ·¨Ìá¹©¸üÏêÏ¸µÄÃèÊö¡£", photo: "photos/20250717_210231.jpg" },
+                { timestamp: "2025-07-17 21:03:07", question: "ÄªË¹¿ÆÇëÅÄÕÕ", answer: "ºÃµÄ£¬ÎÒÒÑ¾­ÅÄµ½ÁËÕâÕÅÍ¼Æ¬¡£ÇëÎÊÄúĞèÒªÎÒ×öÊ²Ã´ÄØ£¿", photo: "photos/20250717_210305.jpg" },
+                { timestamp: "2025-07-17 21:03:27", question: "ÄªË¹¿ÆÇëÅÄÕÕ", answer: "ºÃµÄ£¬ÎÒ»á¾¡Á¦°ïÖúÄúÅÄÕÕ¡£Çë¸æËßÎÒÄúĞèÒªÅÄÉãµÄ¾ßÌåÄÚÈİ»ò³¡¾°£¬ÎÒ»á¸ù¾İÄúµÄÒªÇó½øĞĞÅÄÕÕ¡£", photo: "photos/20250717_210326.jpg" }
             ],
             device: {
-                name: "æ™ºèƒ½çƒ¹é¥ªçœ¼é•œX1",
+                name: "ÖÇÄÜÅëâ¿ÑÛ¾µX1",
                 isConnected: true,
                 battery: 85,
                 firmware: "v1.2.5",
                 settings: {
                     brightness: 70, 
                     notifications: true,
-                    hapticFeedback: "ä¸­", // æ–°å¢
-                    displayProfile: "æ ‡å‡†" // æ–°å¢
+                    hapticFeedback: "ÖĞ", // ĞÂÔö
+                    displayProfile: "±ê×¼" // ĞÂÔö
                 }
             }
         };
@@ -651,7 +923,7 @@
                     // Extract meeting duration and content preview
                     const lines = content.split('\n').filter(line => line.trim() !== '');
                     const contentLines = lines.filter(line => line.startsWith('[') && line.includes(']'));
-                    const duration = contentLines.length > 0 ? `${contentLines.length} æ¡è®°å½•` : 'æ— è®°å½•';
+                    const duration = contentLines.length > 0 ? `${contentLines.length} Ìõ¼ÇÂ¼` : 'ÎŞ¼ÇÂ¼';
                     const preview = contentLines.slice(0, 3).map(line => line.replace(/^\[\d{2}:\d{2}:\d{2}\]\s*/, '')).join(' | ');
 
                     // Create meeting record element
@@ -662,7 +934,7 @@
 
                     meetingEl.innerHTML = `
                         <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-semibold text-gray-100">ä¼šè®®è®°å½•</h3>
+                            <h3 class="text-lg font-semibold text-gray-100">»áÒé¼ÇÂ¼</h3>
                             <span class="text-xs text-gray-400">${formattedTime}</span>
                         </div>
                         <div class="flex justify-between items-center mb-2">
@@ -671,7 +943,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </div>
-                        <p class="text-sm text-gray-300 truncate">${preview || 'ç‚¹å‡»æŸ¥çœ‹è¯¦ç»†å†…å®¹'}</p>
+                        <p class="text-sm text-gray-300 truncate">${preview || 'µã»÷²é¿´ÏêÏ¸ÄÚÈİ'}</p>
                     `;
 
                     // Add click event to show meeting details
@@ -694,7 +966,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p>åŠ è½½ä¼šè®®è®°å½•å¤±è´¥</p>
+                    <p>¼ÓÔØ»áÒé¼ÇÂ¼Ê§°Ü</p>
                 `;
                 noMeetingsIndicator.classList.remove('hidden');
             }
@@ -711,7 +983,7 @@
                 <div class="bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
                     <div class="flex justify-between items-center p-6 border-b border-gray-700">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-100">ä¼šè®®è®°å½•è¯¦æƒ…</h2>
+                            <h2 class="text-xl font-bold text-gray-100">»áÒé¼ÇÂ¼ÏêÇé</h2>
                             <p class="text-sm text-gray-400">${formattedTime}</p>
                         </div>
                         <button class="close-modal text-gray-400 hover:text-gray-200 transition">
@@ -768,7 +1040,7 @@
          * Loads chat history from server and renders messages
          */
         async function loadChatHistory() {
-    // ä½¿ç”¨ç›¸å¯¹è·¯å¾„è®¿é—®èµ„æº
+    // Ê¹ÓÃÏà¶ÔÂ·¾¶·ÃÎÊ×ÊÔ´
     console.log('Using relative paths for resource access');
             const chatContainer = document.getElementById('chat-messages');
             const loadingIndicator = document.getElementById('loading-chats');
@@ -860,7 +1132,7 @@
                             <div class="bg-gray-800 rounded-lg rounded-tl-none p-4 max-w-[80%] mr-auto">
                                 <p class="text-gray-100">${answer}</p>
                                 ${photo ? `<div class="mt-3 rounded-lg overflow-hidden border border-gray-700 transition-transform hover:scale-[1.02]">
-                                    <img src="../photos/${photo.split('/').pop()}" alt="èŠå¤©å›¾ç‰‡" class="w-full h-auto object-cover" loading="lazy" onError="this.src='https://via.placeholder.com/300x200?text=å›¾ç‰‡åŠ è½½å¤±è´¥'; console.error('Failed to load image:', '../photos/${photo.split('/').pop()}');">
+                                    <img src="../photos/${photo.split('/').pop()}" alt="ÁÄÌìÍ¼Æ¬" class="w-full h-auto object-cover" loading="lazy" onError="this.src='https://via.placeholder.com/300x200?text=Í¼Æ¬¼ÓÔØÊ§°Ü'; console.error('Failed to load image:', '../photos/${photo.split('/').pop()}');">
                                 </div>` : ''}
                             </div>
                         </div>
@@ -883,7 +1155,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p>åŠ è½½èŠå¤©è®°å½•å¤±è´¥</p>
+                    <p>¼ÓÔØÁÄÌì¼ÇÂ¼Ê§°Ü</p>
                 `;
                 noChatsIndicator.classList.remove('hidden');
             }
@@ -906,6 +1178,330 @@
             }, 300);
         }
 
+        // È«¾Ö±äÁ¿´æ´¢Ê³Æ·¼ÇÂ¼
+        let globalFoodRecords = [];
+
+        /**
+         * ¼ÓÔØÊ³Æ·Ê¶±ğ¼ÇÂ¼
+         */
+        async function loadFoodRecords() {
+            try {
+                const response = await fetch('/food_recognition/');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a'))
+                    .map(link => link.textContent.trim())
+                    .filter(filename => filename.endsWith('.json'));
+                
+                const records = [];
+                for (const filename of links) {
+                    try {
+                        const recordResponse = await fetch(`/food_recognition/${filename}`);
+                        const recordData = await recordResponse.text();
+                        const record = JSON.parse(recordData);
+                        records.push(record);
+                    } catch (error) {
+                        console.error(`½âÎöÊ³Æ·¼ÇÂ¼ ${filename} Ê§°Ü:`, error);
+                    }
+                }
+                
+                globalFoodRecords = records;
+                return records;
+            } catch (error) {
+                console.error('¼ÓÔØÊ³Æ·¼ÇÂ¼Ê§°Ü:', error);
+                return [];
+            }
+        }
+
+        /**
+         * ¸ù¾İÊ±¼äÅĞ¶Ï²Í´Î
+         */
+        function getMealTime(datetime) {
+            const hour = new Date(datetime).getHours();
+            if (hour >= 6 && hour < 10) return 'breakfast';
+            if (hour >= 11 && hour < 14) return 'lunch';
+            if (hour >= 17 && hour < 20) return 'dinner';
+            return 'snack';
+        }
+
+        /**
+         * °´ÈÕÆÚºÍ²Í´Î·Ö×éÊ³Æ·¼ÇÂ¼
+         */
+        function groupFoodRecordsByDate(records) {
+            const grouped = {};
+            
+            records.forEach(record => {
+                const date = record.datetime.split(' ')[0];
+                const mealTime = getMealTime(record.datetime);
+                
+                if (!grouped[date]) {
+                    grouped[date] = {
+                        breakfast: [],
+                        lunch: [],
+                        dinner: [],
+                        snack: []
+                    };
+                }
+                
+                grouped[date][mealTime].push(record);
+            });
+            
+            return grouped;
+        }
+
+        /**
+         * ¼ÆËãÓªÑøÍ³¼Æ
+         */
+        function calculateNutritionStats(records, period = 'daily') {
+            const stats = {
+                calories: 0,
+                protein: 0,
+                fat: 0,
+                carbs: 0,
+                fiber: 0,
+                sodium: 0,
+                calcium: 0,
+                iron: 0
+            };
+            
+            const now = new Date();
+            const filteredRecords = records.filter(record => {
+                const recordDate = new Date(record.datetime);
+                if (period === 'daily') {
+                    return recordDate.toDateString() === now.toDateString();
+                } else if (period === 'weekly') {
+                    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    return recordDate >= weekAgo;
+                } else if (period === 'monthly') {
+                    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    return recordDate >= monthAgo;
+                }
+                return true;
+            });
+            
+            filteredRecords.forEach(record => {
+                if (record.nutrients) {
+                    // ¸ù¾İ24ÖÖÓªÑøËØµÄÕıÈ·Ë³Ğò»ñÈ¡ÊıÖµ
+                    const nutrientValues = Object.values(record.nutrients);
+                    
+                    // °´ÕÕÕıÈ·µÄË÷ÒıÎ»ÖÃ»ñÈ¡ÓªÑøËØÖµ
+                    // 0:¿ÉÊ³²¿·Ö 1:Ë®·Ö 2:ÄÜÁ¿ 3:µ°°×ÖÊ 4:Ö¬·¾ 5:Ì¼Ë®»¯ºÏÎï 6:ÉÅÊ³ÏËÎ¬
+                    // 7:µ¨¹Ì´¼ 8:Î¬ÉúËØA 9:Î¬ÉúËØB1 10:Î¬ÉúËØB2 11:Î¬ÉúËØB3 12:Î¬ÉúËØC 13:Î¬ÉúËØE
+                    // 14:¸Æ 15:Á× 16:¼Ø 17:ÄÆ 18:Ã¾ 19:Ìú 20:Ğ¿ 21:Îø 22:Í­ 23:ÃÌ
+                    if (nutrientValues[2]) stats.calories += parseFloat(nutrientValues[2]) || 0;  // ÄÜÁ¿
+                    if (nutrientValues[3]) stats.protein += parseFloat(nutrientValues[3]) || 0;   // µ°°×ÖÊ
+                    if (nutrientValues[4]) stats.fat += parseFloat(nutrientValues[4]) || 0;       // Ö¬·¾
+                    if (nutrientValues[5]) stats.carbs += parseFloat(nutrientValues[5]) || 0;     // Ì¼Ë®»¯ºÏÎï
+                    if (nutrientValues[6]) stats.fiber += parseFloat(nutrientValues[6]) || 0;     // ÉÅÊ³ÏËÎ¬
+                    if (nutrientValues[17]) stats.sodium += parseFloat(nutrientValues[17]) || 0;  // ÄÆ
+                    if (nutrientValues[14]) stats.calcium += parseFloat(nutrientValues[14]) || 0; // ¸Æ
+                    if (nutrientValues[19]) stats.iron += parseFloat(nutrientValues[19]) || 0;    // Ìú
+                }
+            });
+            
+            return stats;
+        }
+
+        /**
+         * ¸üĞÂÓªÑø±¦ËşÏÔÊ¾
+         */
+        function updateNutritionPyramid(stats, period = 'daily') {
+            // ¸ù¾İÊ±¼äÖÜÆÚµ÷ÕûÍÆ¼öÉãÈëÁ¿µÄ±¶Êı
+            let multiplier = 1;
+            if (period === 'weekly') {
+                multiplier = 7;
+            } else if (period === 'monthly') {
+                multiplier = 30;
+            }
+            
+            // ÖĞ¹úÉÅÊ³±¦ËşÍÆ¼öÉãÈëÁ¿£¨³ÉÈËÃ¿ÈÕ£©
+            const recommendations = {
+                'ÓÍÖ¬': { current: stats.fat, recommended: 25 * multiplier, unit: 'g' },
+                'ÄÌÀà': { current: stats.protein * 6, recommended: 300 * multiplier, unit: 'g' },
+                'ÈâÀà': { current: stats.protein * 5, recommended: 120 * multiplier, unit: 'g' },
+                '¹ûÊß': { current: stats.fiber * 20, recommended: 500 * multiplier, unit: 'g' },
+                '¹ÈÎï': { current: stats.carbs * 1.2, recommended: 250 * multiplier, unit: 'g' }
+            };
+            
+            Object.keys(recommendations).forEach(nutrient => {
+                const layer = document.querySelector(`[data-nutrient="${nutrient}"]`);
+                if (layer) {
+                    const progress = layer.querySelector('.layer-progress');
+                    const valueSpan = layer.querySelector('.layer-value');
+                    
+                    const { current, recommended, unit } = recommendations[nutrient];
+                    const percentage = (current / recommended) * 100;
+                    const isOverflow = percentage > 100;
+                    
+                    // ÉèÖÃ½ø¶ÈÌõ¿í¶È£¬×î´ó100%
+                    progress.style.width = `${Math.min(percentage, 100)}%`;
+                    valueSpan.textContent = `${current.toFixed(1)}/${recommended}${unit}`;
+                    
+                    // ´¦Àí³¬³öÏŞÖÆµÄÇé¿ö
+                    if (isOverflow) {
+                        layer.classList.add('overflow');
+                        progress.classList.add('overflow');
+                        
+                        // Ìí¼ÓÕğ¶¯Ğ§¹û
+                        setTimeout(() => {
+                            layer.classList.remove('overflow');
+                        }, 500);
+                    } else {
+                        layer.classList.remove('overflow');
+                        progress.classList.remove('overflow');
+                    }
+                }
+            });
+            
+            // ¸üĞÂ×Ü¿¨Â·Àï
+            const totalCaloriesElement = document.getElementById('total-calories');
+            if (totalCaloriesElement) {
+                animateValue(totalCaloriesElement, Math.round(stats.calories));
+            }
+        }
+
+        /**
+         * äÖÈ¾Ê³Æ·Ò³Ãæ
+         */
+        async function renderFoodPage() {
+            const loadingIndicator = document.getElementById('loading-foods');
+            const noFoodsIndicator = document.getElementById('no-foods');
+            
+            // ÏÔÊ¾¼ÓÔØ×´Ì¬
+            loadingIndicator.classList.remove('hidden');
+            noFoodsIndicator.classList.add('hidden');
+            
+            try {
+                const records = await loadFoodRecords();
+                
+                if (records.length === 0) {
+                    loadingIndicator.classList.add('hidden');
+                    noFoodsIndicator.classList.remove('hidden');
+                    return;
+                }
+                
+                const groupedRecords = groupFoodRecordsByDate(records);
+                const dates = Object.keys(groupedRecords).sort().reverse();
+                
+                // äÖÈ¾Ã¿ÈÕÊ³Æ·¼ÇÂ¼
+                const mealSections = {
+                    breakfast: document.getElementById('breakfast-items'),
+                    lunch: document.getElementById('lunch-items'),
+                    dinner: document.getElementById('dinner-items'),
+                    snack: document.getElementById('snack-items')
+                };
+                
+                // Çå¿ÕÏÖÓĞÄÚÈİ
+                Object.values(mealSections).forEach(section => {
+                    if (section) section.innerHTML = '';
+                });
+                
+                // ÏÔÊ¾½ñÈÕ¼ÇÂ¼
+                const today = new Date().toISOString().split('T')[0];
+                const todayRecords = groupedRecords[today] || { breakfast: [], lunch: [], dinner: [], snack: [] };
+                
+                Object.keys(todayRecords).forEach(mealType => {
+                    const section = mealSections[mealType];
+                    if (!section) return;
+                    
+                    todayRecords[mealType].forEach(record => {
+                        const foodItem = document.createElement('div');
+                        foodItem.className = 'food-item bg-gray-700 rounded-lg p-3 cursor-pointer hover:bg-gray-600 transition-colors';
+                        
+                        // »ñÈ¡ÓªÑøÖµÊı×é£¬Ê¹ÓÃÕıÈ·µÄÄÜÁ¿Ë÷Òı
+                        const nutrientValues = Object.values(record.nutrients || {});
+                        const calories = parseFloat(nutrientValues[2] || 0).toFixed(2); // ÄÜÁ¿(Ë÷Òı2)£¬±£ÁôÁ½Î»Ğ¡Êı
+                        
+                        foodItem.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <img src="${record.photo_path}" alt="${record.dish_name}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/48x48?text=Ê³Îï'">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-gray-100">${record.dish_name}</h4>
+                                    <p class="text-sm text-gray-400">${calories} kcal</p>
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    ${new Date(record.datetime).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                            </div>
+                        `;
+                        
+                        foodItem.addEventListener('click', () => showFoodDetail(record));
+                        section.appendChild(foodItem);
+                    });
+                });
+                
+                loadingIndicator.classList.add('hidden');
+                
+            } catch (error) {
+                console.error('äÖÈ¾Ê³Æ·Ò³ÃæÊ§°Ü:', error);
+                loadingIndicator.classList.add('hidden');
+                noFoodsIndicator.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * ÏÔÊ¾Ê³Æ·ÏêÇé
+         */
+        function showFoodDetail(record) {
+            const modal = document.getElementById('food-detail-modal');
+            const modalContent = modal.querySelector('.modal-content');
+            
+            modalContent.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-100">${record.dish_name}</h3>
+                    <button class="close-modal text-gray-400 hover:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <img src="${record.photo_path}" alt="${record.dish_name}" class="w-full rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Ê³ÎïÍ¼Æ¬'">
+                        <div class="mt-4">
+                            <p class="text-sm text-gray-400">Ê¶±ğÊ±¼ä: ${record.datetime}</p>
+                            <p class="text-sm text-gray-400">ÖÃĞÅ¶È: ${(record.confidence * 100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-200 mb-3">ÓªÑø³É·Ö</h4>
+                        <div class="space-y-2">
+                            ${(() => {
+                                const nutrientValues = Object.values(record.nutrients || {});
+                                const nutrientLabels = ['¿ÉÊ³²¿·Ö(%)', 'Ë®·Ö(g)', 'ÄÜÁ¿(kcal)', 'µ°°×ÖÊ(g)', 'Ö¬·¾(g)', 'Ì¼Ë®»¯ºÏÎï(g)', 'ÉÅÊ³ÏËÎ¬(g)', 'µ¨¹Ì´¼(mg)', 'Î¬ÉúËØA(¦Ìg)', 'Î¬ÉúËØB1(mg)', 'Î¬ÉúËØB2(mg)', 'Î¬ÉúËØB3(mg)', 'Î¬ÉúËØC(mg)', 'Î¬ÉúËØE(mg)', '¸Æ(mg)', 'Á×(mg)', '¼Ø(mg)', 'ÄÆ(mg)', 'Ã¾(mg)', 'Ìú(mg)', 'Ğ¿(mg)', 'Îø(¦Ìg)', 'Í­(mg)', 'ÃÌ(mg)'];
+                                return nutrientValues.map((value, index) => {
+                                    const label = nutrientLabels[index] || `ÓªÑøËØ${index + 1}`;
+                                    return `
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-300">${label}</span>
+                                            <span class="text-gray-100">${value}</span>
+                                        </div>
+                                    `;
+                                }).join('');
+                            })()} 
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            
+            // Ìí¼Ó¹Ø±Õ¹¦ÄÜ
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                modal.classList.remove('modal-visible');
+                modal.classList.add('modal-hidden');
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('modal-visible');
+                    modal.classList.add('modal-hidden');
+                }
+            });
+        }
+
         function navigateTo(pageId) {
             const targetPage = document.getElementById(pageId);
             if (!targetPage) return;
@@ -926,43 +1522,78 @@
                 setTimeout(() => {
                     if (!threeScene) initThreeJS();
                 }, 50);
+            } else if (pageId === 'food-page') {
+                setTimeout(() => {
+                    renderFoodPage();
+                }, 50);
             }
         }
 
         /**
          * @description Renders the home page dashboard.
          */
-        function renderHomePage(period = 'daily') {
+        async function renderHomePage(period = 'daily') {
             const pageEl = document.getElementById('home-page');
-            const nutritionData = DEMO_DATA.nutrition[period];
-            if (!nutritionData) return;
-
+            
             pageEl.innerHTML = `
                 <header class="flex justify-between items-center">
-                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-100">ä½ å¥½, ${DEMO_DATA.userProfile.name}</h1>
+                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-100">ÄãºÃ, ${DEMO_DATA.userProfile.name}</h1>
                     <div id="period-selector" class="flex bg-gray-800 rounded-full p-1" role="group">
-                        <button data-period="daily" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'daily' ? 'bg-blue-600 text-white' : 'text-gray-300'}">æ—¥</button>
-                        <button data-period="weekly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'weekly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">å‘¨</button>
-                        <button data-period="monthly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'monthly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">æœˆ</button>
+                        <button data-period="daily" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'daily' ? 'bg-blue-600 text-white' : 'text-gray-300'}">ÈÕ</button>
+                        <button data-period="weekly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'weekly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">ÖÜ</button>
+                        <button data-period="monthly" class="period-btn px-4 py-2 text-sm rounded-full transition-colors ${period === 'monthly' ? 'bg-blue-600 text-white' : 'text-gray-300'}">ÔÂ</button>
                     </div>
                 </header>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 space-y-6">
                         <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                            <h2 class="text-lg font-semibold text-gray-200 mb-4">è¥å…»ç´ æ‘„å…¥åˆ†æ</h2>
-                            <div class="flex flex-col md:flex-row items-center gap-6">
-                                <div class="relative w-48 h-48 mx-auto flex-shrink-0">
-                                    <svg id="nutrition-chart" class="w-full h-full" viewBox="0 0 100 100"></svg>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span id="total-calories" class="text-4xl font-bold text-white">0</span>
-                                        <span class="text-sm text-gray-400">æ€»æ‘„å…¥ (Kcal)</span>
+                            <h2 class="text-lg font-semibold text-gray-200 mb-4">ÓªÑøËØÉãÈë·ÖÎö</h2>
+                            <div class="flex flex-col items-center gap-6">
+                                <div class="text-center mb-4">
+                                    <span id="total-calories" class="text-4xl font-bold text-white">0</span>
+                                    <span class="text-sm text-gray-400 block">×ÜÉãÈë (Kcal)</span>
+                                </div>
+                                <div class="nutrition-pyramid w-full max-w-md">
+                                    <div class="pyramid-layer pyramid-layer-1" data-nutrient="ÓÍÖ¬">
+                                        <div class="layer-progress" style="width: 0%"></div>
+                                        <div class="layer-info">
+                                            <span class="layer-name">ÓÍÖ¬Àà</span>
+                                            <span class="layer-value">0/25g</span>
+                                        </div>
+                                    </div>
+                                    <div class="pyramid-layer pyramid-layer-2" data-nutrient="ÄÌÀà">
+                                        <div class="layer-progress" style="width: 0%"></div>
+                                        <div class="layer-info">
+                                            <span class="layer-name">ÄÌÀà¶¹Àà</span>
+                                            <span class="layer-value">0/300g</span>
+                                        </div>
+                                    </div>
+                                    <div class="pyramid-layer pyramid-layer-3" data-nutrient="ÈâÀà">
+                                        <div class="layer-progress" style="width: 0%"></div>
+                                        <div class="layer-info">
+                                            <span class="layer-name">Èâµ°Àà</span>
+                                            <span class="layer-value">0/120g</span>
+                                        </div>
+                                    </div>
+                                    <div class="pyramid-layer pyramid-layer-4" data-nutrient="¹ûÊß">
+                                        <div class="layer-progress" style="width: 0%"></div>
+                                        <div class="layer-info">
+                                            <span class="layer-name">Êß¹ûÀà</span>
+                                            <span class="layer-value">0/500g</span>
+                                        </div>
+                                    </div>
+                                    <div class="pyramid-layer pyramid-layer-5" data-nutrient="¹ÈÎï">
+                                        <div class="layer-progress" style="width: 0%"></div>
+                                        <div class="layer-info">
+                                            <span class="layer-name">¹ÈÊíÀà</span>
+                                            <span class="layer-value">0/250g</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div id="nutrition-legend" class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm w-full"></div>
                             </div>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                             <h2 class="text-lg font-semibold text-gray-200 mb-4">è¯¦ç»†æ•°æ®</h2>
+                             <h2 class="text-lg font-semibold text-gray-200 mb-4">ÏêÏ¸Êı¾İ</h2>
                              <div id="nutrition-details" class="space-y-4"></div>
                         </div>
                     </div>
@@ -972,56 +1603,67 @@
                             <ul id="meal-plan-list" class="space-y-3"></ul>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                            <h2 class="text-lg font-semibold text-gray-200 mb-4">å¿«æ·æ“ä½œ</h2>
+                            <h2 class="text-lg font-semibold text-gray-200 mb-4">¿ì½İ²Ù×÷</h2>
                             <div id="quick-actions-list" class="grid grid-cols-2 gap-4"></div>
                         </div>
                     </div>
                 </div>
             `;
 
-            animateValue(pageEl.querySelector('#total-calories'), nutritionData.totalCalories);
-
-            const chartSVG = pageEl.querySelector('#nutrition-chart');
-            const legendEl = pageEl.querySelector('#nutrition-legend');
-            legendEl.innerHTML = '';
-            const radius = 45, circumference = 2 * Math.PI * radius;
-            let offset = 0;
-            const totalValue = nutritionData.nutrients.reduce((sum, n) => sum + n.value, 0);
-            nutritionData.nutrients.forEach(n => {
-                const percentage = totalValue > 0 ? n.value / totalValue : 0;
-                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                // FIX: Use setAttribute for SVG elements
-                circle.setAttribute("cx", "50");
-                circle.setAttribute("cy", "50");
-                circle.setAttribute("r", String(radius));
-                circle.setAttribute("fill", "transparent");
-                circle.setAttribute("stroke", n.color);
-                circle.setAttribute("stroke-width", "10");
-                circle.setAttribute("stroke-dasharray", `${percentage * circumference} ${circumference}`);
-                circle.setAttribute("stroke-dashoffset", String(-offset));
-                circle.setAttribute("transform", "rotate(-90 50 50)");
-                chartSVG.appendChild(circle);
-                offset += percentage * circumference;
-                legendEl.innerHTML += `<div class="flex items-center"><span class="w-3 h-3 rounded-full mr-3" style="background-color: ${n.color};"></span><span>${n.name}</span></div>`;
-            });
-
-            const detailsEl = pageEl.querySelector('#nutrition-details');
-            detailsEl.innerHTML = '';
-            nutritionData.nutrients.forEach((n, i) => {
-                const percentage = n.total > 0 ? (n.value / n.total) * 100 : 0;
-                const item = document.createElement('div');
-                item.className = 'fade-in-up';
-                item.style.animationDelay = `${i * 100}ms`;
-                item.style.opacity = 0;
-                item.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-semibold text-gray-200">${n.name}</span>
-                        <span class="text-sm text-gray-400">${n.value}${n.unit} / ${n.total}${n.unit}</span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="h-2.5 rounded-full" style="width: ${percentage}%; background-color: ${n.color};"></div></div>
-                `;
-                detailsEl.appendChild(item);
-            });
+            // ¼ÓÔØÕæÊµµÄÊ³Æ·Êı¾İ²¢¸üĞÂÓªÑø±¦Ëş
+            try {
+                if (globalFoodRecords.length === 0) {
+                    await loadFoodRecords();
+                }
+                const stats = calculateNutritionStats(globalFoodRecords, period);
+                updateNutritionPyramid(stats, period);
+                
+                // ¸üĞÂÏêÏ¸Êı¾İÏÔÊ¾
+                const detailsEl = pageEl.querySelector('#nutrition-details');
+                
+                // ¸ù¾İÊ±¼äÖÜÆÚµ÷ÕûÍÆ¼öÖµ
+                let multiplier = 1;
+                if (period === 'weekly') {
+                    multiplier = 7;
+                } else if (period === 'monthly') {
+                    multiplier = 30;
+                }
+                
+                const nutritionDetails = [
+                    { name: 'µ°°×ÖÊ', value: stats.protein, total: 60 * multiplier, unit: 'g', color: '#3B82F6' },
+                    { name: 'Ì¼Ë®»¯ºÏÎï', value: stats.carbs, total: 130 * multiplier, unit: 'g', color: '#10B981' },
+                    { name: 'Ö¬·¾', value: stats.fat, total: 50 * multiplier, unit: 'g', color: '#F59E0B' },
+                    { name: 'ÉÅÊ³ÏËÎ¬', value: stats.fiber, total: 30 * multiplier, unit: 'g', color: '#8B5CF6' },
+                    { name: 'ÄÆ', value: stats.sodium / 1000, total: 2.3 * multiplier, unit: 'g', color: '#EF4444' },
+                    { name: '¸Æ', value: stats.calcium, total: 800 * multiplier, unit: 'mg', color: '#06B6D4' },
+                    { name: 'Ìú', value: stats.iron, total: 15 * multiplier, unit: 'mg', color: '#84CC16' }
+                ];
+                
+                detailsEl.innerHTML = '';
+                nutritionDetails.forEach((n, i) => {
+                    const percentage = n.total > 0 ? (n.value / n.total) * 100 : 0;
+                    const item = document.createElement('div');
+                    item.className = 'fade-in-up';
+                    item.style.animationDelay = `${i * 100}ms`;
+                    item.style.opacity = 0;
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-semibold text-gray-200">${n.name}</span>
+                            <span class="text-sm text-gray-400">${n.value.toFixed(1)}${n.unit} / ${n.total}${n.unit}</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="h-2.5 rounded-full" style="width: ${Math.min(percentage, 100)}%; background-color: ${n.color};"></div></div>
+                    `;
+                    detailsEl.appendChild(item);
+                    setTimeout(() => item.style.opacity = 1, i * 100);
+                });
+            } catch (error) {
+                console.error('¸üĞÂÓªÑøÊı¾İÊ§°Ü:', error);
+                // Ê¹ÓÃÄ¬ÈÏÊı¾İ
+                const nutritionData = DEMO_DATA.nutrition[period];
+                if (nutritionData) {
+                    animateValue(pageEl.querySelector('#total-calories'), nutritionData.totalCalories);
+                }
+            }
 
             const mealPlanList = pageEl.querySelector('#meal-plan-list');
             mealPlanList.innerHTML = '';
@@ -1033,7 +1675,7 @@
                             <span class="font-semibold text-gray-200">${meal.name}</span>
                             <p class="text-sm text-gray-400">${recipe.name}</p>
                         </div>
-                        <span class="text-xs font-medium px-2 py-1 rounded-full ${meal.status === 'å·²å®Œæˆ' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}">${meal.status}</span>
+                        <span class="text-xs font-medium px-2 py-1 rounded-full ${meal.status === 'ÒÑÍê³É' ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}">${meal.status}</span>
                     </li>`;
             });
 
@@ -1061,7 +1703,7 @@
                 <header class="flex items-center gap-4">
                     <div class="relative flex-grow">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg></div>
-                        <input type="search" class="w-full bg-gray-800 border border-gray-700 rounded-full py-3 pl-12 pr-4 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="æœç´¢ ${DEMO_DATA.recipes.length} é“èœè°±...">
+                        <input type="search" class="w-full bg-gray-800 border border-gray-700 rounded-full py-3 pl-12 pr-4 text-gray-100 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="ËÑË÷ ${DEMO_DATA.recipes.length} µÀ²ËÆ×...">
                     </div>
                     <button class="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 active:scale-95 transition"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></button>
                 </header>
@@ -1079,7 +1721,7 @@
                     <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-32 object-cover">
                     <div class="p-4">
                         <h3 class="font-bold text-gray-100 truncate">${recipe.name}</h3>
-                        <p class="text-xs text-gray-400 mb-2">${recipe.time} åˆ†é’Ÿ Â· ${recipe.calories} Kcal</p>
+                        <p class="text-xs text-gray-400 mb-2">${recipe.time} ·ÖÖÓ ¡¤ ${recipe.calories} Kcal</p>
                         <p class="hidden lg:block text-sm text-gray-400 mt-2 h-10 overflow-hidden">${recipe.description}</p>
                         <div class="hidden lg:flex items-center gap-2 mt-3">
                             <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-500/20 text-blue-400">${recipe.difficulty}</span>
@@ -1107,18 +1749,18 @@
                 <button id="back-to-recipes" class="absolute top-6 left-6 z-10 p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition lg:left-28">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                 </button>
-                <img src="${recipe.image}" alt="èœè°±å›¾ç‰‡" class="w-full h-64 lg:h-80 object-cover">
+                <img src="${recipe.image}" alt="²ËÆ×Í¼Æ¬" class="w-full h-64 lg:h-80 object-cover">
                 <div class="p-4 lg:p-8">
                     <h1 class="text-3xl lg:text-4xl font-bold text-white">${recipe.name}</h1>
                     <p class="text-gray-400 mt-2 lg:max-w-2xl">${recipe.description}</p>
                     
                     <div class="hidden lg:grid grid-cols-5 gap-8 mt-8">
                         <div class="col-span-2">
-                            <h2 class="text-xl font-semibold text-white mb-4">é£Ÿææ¸…å•</h2>
+                            <h2 class="text-xl font-semibold text-white mb-4">Ê³²ÄÇåµ¥</h2>
                             <ul id="ingredients-list-desktop" class="space-y-3"></ul>
                         </div>
                         <div class="col-span-3">
-                            <h2 class="text-xl font-semibold text-white mb-4">çƒ¹é¥ªæ­¥éª¤</h2>
+                            <h2 class="text-xl font-semibold text-white mb-4">Åëâ¿²½Öè</h2>
                             <ol id="steps-list-desktop" class="space-y-4 list-decimal list-inside text-gray-300"></ol>
                         </div>
                     </div>
@@ -1126,8 +1768,8 @@
                     <div class="lg:hidden mt-6">
                         <div class="border-b border-gray-700">
                             <nav id="recipe-tabs" class="-mb-px flex space-x-6" aria-label="Tabs">
-                                <button data-tab="ingredients" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-400">é£Ÿææ¸…å•</button>
-                                <button data-tab="steps" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500">çƒ¹é¥ªæ­¥éª¤</button>
+                                <button data-tab="ingredients" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-blue-500 text-blue-400">Ê³²ÄÇåµ¥</button>
+                                <button data-tab="steps" class="recipe-tab whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500">Åëâ¿²½Öè</button>
                             </nav>
                         </div>
                         <div id="ingredients-content-mobile" class="tab-content py-4"></div>
@@ -1137,7 +1779,7 @@
                 <div class="sticky bottom-20 lg:bottom-8 p-4 lg:px-8 bg-transparent">
                      <button id="send-to-glasses-btn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-blue-700 active:scale-95 transition shadow-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" /></svg>
-                        <span>å‘é€åˆ°çœ¼é•œå¹¶å¼€å§‹çƒ¹é¥ª</span>
+                        <span>·¢ËÍµ½ÑÛ¾µ²¢¿ªÊ¼Åëâ¿</span>
                     </button>
                 </div>
             `;
@@ -1178,41 +1820,41 @@
             const pageEl = document.getElementById('device-page');
             const device = DEMO_DATA.device;
             pageEl.innerHTML = `
-                <header><h1 class="text-2xl lg:text-3xl font-bold text-gray-100">æˆ‘çš„è®¾å¤‡</h1></header>
+                <header><h1 class="text-2xl lg:text-3xl font-bold text-gray-100">ÎÒµÄÉè±¸</h1></header>
                 <div class="bg-gray-800 rounded-xl shadow-lg p-4 lg:p-6 flex flex-col md:flex-row gap-6">
                     <div class="w-full md:w-1/2 lg:w-2/5 h-64 md:h-96 bg-gray-900 rounded-lg flex items-center justify-center p-4">
                         <canvas id="device-canvas"></canvas>
                     </div>
                     <div class="flex-grow space-y-4 text-gray-300">
                         <h3 class="text-xl font-bold text-white">${device.name}</h3>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ${device.isConnected ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'}"></span><span class="text-sm">${device.isConnected ? 'å·²è¿æ¥' : 'å·²æ–­å¼€'}</span></div>
-                        <div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg><span>ç”µé‡: ${device.battery}%</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ${device.isConnected ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'}"></span><span class="text-sm">${device.isConnected ? 'ÒÑÁ¬½Ó' : 'ÒÑ¶Ï¿ª'}</span></div>
+                        <div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg><span>µçÁ¿: ${device.battery}%</span></div>
                         <div class="w-full bg-gray-700 rounded-full h-2.5 mt-1"><div class="bg-green-500 h-2.5 rounded-full" style="width: ${device.battery}%"></div></div>
-                        <button class="w-full mt-4 bg-red-600/80 text-white font-semibold py-3 rounded-lg hover:bg-red-600 transition">æ–­å¼€è¿æ¥</button>
+                        <button class="w-full mt-4 bg-red-600/80 text-white font-semibold py-3 rounded-lg hover:bg-red-600 transition">¶Ï¿ªÁ¬½Ó</button>
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <h2 class="text-lg font-semibold text-gray-300 px-2">çœ¼é•œç«¯è®¾ç½®</h2>
+                    <h2 class="text-lg font-semibold text-gray-300 px-2">ÑÛ¾µ¶ËÉèÖÃ</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div id="setting-brightness" class="bg-gray-800 rounded-xl p-4 flex justify-between items-center hover:bg-gray-700/80 cursor-pointer transition">
-                            <div><h4 class="font-semibold text-gray-200">æ˜¾ç¤ºäº®åº¦</h4><p class="text-sm text-gray-400">è°ƒæ•´çœ¼é•œé•œç‰‡äº®åº¦</p></div>
+                            <div><h4 class="font-semibold text-gray-200">ÏÔÊ¾ÁÁ¶È</h4><p class="text-sm text-gray-400">µ÷ÕûÑÛ¾µ¾µÆ¬ÁÁ¶È</p></div>
                             <div class="flex items-center gap-2 text-gray-400"><span id="brightness-value">${device.settings.brightness}%</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></div>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center">
-                             <div><h4 class="font-semibold text-gray-200">é€šçŸ¥ç®¡ç†</h4><p class="text-sm text-gray-400">å…è®¸Appå‘é€é€šçŸ¥</p></div>
+                             <div><h4 class="font-semibold text-gray-200">Í¨Öª¹ÜÀí</h4><p class="text-sm text-gray-400">ÔÊĞíApp·¢ËÍÍ¨Öª</p></div>
                             <label class="switch"><input type="checkbox" ${device.settings.notifications ? 'checked' : ''}><span class="slider"></span></label>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center">
-                             <div><h4 class="font-semibold text-gray-200">è§¦è§‰åé¦ˆ</h4><p class="text-sm text-gray-400">è°ƒæ•´æ“ä½œéœ‡åŠ¨å¼ºåº¦</p></div>
+                             <div><h4 class="font-semibold text-gray-200">´¥¾õ·´À¡</h4><p class="text-sm text-gray-400">µ÷Õû²Ù×÷Õğ¶¯Ç¿¶È</p></div>
                              <span class="font-medium text-gray-300">${device.settings.hapticFeedback}</span>
                         </div>
                          <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center hover:bg-gray-700/80 cursor-pointer transition">
-                             <div><h4 class="font-semibold text-gray-200">æ˜¾ç¤ºæ¨¡å¼</h4><p class="text-sm text-gray-400">é€‰æ‹©ä¸åŒçš„æ˜¾ç¤ºé¢„è®¾</p></div>
+                             <div><h4 class="font-semibold text-gray-200">ÏÔÊ¾Ä£Ê½</h4><p class="text-sm text-gray-400">Ñ¡Ôñ²»Í¬µÄÏÔÊ¾Ô¤Éè</p></div>
                              <span class="font-medium text-blue-400">${device.settings.displayProfile}</span>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-4 flex justify-between items-center col-span-1 md:col-span-2 hover:bg-gray-700/80 cursor-pointer transition">
-                             <div><h4 class="font-semibold text-gray-200">å›ºä»¶æ›´æ–°</h4><p class="text-sm text-gray-400">æ£€æŸ¥å¹¶å®‰è£…æœ€æ–°å›ºä»¶</p></div>
-                            <div class="flex items-center gap-2 text-gray-400"><span id="firmware-version">${device.firmware}</span><button class="text-sm font-semibold text-blue-400 hover:underline">æ£€æŸ¥æ›´æ–°</button></div>
+                             <div><h4 class="font-semibold text-gray-200">¹Ì¼ş¸üĞÂ</h4><p class="text-sm text-gray-400">¼ì²é²¢°²×°×îĞÂ¹Ì¼ş</p></div>
+                            <div class="flex items-center gap-2 text-gray-400"><span id="firmware-version">${device.firmware}</span><button class="text-sm font-semibold text-blue-400 hover:underline">¼ì²é¸üĞÂ</button></div>
                         </div>
                     </div>
                 </div>
@@ -1233,15 +1875,15 @@
             if (!canvas || threeScene) return;
 
             const scene = new THREE.Scene();
-            // åŠ è½½FBXæ¨¡å‹
+            // ¼ÓÔØFBXÄ£ĞÍ
             const loader = new FBXLoader();
             loader.load('glass.fbx', (object) => {
-                // è°ƒæ•´æ¨¡å‹å¤§å°å’Œä½ç½®
+                // µ÷ÕûÄ£ĞÍ´óĞ¡ºÍÎ»ÖÃ
                 object.scale.set(0.01, 0.01, 0.01);
                 object.position.set(0, -0.5, 0);
                 scene.add(object);
             }, undefined, (error) => {
-                console.error('åŠ è½½FBXæ¨¡å‹æ—¶å‡ºé”™:', error);
+                console.error('¼ÓÔØFBXÄ£ĞÍÊ±³ö´í:', error);
             });
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
@@ -1331,6 +1973,9 @@
             renderRecipesPage();
             renderDevicePage();
             renderMeetingPage();
+            
+            // Load food data
+            loadFoodRecords();
             
             // Setup navigation
             navButtons.forEach(btn => {

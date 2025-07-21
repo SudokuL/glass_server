@@ -42,7 +42,7 @@ async def take_a_photo(ws):
     except Exception as e:
         print("[Pi] photo err",e)
 
-# ======== ?????§¿?? ========
+# ======== ????????? ========
 async def _video_loop(ws, fps=10):
     cap=cv2.VideoCapture(0)
     if not cap.isOpened(): raise RuntimeError("cam open fail")
@@ -97,7 +97,7 @@ async def recv_cmd(ws):
             video_task = None
             print("[Pi] ?? stop streaming")
         else:
-            print("[Pi] ¦Ä????:", data)
+            print("[Pi] ??????:", data)
 
 
 
