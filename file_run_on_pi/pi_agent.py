@@ -8,7 +8,7 @@ WS_URI=f"ws://{AUDIO_HOST}:{AUDIO_PORT}/ws"
 
 CHUNK=1024; FORMAT=pyaudio.paInt16; CHANNELS=1; RATE=16000
 
-# ---------- 音频 ----------
+# ---------- ??? ----------
 async def send_audio(ws):
     pa=pyaudio.PyAudio()
     st=pa.open(format=FORMAT,channels=CHANNELS,rate=RATE,
@@ -23,7 +23,7 @@ async def send_audio(ws):
     finally:
         st.stop_stream(); st.close(); pa.terminate()
 
-# ---------- 摄像 ----------
+# ---------- ???? ----------
 def _snap() -> bytes:
     cap=cv2.VideoCapture(0)
     if not cap.isOpened(): raise RuntimeError("cam open fail")
@@ -42,7 +42,7 @@ async def take_a_photo(ws):
     except Exception as e:
         print("[Pi] photo err",e)
 
-# ======== 视频流协程 ========
+# ======== ?????Э?? ========
 async def _video_loop(ws, fps=10):
     cap=cv2.VideoCapture(0)
     if not cap.isOpened(): raise RuntimeError("cam open fail")
@@ -59,7 +59,7 @@ async def _video_loop(ws, fps=10):
     finally:
         cap.release()
 
-video_task=None  # 全局任务引用
+video_task=None  # ???????????
 
 async def recv_cmd(ws):
     global video_task
@@ -67,17 +67,17 @@ async def recv_cmd(ws):
     async for msg in ws:
         data = json.loads(msg)
 
-        # 统一处理 text+audio response
+        # ?????? text+audio response
         if data.get("tag") == "response":
             fn = data["filename"]
             question = data.get("question", "")
             answer   = data.get("text", "")
-            # 保存问答到同一 txt
+            # ????????? txt
             txt_fn = f"response_{fn}.txt"
             with open(txt_fn, "w", encoding="utf-8") as f:
                 f.write(f"Q: {question}\nA: {answer}")
             print(f"[Pi] ? Saved Q&A: {txt_fn}")
-            # 保存音频
+            # ???????
             mp3_fn = f"response_{fn}.mp3"
             mp3_bytes = bytes.fromhex(data.get("payload_hex", ""))
             with open(mp3_fn, "wb") as f:
@@ -85,7 +85,7 @@ async def recv_cmd(ws):
             print(f"[Pi] ? Saved audio: {mp3_fn}")
             continue
 
-        # 原有命令处理（拍照/视频）
+        # ???????????????/?????
         cmd = data.get("cmd")
         if cmd == "photo":
             asyncio.create_task(take_a_photo(ws))
@@ -97,11 +97,11 @@ async def recv_cmd(ws):
             video_task = None
             print("[Pi] ?? stop streaming")
         else:
-            print("[Pi] 未知消息:", data)
+            print("[Pi] δ????:", data)
 
 
 
-# ---------- 主循环 ----------
+# ---------- ????? ----------
 async def main():
     while True:
         try:

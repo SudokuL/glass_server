@@ -1,14 +1,14 @@
 # -*- coding: gbk -*-
-import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torchvision.transforms.v2 as v2
 from torchvision.models import regnet_y_16gf, regnet_y_32gf, regnet_y_128gf
-from torchvision.transforms import InterpolationMode
+from torchvision.transforms import v2, InterpolationMode
 from PIL import Image
 import numpy as np
 import pandas as pd
+import os
+import pickle
 
 # === ??? ===
 class_names = pd.read_csv("/root/autodl-tmp/.autodl/iot/food_cv/class_names.xlsx", header=None)[1].tolist()
@@ -81,13 +81,24 @@ def load_model(model_path):
     model = CombinedModel(model1, model2, model3, gated_head)
     model = nn.DataParallel(model).to(DEVICE)
 
-    checkpoint = torch.load(model_path, map_location=DEVICE)
-    if 'model_dict' in checkpoint:
-        state_dict = checkpoint['model_dict']
-    else:
-        state_dict = checkpoint  # ???????? state_dict ??
-    model.load_state_dict(state_dict)
-    model.load_state_dict(checkpoint['model_dict'])
+    # Temporarily add FocalLoss to __main__ module to fix loading
+    import sys
+    import __main__
+    if not hasattr(__main__, 'FocalLoss'):
+        __main__.FocalLoss = FocalLoss
+    
+    try:
+        checkpoint = torch.load(model_path, map_location=DEVICE, weights_only=False)
+        if 'model_dict' in checkpoint:
+            state_dict = checkpoint['model_dict']
+        else:
+            state_dict = checkpoint  # ???????? state_dict ??
+        model.load_state_dict(state_dict)
+    finally:
+        # Clean up the temporary reference
+        if hasattr(__main__, 'FocalLoss'):
+            delattr(__main__, 'FocalLoss')
+    
     model.eval()
     return model
 
@@ -128,24 +139,24 @@ def predict(model, image_path, nutrient_label):
         top3_indices = np.argsort(probs)[-3:][::-1]
         top3_probs = probs[top3_indices]
 
-        print("\n? Top-3 ?????")
-        for i in range(3):
-            print(f"  - ?? {top3_indices[i]}?{class_names[top3_indices[i]]}????{top3_probs[i]:.4f}")
+        # print("\n? Top-3 ?????")
+        # for i in range(3):
+        #     print(f"  - ?? {top3_indices[i]}?{class_names[top3_indices[i]]}????{top3_probs[i]:.4f}")
 
         norm_probs = top3_probs / top3_probs.sum()
         nutrient_estimate = np.dot(norm_probs, nutrient_label[top3_indices])
-        print("\n? Top-3 ????????24??:")
-        for idx, val in enumerate(nutrient_estimate):
-            print(f"  [{idx+1:02}] = {val:.2f}")
+        # print("\n? Top-3 ????????24??:")
+        # for idx, val in enumerate(nutrient_estimate):
+        #     print(f"  [{idx+1:02}] = {val:.2f}")
 
         return top3_indices, top3_probs, nutrient_estimate
 
-# === ??????? ===
+# === 营养素名称定义 ===
 nutrient_names = [
-    "??(kcal)", "???(g)", "??(g)", "?????(g)", "????(g)", "???A(?g)", 
-    "???B1(mg)", "???B2(mg)", "???B6(mg)", "???B12(?g)", "???C(mg)", 
-    "???D(?g)", "???E(mg)", "???K(?g)", "?(mg)", "?(mg)", "?(mg)", 
-    "?(?g)", "?(mg)", "?(mg)", "?(mg)", "?(mg)", "?(mg)", "?(mg)"
+    "热量(kcal)", "蛋白质(g)", "脂肪(g)", "碳水化合物(g)", "膳食纤维(g)", "维生素A(μg)", 
+    "维生素B1(mg)", "维生素B2(mg)", "维生素B6(mg)", "维生素B12(μg)", "维生素C(mg)", 
+    "维生素D(μg)", "维生素E(mg)", "维生素K(μg)", "钙(mg)", "铁(mg)", "锌(mg)", 
+    "硒(μg)", "钠(mg)", "钾(mg)", "镁(mg)", "磷(mg)", "铜(mg)", "锰(mg)"
 ]
 
 # === ????? ===

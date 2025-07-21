@@ -15,6 +15,11 @@ from qwen_vl_utils import process_vision_info
 # --- Baidu TTS ---
 import baidu_tts
 
+# --- 食品识别 ---
+import sys
+sys.path.append('/root/autodl-tmp/.autodl/iot/food_cv')
+from food_cv.GatedRegNet_Food import FoodRecognizer
+
 # 离线模型路径
 QWEN_MODEL_PATH = "/root/autodl-tmp/.autodl/iot/qwen_7b_vl_offline"
 # TTS 临时文件
@@ -31,6 +36,11 @@ qwen = Qwen2_5_VLForConditionalGeneration.from_pretrained(
 qwen = prepare_model_for_kbit_training(qwen)
 qwen.eval()
 print("[Srv] Qwen2.5-VL ready on", qwen.device)
+
+# 初始化食品识别器
+print("[Srv] Loading FoodRecognizer...")
+food_recognizer = FoodRecognizer()
+print("[Srv] FoodRecognizer ready")
 
 
 def query_qwen(messages):
@@ -55,8 +65,8 @@ MODEL_PATH  = "model/vosk-model-cn-0.22"
 SAMPLE_RATE = 16000
 vosk_model = Model(MODEL_PATH)
 
-PHOTO_DIR = "photos"; VIDEO_DIR = "video_frames"; MEETING_DIR = "meeting_recording"
-os.makedirs(PHOTO_DIR, exist_ok=True); os.makedirs(VIDEO_DIR, exist_ok=True); os.makedirs(MEETING_DIR, exist_ok=True)
+PHOTO_DIR = "photos"; VIDEO_DIR = "video_frames"; MEETING_DIR = "meeting_recording"; FOOD_DIR = "food_recognition"
+os.makedirs(PHOTO_DIR, exist_ok=True); os.makedirs(VIDEO_DIR, exist_ok=True); os.makedirs(MEETING_DIR, exist_ok=True); os.makedirs(FOOD_DIR, exist_ok=True)
 
 
 def save_photo(img: bytes) -> str:
@@ -148,6 +158,12 @@ async def ws_handler(ws):
                                 last_photo_ts = time.time()
                                 print("[Srv] ? photo cmd")
                             awaiting_photo_model = True
+                        elif "食物识别" in result or "实物识别" in result:
+                            if time.time() - last_photo_ts > 3:
+                                await ws.send(json.dumps({"cmd": "photo"}))
+                                last_photo_ts = time.time()
+                                print("[Srv] ? food recognition photo cmd")
+                            awaiting_photo_model = "food"
                         else:
                             # 纯文本调用
                             print("[info] 触发 Qwen2.5-VL 文本推理 …")
@@ -194,7 +210,64 @@ async def ws_handler(ws):
             if tag == "photo":
                 img_bytes = bytes.fromhex(data["payload_hex"])
                 photo_path = save_photo(img_bytes)
-                if awaiting_photo_model and "麦粒" in pending_text and "拍照" in pending_text:
+                if awaiting_photo_model == "food" and "麦粒" in pending_text and ("食物识别" in pending_text or "实物识别" in pending_text):
+                     # 食品识别调用
+                     print("[info] 触发食品识别 …")
+                     food_result = food_recognizer.recognize_food(photo_path)
+                     
+                     if food_result:
+                         dish_name = food_result.get('dish_name', '未知食品')
+                         confidence = food_result.get('confidence', 0.0)
+                         nutrients = food_result.get('nutrients', {})
+                         
+                         # 保存食品识别结果
+                         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                         food_result_path = os.path.join(FOOD_DIR, f"food_{ts}.json")
+                         with open(food_result_path, "w", encoding="utf-8") as f:
+                             json.dump({
+                                 "timestamp": ts,
+                                 "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                 "photo_path": photo_path,
+                                 "dish_name": dish_name,
+                                 "confidence": confidence,
+                                 "nutrients": nutrients,
+                                 "full_result": food_result
+                             }, f, ensure_ascii=False, indent=2)
+                         
+                         # 构建营养信息摘要
+                         key_nutrients = ["热量(kcal)", "蛋白质(g)", "脂肪(g)", "碳水化合物(g)"]
+                         nutrient_summary = ", ".join([f"{k}:{nutrients.get(k, 0):.1f}" for k in key_nutrients if k in nutrients])
+                         
+                         resp = f"识别到食品：{dish_name}，置信度：{confidence:.2f}。主要营养成分：{nutrient_summary}"
+                         print(f"[FOOD] {resp}")
+                         
+                         baidu_tts.baidu_tts_test(resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": ts,
+                             "food_result": food_result
+                         }))
+                     else:
+                         resp = "抱歉，食品识别失败，请重试"
+                         print(f"[FOOD] {resp}")
+                         baidu_tts.baidu_tts_test(resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": datetime.now().strftime("%Y%m%d_%H%M%S")
+                         }))
+                     
+                     awaiting_photo_model = False
+                     pending_text = ""
+                elif awaiting_photo_model == True and "麦粒" in pending_text and "拍照" in pending_text:
                     # 图文调用
                     print("[info] 触发 Qwen2.5-VL 图文推理 …")
                     resp = query_qwen([{
