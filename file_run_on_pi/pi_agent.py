@@ -84,16 +84,6 @@ async def recv_cmd(ws):
                 f.write(mp3_bytes)
             print(f"[Pi] ? Saved audio: {mp3_fn}")
             continue
-        
-        # 处理会议记录
-        if data.get("tag") == "meeting_record":
-            filename = data["filename"]
-            content = data.get("content", "")
-            # 保存会议记录到本地
-            with open(filename, "w", encoding="utf-8") as f:
-                f.write(content)
-            print(f"[Pi] ? Saved meeting record: {filename}")
-            continue
 
         # 原有命令处理（拍照/视频）
         cmd = data.get("cmd")
