@@ -10,15 +10,15 @@ import pandas as pd
 import os
 import pickle
 
-# === ??? ===
+# === ??????? ===
 class_names = pd.read_csv("/root/autodl-tmp/.autodl/iot/food_cv/class_names.xlsx", header=None)[1].tolist()
 
-# === ???? ===
+# === ??????? ===
 NUM_CLASSES = 241
 IMG_SIZE = 384
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# === ???? ===
+# === ?????? ===
 class GatedHead(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GatedHead, self).__init__()
@@ -45,7 +45,7 @@ class CombinedModel(nn.Module):
         combined = torch.cat((out1, out2, out3), dim=1)
         return self.gated_head(combined) + out1 / 3 + out2 / 3 + out3 / 3
 
-# === ????? ===
+# === ???????? ===
 transform = v2.Compose([
     v2.Resize((IMG_SIZE, IMG_SIZE), interpolation=InterpolationMode.BICUBIC),
     v2.ToImage(),
@@ -53,7 +53,7 @@ transform = v2.Compose([
     v2.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
 ])
 
-# === ???? ===
+# === ??????? ===
 class FocalLoss(nn.Module):
     def __init__(self, alpha=1, gamma=2, reduction='mean'):
         super(FocalLoss, self).__init__()
@@ -92,7 +92,7 @@ def load_model(model_path):
         if 'model_dict' in checkpoint:
             state_dict = checkpoint['model_dict']
         else:
-            state_dict = checkpoint  # ???????? state_dict ??
+            state_dict = checkpoint  # ????????? state_dict ???
         model.load_state_dict(state_dict)
     finally:
         # Clean up the temporary reference
@@ -102,33 +102,66 @@ def load_model(model_path):
     model.eval()
     return model
 
-# === ??????? ===
+# === ?????????? ===
 def load_nutrient_labels(nutrient_txt_path):
     if not os.path.exists(nutrient_txt_path):
-        print("?? ????????????????????????")
+        print("??????????????????????????")
         np.random.seed(42)
         return np.random.uniform(10, 200, size=(241, 24)).round(2)
 
-    with open(nutrient_txt_path, 'r') as f:
+    with open(nutrient_txt_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
+    
     data = []
     for line in lines:
-        s = line
+        line = line.strip()
+        if not line:
+            continue
+            
+        # ???????: "???-????:??????????"
+        colon_idx = line.find(':')
+        if colon_idx == -1:
+            continue
+            
+        # ????????????
+        nutrient_part = line[colon_idx+1:]
+        
+        # ???????????????
         values = []
+        s = nutrient_part
         while True:
             idx1 = s.find("=")
             idx2 = s.find(",")
-            if idx1 == -1 or idx2 == -1:
+            if idx1 == -1:
                 break
-            val = float(s[idx1+1:idx2])
-            values.append(round(val, 2))
-            s = s[idx2+1:]
-        indices = [2,3,4,6,7,8,9,10,12,15,16,17,18,19,23,24,25,26,27,28,29,30,31,32]
-        values = np.array(values)[indices]
-        data.append(values)
+            if idx2 == -1:  # ???????
+                val_str = s[idx1+1:].strip()
+                if val_str:
+                    try:
+                        val = float(val_str)
+                        values.append(round(val, 2))
+                    except ValueError:
+                        pass
+                break
+            else:
+                try:
+                    val = float(s[idx1+1:idx2])
+                    values.append(round(val, 2))
+                except ValueError:
+                    pass
+                s = s[idx2+1:]
+        
+        # ????????24???????????
+        # ???????????????????? (?????3??: total_edible_weight, total_ingredient_weight, edible (%))
+        if len(values) >= 33:  # ?????????????
+            # ?????4???????24???????? (????3-26)
+            selected_indices = list(range(3, 27))
+            selected_values = [values[i] if i < len(values) else 0.0 for i in selected_indices]
+            data.append(selected_values)
+    
     return np.array(data)
 
-# === ?? ===
+# === ??? ===
 def predict(model, image_path, nutrient_label):
     image = Image.open(image_path).convert('RGB')
     x = transform(image).unsqueeze(0).to(DEVICE)
@@ -139,49 +172,49 @@ def predict(model, image_path, nutrient_label):
         top3_indices = np.argsort(probs)[-3:][::-1]
         top3_probs = probs[top3_indices]
 
-        # print("\n? Top-3 ?????")
+        # print("\n?? Top-3 ?????")
         # for i in range(3):
-        #     print(f"  - ?? {top3_indices[i]}?{class_names[top3_indices[i]]}????{top3_probs[i]:.4f}")
+        #     print(f"  - ??? {top3_indices[i]}??{class_names[top3_indices[i]]}????????{top3_probs[i]:.4f}")
 
         norm_probs = top3_probs / top3_probs.sum()
         nutrient_estimate = np.dot(norm_probs, nutrient_label[top3_indices])
-        # print("\n? Top-3 ????????24??:")
+        # print("\n?? Top-3 ????????????24??:")
         # for idx, val in enumerate(nutrient_estimate):
         #     print(f"  [{idx+1:02}] = {val:.2f}")
 
         return top3_indices, top3_probs, nutrient_estimate
 
-# === ???????????? ===
+# === ?????????????? ===
 nutrient_names = [
     "????(kcal)", "??????(g)", "???(g)", "????????(g)", "??????(g)", "?????A(??g)", 
     "?????B1(mg)", "?????B2(mg)", "?????B6(mg)", "?????B12(??g)", "?????C(mg)", 
     "?????D(??g)", "?????E(mg)", "?????K(??g)", "??(mg)", "??(mg)", "??(mg)", 
-    "??(??g)", "??(mg)", "??(mg)", "?(mg)", "??(mg)", "?(mg)", "??(mg)"
+    "??(??g)", "?(mg)", "??(mg)", "??(mg)", "??(mg)", "?(mg)", "??(mg)"
 ]
 
-# === ????? ===
+# === ???????? ===
 class FoodRecognizer:
     def __init__(self):
         self.MODEL_PATH = "/root/autodl-tmp/.autodl/iot/food_cv/SEP14_y128y32y16_best.pt"
-        self.NUTRIENT_TXT = "/root/autodl-tmp/.autodl/iot/food_cv/new nutrient_label 2.txt"
+        self.NUTRIENT_TXT = "/root/autodl-tmp/.autodl/iot/food_cv/dish nutrient label.txt"
         self.model = None
         self.nutrient_label = None
         self._load_model_and_nutrients()
     
     def _load_model_and_nutrients(self):
-        """??????????"""
-        print("[FoodCV] ?????...")
+        """???????????????"""
+        print("[FoodCV] ?????????...")
         self.model = load_model(self.MODEL_PATH)
-        print("[FoodCV] ???????...")
+        print("[FoodCV] ????????????...")
         self.nutrient_label = load_nutrient_labels(self.NUTRIENT_TXT)
-        print("[FoodCV] ??????????")
+        print(f"[FoodCV] ????????????????{len(self.nutrient_label)}????????{len(self.nutrient_label[0]) if len(self.nutrient_label) > 0 else 0}????????")
     
     def recognize_food(self, image_path):
-        """?????????"""
+        """????????"""
         try:
             top3_indices, top3_probs, nutrient_estimate = predict(self.model, image_path, self.nutrient_label)
             
-            # ??????
+            # ???????
             result = {
                 "dish_name": class_names[top3_indices[0]],
                 "confidence": float(top3_probs[0]),
@@ -196,27 +229,27 @@ class FoodRecognizer:
                 }
             }
             
-            print(f"[FoodCV] ????: {result['dish_name']} (???: {result['confidence']:.4f})")
+            print(f"[FoodCV] ?????: {result['dish_name']} (?????: {result['confidence']:.4f})")
             return result
             
         except Exception as e:
             print(f"[FoodCV] ??????: {str(e)}")
             return None
 
-# === ????? ===
+# === ????????? ===
 if __name__ == "__main__":
     recognizer = FoodRecognizer()
     
     IMG_DIR = "/root/autodl-tmp/.autodl/iot/food_img/"
-    print(f"? ??????????: {IMG_DIR}")
+    print(f"?? ????????????: {IMG_DIR}")
     valid_exts = {'.jpg', '.jpeg', '.png', '.bmp'}
     image_files = [os.path.join(IMG_DIR, f) for f in os.listdir(IMG_DIR) if os.path.splitext(f)[1].lower() in valid_exts]
 
     if not image_files:
-        print("?? ????????????????????")
+        print("? ????????????????????")
     else:
         for idx, img_path in enumerate(sorted(image_files)):
-            print(f"\n===== ?? ? {idx+1} ????{os.path.basename(img_path)} =====")
+            print(f"\n===== ?? {idx+1} ??????{os.path.basename(img_path)} =====")
             result = recognizer.recognize_food(img_path)
             if result:
-                print(f"? Top-1 ??{result['dish_name']}????{result['confidence']:.4f}")
+                print(f"?? Top-1 ?????{result['dish_name']}????????{result['confidence']:.4f}")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: gbk -*-
 import asyncio, json, websockets, pyaudio, os, traceback, cv2
-
+# /usr/bin/python3 /home/arglasses/iot/pi_agent.py
 AUDIO_HOST=os.getenv("AUDIO_HOST","127.0.0.1")
 AUDIO_PORT=int(os.getenv("AUDIO_PORT",6006))
 WS_URI=f"ws://{AUDIO_HOST}:{AUDIO_PORT}/ws"
