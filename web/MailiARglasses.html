@@ -628,30 +628,60 @@
                 <!-- ============== CHAT PAGE ========================= -->
                 <!-- ================================================== -->
                 <main id="chat-page" class="p-4 lg:p-8 space-y-6 page-hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold text-gray-100">麦粒聊天记录</h1>
-                        <div class="flex space-x-2">
-                            <button id="refresh-chats" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                刷新
-                            </button>
-                            <button id="clear-chats" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                清空
-                            </button>
+                    <!-- 顶部标题栏 -->
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h1 class="text-2xl font-bold text-white gradient-text">麦粒智能助手</h1>
+                                    <p class="text-gray-400 text-sm">您的专属AI烹饪顾问</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button id="refresh-chats" class="btn-enhanced bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl transition flex items-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                    刷新
+                                </button>
+                                <button id="clear-chats" class="btn-enhanced bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-4 py-2 rounded-xl transition flex items-center shadow-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    清空
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div id="chat-container" class="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg max-h-[calc(100vh-200px)] overflow-y-auto space-y-6 w-full box-border">
-                        <!-- Chat messages will be loaded here -->
-                        <div class="text-center text-gray-500 py-10" id="loading-chats">
-                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                            <p>正在加载聊天记录...</p>
+
+                    <!-- 聊天容器 -->
+                    <div class="glass-card rounded-2xl overflow-hidden shadow-2xl">
+                        <div id="chat-container" class="h-[calc(100vh-280px)] lg:h-[calc(100vh-320px)] overflow-y-auto">
+                            <!-- 加载状态 -->
+                            <div class="text-center text-gray-400 py-16" id="loading-chats">
+                                <div class="relative mx-auto mb-6">
+                                    <div class="animate-spin rounded-full h-16 w-16 border-4 border-gray-600 border-t-blue-500 mx-auto"></div>
+                                    <div class="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
+                                </div>
+                                <p class="text-lg font-medium">正在加载聊天记录...</p>
+                                <p class="text-sm text-gray-500 mt-2">请稍候片刻</p>
+                            </div>
+                            
+                            <!-- 无聊天记录状态 -->
+                            <div id="no-chats" class="text-center text-gray-400 py-16 hidden">
+                                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-300 mb-2">暂无聊天记录</h3>
+                                <p class="text-gray-500">开始与麦粒智能助手对话吧！</p>
+                            </div>
+                            
+                            <!-- 聊天消息容器 -->
+                            <div id="chat-messages" class="p-6 space-y-6 hidden"></div>
                         </div>
-                        <div id="no-chats" class="text-center text-gray-500 py-10 hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
-                            <p>暂无聊天记录</p>
-                        </div>
-                        <div id="chat-messages" class="space-y-4 hidden"></div>
                     </div>
                 </main>
 
@@ -848,7 +878,7 @@
          * Now expanded with more data for a richer desktop experience.
          */
         const DEMO_DATA = {
-            userProfile: { name: "Alex" },
+            userProfile: { name: "Efim" },
             dailyPlan: {
                 title: "今日膳食计划",
                 meals: [
@@ -1179,28 +1209,53 @@
                     messageEl.style.animationDelay = `${links.indexOf(filename) * 0.1}s`;
 
                     messageEl.innerHTML = `
-                        <div class="text-xs text-gray-500 mb-2">${formattedTime}</div>
-                        <div class="flex items-start mb-2 justify-end">
-                            <div class="bg-blue-600 rounded-full p-2 mr-3 flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="bg-blue-600 rounded-lg rounded-tr-none p-4 max-w-[80%] ml-auto">
-                                <p class="text-gray-100">${question}</p>
+                        <!-- 时间戳 -->
+                        <div class="text-center mb-4">
+                            <span class="inline-block px-3 py-1 bg-gray-700/50 text-gray-400 text-xs rounded-full backdrop-blur-sm">${formattedTime}</span>
+                        </div>
+                        
+                        <!-- 用户消息 -->
+                        <div class="flex items-end justify-end mb-4 group">
+                            <div class="flex flex-col items-end max-w-[75%] lg:max-w-[60%]">
+                                <div class="relative">
+                                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg">
+                                        <p class="text-sm leading-relaxed">${question}</p>
+                                        ${photo ? `<div class="mt-3 rounded-xl overflow-hidden border border-blue-400/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+                                            <img src="../photos/${photo.split('/').pop()}" alt="聊天图片" class="w-full h-auto object-cover" loading="lazy" onError="this.src='https://via.placeholder.com/300x200?text=图片加载失败'; console.error('Failed to load image:', '../photos/${photo.split('/').pop()}');">
+                                        </div>` : ''}
+                                    </div>
+                                    <!-- 消息尾巴 -->
+                                    <div class="absolute -bottom-0 -right-0 w-4 h-4 bg-blue-600 transform rotate-45 translate-x-2 translate-y-2"></div>
+                                </div>
+                                <div class="flex items-center mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-xs text-gray-500 mr-2">您</span>
+                                    <div class="w-6 h-6 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex items-start justify-start">
-                            <div class="bg-gray-600 rounded-full p-2 mr-3 flex-shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                </svg>
-                            </div>
-                            <div class="bg-gray-800 rounded-lg rounded-tl-none p-4 max-w-[80%] mr-auto">
-                                <p class="text-gray-100">${answer}</p>
-                                ${photo ? `<div class="mt-3 rounded-lg overflow-hidden border border-gray-700 transition-transform hover:scale-[1.02]">
-                                    <img src="../photos/${photo.split('/').pop()}" alt="聊天图片" class="w-full h-auto object-cover" loading="lazy" onError="this.src='https://via.placeholder.com/300x200?text=图片加载失败'; console.error('Failed to load image:', '../photos/${photo.split('/').pop()}');">
-                                </div>` : ''}
+                        
+                        <!-- AI回复 -->
+                        <div class="flex items-end justify-start group">
+                            <div class="flex flex-col items-start max-w-[75%] lg:max-w-[60%]">
+                                <div class="flex items-center mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs text-gray-500">麦粒助手</span>
+                                </div>
+                                <div class="relative">
+                                    <div class="bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-2xl rounded-bl-md px-4 py-3 shadow-lg border border-gray-600/30">
+                                        <p class="text-sm leading-relaxed">${answer}</p>
+                                    </div>
+                                    <!-- 消息尾巴 -->
+                                    <div class="absolute -bottom-0 -left-0 w-4 h-4 bg-gray-800 transform rotate-45 -translate-x-2 translate-y-2"></div>
+                                </div>
                             </div>
                         </div>
                     `;
