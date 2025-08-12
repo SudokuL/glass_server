@@ -13,3 +13,8 @@ __pycache__/
 
 # 忽略其他临时文件
 *.log
+
+# 忽略大模型文件
+*.safetensors
+LoRA/lora_output/adapter_model.safetensors
+LoRA/lora_output/checkpoint-*/adapter_model.safetensors
