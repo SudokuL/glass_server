@@ -2,7 +2,10 @@
 qwen_7b_vl_offline/
 model/
 __pycache__/
-
+LoRA/
+video_frames/
+videos/
+photos/
 # 忽略音频和输出
 *.pt
 *.gz
@@ -16,5 +19,3 @@ __pycache__/
 
 # 忽略大模型文件
 *.safetensors
-LoRA/lora_output/adapter_model.safetensors
-LoRA/lora_output/checkpoint-*/adapter_model.safetensors
