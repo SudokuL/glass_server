@@ -1,0 +1,21 @@
+# -*- coding: gbk -*-
+# 多目标中国菜检测 + 手势识别所需依赖
+
+# 基础依赖（您可能已有）
+opencv-python>=4.8.0
+numpy>=1.21.0
+torch>=1.9.0
+torchvision>=0.10.0
+
+# 手势识别（必需）
+mediapipe>=0.10.0
+
+# YOLO目标检测（可选，更高精度方案）
+ultralytics>=8.0.0
+
+# 图像处理增强
+Pillow>=9.0.0
+scikit-image>=0.19.0
+
+# 工具库
+tqdm>=4.64.0

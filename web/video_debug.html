@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .log {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct Video Element</h2>
+        <video id="direct-video" controls preload="metadata">
+            <source src="/videos/20250724_172924.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="log" id="direct-log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Dynamic Video Creation</h2>
+        <button onclick="createDynamicVideo()">Create Dynamic Video</button>
+        <div id="dynamic-container"></div>
+        <div class="log" id="dynamic-log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Test playVideo Function</h2>
+        <button onclick="testPlayVideo()">Test playVideo Function</button>
+        <div class="log" id="playvideo-log"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Network Test</h2>
+        <button onclick="testNetworkAccess()">Test Network Access</button>
+        <div class="log" id="network-log"></div>
+    </div>
+
+    <script>
+        function log(elementId, message) {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Test 1: Direct video element
+        const directVideo = document.getElementById('direct-video');
+        directVideo.addEventListener('loadstart', () => log('direct-log', 'Direct video: loadstart'));
+        directVideo.addEventListener('loadedmetadata', () => log('direct-log', 'Direct video: loadedmetadata'));
+        directVideo.addEventListener('canplay', () => log('direct-log', 'Direct video: canplay'));
+        directVideo.addEventListener('error', (e) => {
+            log('direct-log', `Direct video error: ${e.type}`);
+            if (directVideo.error) {
+                log('direct-log', `Error code: ${directVideo.error.code}, message: ${directVideo.error.message}`);
+            }
+        });
+
+        // Test 2: Dynamic video creation
+        function createDynamicVideo() {
+            const container = document.getElementById('dynamic-container');
+            container.innerHTML = '';
+            
+            const video = document.createElement('video');
+            video.controls = true;
+            video.preload = 'metadata';
+            video.style.width = '100%';
+            video.style.maxWidth = '600px';
+            
+            const source = document.createElement('source');
+            source.src = '/videos/20250724_172924.mp4';
+            source.type = 'video/mp4';
+            
+            video.appendChild(source);
+            
+            video.addEventListener('loadstart', () => log('dynamic-log', 'Dynamic video: loadstart'));
+            video.addEventListener('loadedmetadata', () => log('dynamic-log', 'Dynamic video: loadedmetadata'));
+            video.addEventListener('canplay', () => log('dynamic-log', 'Dynamic video: canplay'));
+            video.addEventListener('error', (e) => {
+                log('dynamic-log', `Dynamic video error: ${e.type}`);
+                if (video.error) {
+                    log('dynamic-log', `Error code: ${video.error.code}, message: ${video.error.message}`);
+                }
+            });
+            
+            container.appendChild(video);
+            log('dynamic-log', 'Dynamic video created');
+        }
+
+        // Test 3: playVideo function
+        function playVideo(videoSrc) {
+            log('playvideo-log', `playVideo called with: ${videoSrc}`);
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;';
+            
+            const videoContainer = document.createElement('div');
+            videoContainer.style.cssText = 'position: relative; max-width: 90%; max-height: 90%;';
+            
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            video.preload = 'metadata';
+            video.style.cssText = 'width: 100%; height: auto; border-radius: 8px;';
+            
+            const source = document.createElement('source');
+            source.src = videoSrc;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = 'Close';
+            closeBtn.style.cssText = 'position: absolute; top: 10px; right: 10px; z-index: 1001;';
+            closeBtn.onclick = () => {
+                document.body.removeChild(modal);
+                log('playvideo-log', 'Modal closed');
+            };
+            
+            video.addEventListener('loadstart', () => log('playvideo-log', 'Modal video: loadstart'));
+            video.addEventListener('loadedmetadata', () => log('playvideo-log', 'Modal video: loadedmetadata'));
+            video.addEventListener('canplay', () => log('playvideo-log', 'Modal video: canplay'));
+            video.addEventListener('play', () => log('playvideo-log', 'Modal video: started playing'));
+            video.addEventListener('error', (e) => {
+                log('playvideo-log', `Modal video error: ${e.type}`);
+                if (video.error) {
+                    log('playvideo-log', `Error code: ${video.error.code}, message: ${video.error.message}`);
+                }
+            });
+            
+            videoContainer.appendChild(video);
+            videoContainer.appendChild(closeBtn);
+            modal.appendChild(videoContainer);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                    log('playvideo-log', 'Modal closed by background click');
+                }
+            });
+            
+            document.body.appendChild(modal);
+            log('playvideo-log', 'Modal created and added to DOM');
+        }
+
+        function testPlayVideo() {
+            playVideo('/videos/20250724_172924.mp4');
+        }
+
+        // Test 4: Network access
+        async function testNetworkAccess() {
+            const urls = [
+                '/videos/',
+                '/videos/20250724_172924.mp4'
+            ];
+            
+            for (const url of urls) {
+                try {
+                    log('network-log', `Testing: ${url}`);
+                    const response = await fetch(url, { method: 'HEAD' });
+                    log('network-log', `${url} - Status: ${response.status} ${response.statusText}`);
+                    
+                    if (url.endsWith('.mp4')) {
+                        const contentType = response.headers.get('content-type');
+                        const contentLength = response.headers.get('content-length');
+                        const acceptRanges = response.headers.get('accept-ranges');
+                        log('network-log', `Content-Type: ${contentType}`);
+                        log('network-log', `Content-Length: ${contentLength}`);
+                        log('network-log', `Accept-Ranges: ${acceptRanges}`);
+                    }
+                } catch (error) {
+                    log('network-log', `${url} - Error: ${error.message}`);
+                }
+            }
+        }
+
+        log('direct-log', 'Page loaded, direct video element ready');
+    </script>
+</body>
+</html>

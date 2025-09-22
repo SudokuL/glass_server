@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Video Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        video {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Video Test</h1>
+        
+        <div class="test-section">
+            <h2>Test 1: Basic Video Element (First Video)</h2>
+            <video id="basicVideo" controls preload="metadata">
+                <source src="/videos/20250724_172924.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="log" id="basicLog"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 1b: Basic Video Element (Second Video)</h2>
+            <video id="basicVideo2" controls preload="metadata">
+                <source src="/videos/20250724_173148.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="log" id="basicLog2"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Video with Different Attributes</h2>
+            <video id="testVideo" controls preload="auto" crossorigin="anonymous">
+                <source src="/videos/20250724_172924.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="log" id="testLog"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Manual Controls</h2>
+            <video id="manualVideo" width="600" height="400"></video>
+            <br>
+            <button onclick="loadVideo()">Load Video</button>
+            <button onclick="playVideo()">Play</button>
+            <button onclick="pauseVideo()">Pause</button>
+            <div class="log" id="manualLog"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 4: Network Information</h2>
+            <button onclick="testNetwork()">Test Network</button>
+            <div class="log" id="networkLog"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(elementId, message) {
+            const logElement = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}<br>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Test 1: Basic Video
+        const basicVideo = document.getElementById('basicVideo');
+        basicVideo.addEventListener('loadstart', () => log('basicLog', 'loadstart'));
+        basicVideo.addEventListener('loadedmetadata', () => log('basicLog', 'loadedmetadata'));
+        basicVideo.addEventListener('loadeddata', () => log('basicLog', 'loadeddata'));
+        basicVideo.addEventListener('canplay', () => log('basicLog', 'canplay'));
+        basicVideo.addEventListener('canplaythrough', () => log('basicLog', 'canplaythrough'));
+        basicVideo.addEventListener('play', () => log('basicLog', 'play'));
+        basicVideo.addEventListener('pause', () => log('basicLog', 'pause'));
+        basicVideo.addEventListener('error', (e) => {
+            log('basicLog', `error: ${e.target.error ? e.target.error.message : 'Unknown error'}`);
+        });
+
+        // Test 1b: Basic Video 2
+        const basicVideo2 = document.getElementById('basicVideo2');
+        basicVideo2.addEventListener('loadstart', () => log('basicLog2', 'loadstart'));
+        basicVideo2.addEventListener('loadedmetadata', () => log('basicLog2', 'loadedmetadata'));
+        basicVideo2.addEventListener('loadeddata', () => log('basicLog2', 'loadeddata'));
+        basicVideo2.addEventListener('canplay', () => log('basicLog2', 'canplay'));
+        basicVideo2.addEventListener('canplaythrough', () => log('basicLog2', 'canplaythrough'));
+        basicVideo2.addEventListener('play', () => log('basicLog2', 'play'));
+        basicVideo2.addEventListener('pause', () => log('basicLog2', 'pause'));
+        basicVideo2.addEventListener('error', (e) => {
+            log('basicLog2', `error: ${e.target.error ? e.target.error.message : 'Unknown error'}`);
+        });
+
+        // Test 2: Test Video
+        const testVideo = document.getElementById('testVideo');
+        testVideo.addEventListener('loadstart', () => log('testLog', 'loadstart'));
+        testVideo.addEventListener('loadedmetadata', () => log('testLog', 'loadedmetadata'));
+        testVideo.addEventListener('loadeddata', () => log('testLog', 'loadeddata'));
+        testVideo.addEventListener('canplay', () => log('testLog', 'canplay'));
+        testVideo.addEventListener('canplaythrough', () => log('testLog', 'canplaythrough'));
+        testVideo.addEventListener('play', () => log('testLog', 'play'));
+        testVideo.addEventListener('pause', () => log('testLog', 'pause'));
+        testVideo.addEventListener('error', (e) => {
+            log('testLog', `error: ${e.target.error ? e.target.error.message : 'Unknown error'}`);
+        });
+
+        // Test 3: Manual Video
+        const manualVideo = document.getElementById('manualVideo');
+        manualVideo.addEventListener('loadstart', () => log('manualLog', 'loadstart'));
+        manualVideo.addEventListener('loadedmetadata', () => log('manualLog', 'loadedmetadata'));
+        manualVideo.addEventListener('loadeddata', () => log('manualLog', 'loadeddata'));
+        manualVideo.addEventListener('canplay', () => log('manualLog', 'canplay'));
+        manualVideo.addEventListener('canplaythrough', () => log('manualLog', 'canplaythrough'));
+        manualVideo.addEventListener('play', () => log('manualLog', 'play'));
+        manualVideo.addEventListener('pause', () => log('manualLog', 'pause'));
+        manualVideo.addEventListener('error', (e) => {
+            log('manualLog', `error: ${e.target.error ? e.target.error.message : 'Unknown error'}`);
+        });
+
+        function loadVideo() {
+            manualVideo.src = '/videos/20250724_172924.mp4';
+            manualVideo.load();
+            log('manualLog', 'Video source set and load() called');
+        }
+
+        function playVideo() {
+            manualVideo.play().then(() => {
+                log('manualLog', 'play() promise resolved');
+            }).catch(error => {
+                log('manualLog', `play() promise rejected: ${error.message}`);
+            });
+        }
+
+        function pauseVideo() {
+            manualVideo.pause();
+            log('manualLog', 'pause() called');
+        }
+
+        // Test 4: Network
+        async function testNetwork() {
+            try {
+                const response = await fetch('/videos/20250724_172924.mp4', { method: 'HEAD' });
+                log('networkLog', `HEAD request status: ${response.status}`);
+                log('networkLog', `Content-Type: ${response.headers.get('Content-Type')}`);
+                log('networkLog', `Content-Length: ${response.headers.get('Content-Length')}`);
+                log('networkLog', `Accept-Ranges: ${response.headers.get('Accept-Ranges')}`);
+                log('networkLog', `Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin')}`);
+                
+                // Test range request
+                const rangeResponse = await fetch('/videos/20250724_172924.mp4', {
+                    headers: { 'Range': 'bytes=0-1023' }
+                });
+                log('networkLog', `Range request status: ${rangeResponse.status}`);
+                log('networkLog', `Content-Range: ${rangeResponse.headers.get('Content-Range')}`);
+            } catch (error) {
+                log('networkLog', `Network test error: ${error.message}`);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            log('basicLog', 'Page loaded');
+            log('basicLog2', 'Page loaded');
+            log('testLog', 'Page loaded');
+            log('manualLog', 'Page loaded');
+            log('networkLog', 'Page loaded');
+        });
+    </script>
+</body>
+</html>

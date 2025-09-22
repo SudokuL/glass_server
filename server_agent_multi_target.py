@@ -7,6 +7,7 @@ from datetime import datetime
 from vosk import Model, KaldiRecognizer
 from aiohttp import web, web_runner
 import aiofiles
+import cv2
 
 # --- Qwen2.5-VL 相关 ---
 import torch
@@ -22,9 +23,49 @@ import sys
 sys.path.append('/root/autodl-tmp/.autodl/iot/food_cv')
 from food_cv.GatedRegNet_Food import FoodRecognizer
 
+# --- 多目标食物检测 ---
+from multi_target_food_detector import MultiTargetFoodDetector
+
 # --- 视频处理 ---
-import cv2
 import glob
+import random
+
+# 菜品营养数据库
+DISH_NUTRITION_DATABASE = {
+    # 高蛋白质菜品
+    '红烧肉': { 'protein': 16.2, 'fat': 20.5, 'carbs': 8.1, 'fiber': 0.8, 'calcium': 15, 'iron': 3.2, 'category': 'meat' },
+    '白切鸡': { 'protein': 23.3, 'fat': 9.3, 'carbs': 0.0, 'fiber': 0.0, 'calcium': 12, 'iron': 1.4, 'category': 'meat' },
+    '蒸蛋羹': { 'protein': 13.1, 'fat': 11.2, 'carbs': 1.2, 'fiber': 0.0, 'calcium': 56, 'iron': 2.8, 'category': 'egg' },
+    '鲫鱼汤': { 'protein': 17.1, 'fat': 2.7, 'carbs': 0.0, 'fiber': 0.0, 'calcium': 79, 'iron': 1.3, 'category': 'fish' },
+    '牛肉炖土豆': { 'protein': 18.6, 'fat': 12.4, 'carbs': 15.2, 'fiber': 2.1, 'calcium': 18, 'iron': 3.8, 'category': 'meat' },
+    
+    # 高钙菜品
+    '麻婆豆腐': { 'protein': 7.9, 'fat': 11.1, 'carbs': 6.0, 'fiber': 1.1, 'calcium': 68.6, 'iron': 2.2, 'category': 'tofu' },
+    '虾仁豆腐': { 'protein': 15.8, 'fat': 8.3, 'carbs': 4.2, 'fiber': 0.5, 'calcium': 156, 'iron': 2.1, 'category': 'seafood' },
+    '芝麻糊': { 'protein': 4.8, 'fat': 12.6, 'carbs': 22.1, 'fiber': 3.2, 'calcium': 218, 'iron': 4.6, 'category': 'dessert' },
+    '紫菜蛋花汤': { 'protein': 8.2, 'fat': 4.1, 'carbs': 2.8, 'fiber': 1.8, 'calcium': 89, 'iron': 12.8, 'category': 'soup' },
+    '酸奶水果': { 'protein': 5.2, 'fat': 3.8, 'carbs': 18.4, 'fiber': 2.1, 'calcium': 125, 'iron': 0.3, 'category': 'dairy' },
+    
+    # 高铁菜品
+    '猪肝炒菠菜': { 'protein': 18.2, 'fat': 8.9, 'carbs': 6.4, 'fiber': 2.8, 'calcium': 28, 'iron': 18.6, 'category': 'organ' },
+    '韭菜炒蛋': { 'protein': 11.8, 'fat': 12.3, 'carbs': 4.1, 'fiber': 2.4, 'calcium': 42, 'iron': 6.2, 'category': 'vegetable' },
+    '黑木耳炒肉': { 'protein': 13.6, 'fat': 9.8, 'carbs': 8.2, 'fiber': 4.2, 'calcium': 38, 'iron': 8.9, 'category': 'fungus' },
+    '红枣银耳汤': { 'protein': 2.8, 'fat': 0.4, 'carbs': 28.6, 'fiber': 5.1, 'calcium': 45, 'iron': 4.8, 'category': 'dessert' },
+    '芝麻菠菜': { 'protein': 6.2, 'fat': 8.4, 'carbs': 9.1, 'fiber': 3.8, 'calcium': 86, 'iron': 7.2, 'category': 'vegetable' },
+    
+    # 高纤维菜品
+    '蒜蓉西兰花': { 'protein': 4.3, 'fat': 2.1, 'carbs': 6.6, 'fiber': 4.2, 'calcium': 47, 'iron': 1.2, 'category': 'vegetable' },
+    '凉拌芹菜': { 'protein': 2.2, 'fat': 0.8, 'carbs': 4.8, 'fiber': 3.2, 'calcium': 80, 'iron': 2.5, 'category': 'vegetable' },
+    '木耳菜': { 'protein': 2.8, 'fat': 0.5, 'carbs': 5.4, 'fiber': 2.8, 'calcium': 166, 'iron': 3.2, 'category': 'vegetable' },
+    '冬瓜汤': { 'protein': 1.2, 'fat': 0.2, 'carbs': 2.9, 'fiber': 1.8, 'calcium': 19, 'iron': 0.3, 'category': 'soup' },
+    '萝卜丝汤': { 'protein': 1.6, 'fat': 0.3, 'carbs': 4.1, 'fiber': 2.4, 'calcium': 24, 'iron': 0.8, 'category': 'soup' },
+    
+    # 低脂低糖菜品
+    '清蒸鲈鱼': { 'protein': 18.6, 'fat': 3.4, 'carbs': 0.0, 'fiber': 0.0, 'calcium': 138, 'iron': 1.2, 'category': 'fish' },
+    '白灼菜心': { 'protein': 2.8, 'fat': 0.4, 'carbs': 3.2, 'fiber': 1.8, 'calcium': 108, 'iron': 1.8, 'category': 'vegetable' },
+    '蒸南瓜': { 'protein': 1.2, 'fat': 0.1, 'carbs': 5.3, 'fiber': 1.4, 'calcium': 16, 'iron': 0.4, 'category': 'vegetable' },
+    '黄瓜汤': { 'protein': 0.8, 'fat': 0.2, 'carbs': 2.0, 'fiber': 0.8, 'calcium': 15, 'iron': 0.3, 'category': 'soup' }
+}
 
 # 离线模型路径
 QWEN_MODEL_PATH = "/root/autodl-tmp/.autodl/iot/qwen_7b_vl_offline"
@@ -47,6 +88,11 @@ print("[Srv] Qwen2.5-VL ready on", qwen.device)
 print("[Srv] Loading FoodRecognizer...")
 food_recognizer = FoodRecognizer()
 print("[Srv] FoodRecognizer ready")
+
+# 初始化多目标食物检测器
+print("[Srv] Loading MultiTargetFoodDetector...")
+multi_target_detector = MultiTargetFoodDetector(silent_mode=True)
+print("[Srv] MultiTargetFoodDetector ready")
 
 # 麦粒唤醒词模糊音识别
 def detect_maili_wakeup(text):
@@ -500,6 +546,267 @@ def generate_health_warnings(nutrition_summary):
         print(f"[Warning] 生成健康预警失败: {e}")
         return None
 
+def get_recommended_dishes(warnings_data):
+    """基于健康预警数据获取推荐菜品列表"""
+    try:
+        # 分析风险等级和营养需求
+        high_risk_diseases = []
+        medium_risk_diseases = []
+        recommended_dishes = []
+        
+        # 解析预警数据
+        if 'warnings' in warnings_data:
+            warnings_list = warnings_data['warnings']
+            for warning in warnings_list:
+                if warning['risk_level'] == 'high':
+                    high_risk_diseases.append(warning['disease'])
+                elif warning['risk_level'] == 'medium':
+                    medium_risk_diseases.append(warning['disease'])
+        
+        # 根据疾病风险选择合适的菜品
+        if high_risk_diseases:
+            for disease in high_risk_diseases:
+                if '糖尿病' in disease:
+                    # 选择低糖低GI食物
+                    candidates = ['蒸蛋羹', '清蒸鲈鱼', '白灼菜心', '蒜蓉西兰花']
+                    recommended_dishes.extend(random.sample(candidates, min(2, len(candidates))))
+                elif '高血压' in disease:
+                    # 选择低钠高钾食物
+                    candidates = ['白灼菜心', '蒸南瓜', '冬瓜汤', '清蒸鲈鱼']
+                    recommended_dishes.extend(random.sample(candidates, min(2, len(candidates))))
+                elif '心血管疾病' in disease:
+                    # 选择低脂食物
+                    candidates = ['清蒸鲈鱼', '鲫鱼汤', '白灼菜心', '蒸蛋羹']
+                    recommended_dishes.extend(random.sample(candidates, min(2, len(candidates))))
+                elif '骨质疏松' in disease:
+                    # 选择高钙食物
+                    candidates = ['虾仁豆腐', '芝麻糊', '紫菜蛋花汤', '麻婆豆腐']
+                    recommended_dishes.extend(random.sample(candidates, min(2, len(candidates))))
+                elif '贫血' in disease:
+                    # 选择富含铁质的食物
+                    candidates = ['猪肝炒菠菜', '韭菜炒蛋', '黑木耳炒肉', '芝麻菠菜']
+                    recommended_dishes.extend(random.sample(candidates, min(2, len(candidates))))
+        
+        elif medium_risk_diseases:
+            # 中等风险，选择均衡营养的菜品
+            candidates = ['蒸蛋羹', '鲫鱼汤', '蒜蓉西兰花', '麻婆豆腐', '白切鸡']
+            recommended_dishes.extend(random.sample(candidates, min(3, len(candidates))))
+        
+        else:
+            # 健康状况良好，随机推荐营养均衡的菜品
+            all_dishes = list(DISH_NUTRITION_DATABASE.keys())
+            recommended_dishes = random.sample(all_dishes, min(3, len(all_dishes)))
+        
+        # 去重并限制为3个菜品
+        recommended_dishes = list(set(recommended_dishes))[:3]
+        
+        # 如果推荐菜品不足3个，补充一些健康菜品
+        if len(recommended_dishes) < 3:
+            healthy_dishes = ['蒸蛋羹', '清蒸鲈鱼', '蒜蓉西兰花', '麻婆豆腐', '白切鸡']
+            for dish in healthy_dishes:
+                if dish not in recommended_dishes and len(recommended_dishes) < 3:
+                    recommended_dishes.append(dish)
+        
+        return recommended_dishes
+        
+    except Exception as e:
+        print(f"[FOOD_REC] 获取推荐菜品失败: {e}")
+        return ['蒸蛋羹', '清蒸鲈鱼', '蒜蓉西兰花']
+
+def generate_food_recommendation(warnings_data):
+    """基于健康预警数据生成菜品推荐"""
+    try:
+        # 获取推荐菜品列表
+        recommended_dishes = get_recommended_dishes(warnings_data)
+        
+        # 分析需要补充的营养素
+        nutrients_needed = []
+        if 'warnings' in warnings_data:
+            warnings_list = warnings_data['warnings']
+            for warning in warnings_list:
+                if warning['risk_level'] in ['high', 'medium']:
+                    disease = warning['disease']
+                    if '糖尿病' in disease:
+                        nutrients_needed.append('膳食纤维')
+                    elif '高血压' in disease:
+                        nutrients_needed.append('钾')
+                    elif '心血管疾病' in disease:
+                        nutrients_needed.append('不饱和脂肪酸')
+                    elif '骨质疏松' in disease:
+                        nutrients_needed.append('钙')
+                    elif '贫血' in disease:
+                        nutrients_needed.append('铁')
+        
+        # 去重营养素
+        nutrients_needed = list(set(nutrients_needed))
+        
+        # 构建简洁的推荐文本
+        if len(recommended_dishes) >= 3:
+            recommendation = f"根据您的营养健康状态，推荐1.{recommended_dishes[0]}，2.{recommended_dishes[1]}，3.{recommended_dishes[2]}三个菜"
+        else:
+            recommendation = f"根据您的营养健康状态，推荐{', '.join(recommended_dishes)}等菜品"
+        
+        if nutrients_needed:
+            if len(nutrients_needed) == 1:
+                recommendation += f"，补充{nutrients_needed[0]}营养素。"
+            elif len(nutrients_needed) == 2:
+                recommendation += f"，补充{nutrients_needed[0]}、{nutrients_needed[1]}两种营养素。"
+            else:
+                recommendation += f"，补充{', '.join(nutrients_needed[:2])}等营养素。"
+        else:
+            recommendation += "，保持营养均衡。"
+        
+        return recommendation
+        
+    except Exception as e:
+        print(f"[FOOD_REC] 生成推荐失败: {e}")
+        return "根据您的营养健康状态，推荐1.蒸蛋羹，2.清蒸鲈鱼，3.蒜蓉西兰花三个菜，补充蛋白质、维生素营养素。"
+
+def evaluate_food_recommendation(detected_foods, warnings_data):
+    """评估检测到的食物是否推荐食用"""
+    try:
+        if not warnings_data:
+            return "暂无健康数据，建议适量食用。", "neutral"
+        
+        # 如果检测到两个及以上的菜，只推荐一个菜
+        if len(detected_foods) >= 2:
+            # 分析高风险疾病和缺乏的营养素
+            high_risk_diseases = []
+            lacking_nutrients = []
+            
+            for disease, data in warnings_data.items():
+                if isinstance(data, dict) and data.get('risk_level') == '高风险':
+                    high_risk_diseases.append(disease)
+                    # 根据疾病类型推断缺乏的营养素
+                    if disease == '糖尿病':
+                        lacking_nutrients.extend(['膳食纤维', '蛋白质'])
+                    elif disease == '高血压':
+                        lacking_nutrients.extend(['钾', '镁'])
+                    elif disease == '心血管疾病':
+                        lacking_nutrients.extend(['Omega-3脂肪酸', '维生素E'])
+                    elif disease == '骨质疏松':
+                        lacking_nutrients.extend(['钙', '维生素D'])
+                    elif disease == '贫血':
+                        lacking_nutrients.extend(['铁', '维生素B12'])
+            
+            # 去重营养素
+            lacking_nutrients = list(set(lacking_nutrients))
+            
+            # 评估每个食物的适宜性得分
+            food_scores = []
+            for food in detected_foods:
+                food_name = food.get('dish_name', '')
+                nutrients = food.get('nutrients', {})
+                
+                score = 0
+                # 基础得分
+                score += food.get('confidence', 0) * 100
+                
+                # 根据营养素含量调整得分
+                protein = nutrients.get('蛋白质(g)', 0)
+                calcium = nutrients.get('钙(mg)', 0)
+                iron = nutrients.get('铁(mg)', 0)
+                
+                # 蛋白质丰富加分
+                if protein > 10:
+                    score += 20
+                # 钙含量丰富加分
+                if calcium > 100:
+                    score += 15
+                # 铁含量丰富加分
+                if iron > 2:
+                    score += 15
+                
+                # 不健康食物减分
+                sugar = nutrients.get('碳水化合物(g)', 0)
+                sodium = nutrients.get('钠(mg)', 0)
+                fat = nutrients.get('脂肪(g)', 0)
+                
+                if sugar > 30:
+                    score -= 30
+                if sodium > 500:
+                    score -= 25
+                if fat > 20:
+                    score -= 20
+                
+                food_scores.append((food_name, score))
+            
+            # 选择得分最高的食物
+            best_food = max(food_scores, key=lambda x: x[1])[0]
+            
+            # 生成推荐文本
+            if lacking_nutrients:
+                nutrients_text = '、'.join(lacking_nutrients[:2])  # 最多显示两个营养素
+                result_text = f"推荐您吃{best_food}，因为您缺乏{nutrients_text}"
+            else:
+                result_text = f"推荐您吃{best_food}，因为它营养均衡适合您"
+            
+            return result_text, "recommended"
+        
+        # 如果只有一个菜，按原逻辑处理
+        else:
+            # 分析高风险疾病
+            high_risk_diseases = []
+            for disease, data in warnings_data.items():
+                if isinstance(data, dict) and data.get('risk_level') == '高风险':
+                    high_risk_diseases.append(disease)
+            
+            # 简单的食物评估逻辑
+            not_recommended = []
+            recommended = []
+            
+            for food in detected_foods:
+                food_name = food.get('dish_name', '').lower()
+                nutrients = food.get('nutrients', {})
+                
+                # 获取关键营养素
+                sugar = nutrients.get('碳水化合物(g)', 0)
+                sodium = nutrients.get('钠(mg)', 0)
+                fat = nutrients.get('脂肪(g)', 0)
+                
+                is_recommended = True
+                reasons = []
+                
+                # 糖尿病风险评估
+                if '糖尿病' in high_risk_diseases:
+                    if sugar > 30 or '糖' in food_name or '甜' in food_name:
+                        is_recommended = False
+                        reasons.append('含糖量较高，不适合糖尿病风险人群')
+                
+                # 高血压风险评估
+                if '高血压' in high_risk_diseases:
+                    if sodium > 500 or '咸' in food_name or '腌' in food_name:
+                        is_recommended = False
+                        reasons.append('钠含量较高，不适合高血压风险人群')
+                
+                # 心血管疾病风险评估
+                if '心血管疾病' in high_risk_diseases:
+                    if fat > 20 or '炸' in food_name or '油' in food_name:
+                        is_recommended = False
+                        reasons.append('脂肪含量较高，不适合心血管疾病风险人群')
+                
+                if is_recommended:
+                    recommended.append(food_name)
+                else:
+                    not_recommended.append((food_name, reasons))
+            
+            # 生成评估结果
+            if not_recommended:
+                result_text = "不建议食用以下食物：\n"
+                for food, reasons in not_recommended:
+                    result_text += f"? {food}: {', '.join(reasons)}\n"
+                if recommended:
+                    result_text += f"\n可以适量食用：{', '.join(recommended)}"
+                return result_text, "not_recommended"
+            elif recommended:
+                return f"检测到的食物都比较适合您：{', '.join(recommended)}，建议适量食用。", "recommended"
+            else:
+                return "未能评估食物适宜性，建议咨询营养师。", "neutral"
+            
+    except Exception as e:
+        print(f"[FOOD_EVAL] 评估失败: {e}")
+        return "食物评估功能暂时不可用，建议适量食用。", "neutral"
+
 async def ws_handler(ws):
     print("[Srv] ? new conn", ws.remote_address)
     rec = KaldiRecognizer(vosk_model, SAMPLE_RATE)
@@ -565,7 +872,87 @@ async def ws_handler(ws):
                                 await ws.send(json.dumps({"cmd": "photo"}))
                                 last_photo_ts = time.time()
                                 print("[Srv] ? food recognition photo cmd")
-                            awaiting_photo_model = "food"
+                            awaiting_photo_model = "food_recommend"
+                        elif "我要吃这个" in result:
+                            if time.time() - last_photo_ts > 3:
+                                await ws.send(json.dumps({"cmd": "photo"}))
+                                last_photo_ts = time.time()
+                                print("[Srv] ? food record photo cmd")
+                            awaiting_photo_model = "food_record"
+                        elif "菜品推荐" in result:
+                            # 直接读取latest_warnings.json并推荐
+                            try:
+                                latest_warning_file = os.path.join(NUTRITION_DIR, "latest_warnings.json")
+                                if os.path.exists(latest_warning_file):
+                                    with open(latest_warning_file, "r", encoding="utf-8") as f:
+                                        warnings_data = json.load(f)
+                                    
+                                    # 生成菜品推荐文本
+                                    recommendation_text = generate_food_recommendation(warnings_data)
+                                    print(f"[FOOD_REC] {recommendation_text}")
+                                    
+                                    # 获取推荐的三个具体菜品
+                                    recommended_dishes = get_recommended_dishes(warnings_data)
+                                    
+                                    # 构建菜品数据结构
+                                    dishes_data = []
+                                    for dish_name in recommended_dishes:
+                                        if dish_name in DISH_NUTRITION_DATABASE:
+                                            dish_info = DISH_NUTRITION_DATABASE[dish_name]
+                                            dishes_data.append({
+                                                "name": dish_name,
+                                                "protein": dish_info["protein"],
+                                                "fat": dish_info["fat"],
+                                                "carbs": dish_info["carbs"],
+                                                "calcium": dish_info["calcium"],
+                                                "iron": dish_info["iron"],
+                                                "category": dish_info["category"]
+                                            })
+                                    
+                                    baidu_tts.baidu_tts_test(recommendation_text)
+                                    mp3 = open(TTS_FILE, "rb").read()
+                                    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                                    
+                                    await ws.send(json.dumps({
+                                        "tag": "response",
+                                        "question": pending_text,
+                                        "text": recommendation_text,
+                                        "payload_hex": mp3.hex(),
+                                        "filename": ts,
+                                        "dishes": dishes_data
+                                    }))
+                                else:
+                                    resp = "暂无健康预警数据，无法生成个性化菜品推荐。请先进行食物识别以建立健康档案。"
+                                    baidu_tts.baidu_tts_test(resp)
+                                    mp3 = open(TTS_FILE, "rb").read()
+                                    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                                    
+                                    await ws.send(json.dumps({
+                                        "tag": "response",
+                                        "question": pending_text,
+                                        "text": resp,
+                                        "payload_hex": mp3.hex(),
+                                        "filename": ts,
+                                        "dishes": []
+                                    }))
+                            except Exception as e:
+                                print(f"[FOOD_REC] 菜品推荐失败: {e}")
+                                resp = "菜品推荐功能暂时不可用，请稍后再试。"
+                                baidu_tts.baidu_tts_test(resp)
+                                mp3 = open(TTS_FILE, "rb").read()
+                                ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                                
+                                await ws.send(json.dumps({
+                                    "tag": "response",
+                                    "question": pending_text,
+                                    "text": resp,
+                                    "payload_hex": mp3.hex(),
+                                    "filename": ts,
+                                    "dishes": []
+                                }))
+                            
+                            awaiting_photo_model = False
+                            pending_text = ""
                         else:
                             # 纯文本调用
                             print("[info] 触发 Qwen2.5-VL 文本推理 …")
@@ -616,7 +1003,45 @@ async def ws_handler(ws):
         else:
             data = json.loads(chunk)
             tag = data.get("tag")
-            if tag == "photo":
+            if tag == "periodic_detection":
+                # 处理定时检测照片
+                img_bytes = bytes.fromhex(data["payload_hex"])
+                
+                # 保存原始照片到临时位置
+                temp_photo_path = os.path.join("/tmp", f"periodic_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
+                with open(temp_photo_path, "wb") as f:
+                    f.write(img_bytes)
+                
+                # 读取图像进行多目标检测
+                image = cv2.imread(temp_photo_path)
+                if image is not None:
+                    try:
+                        # 运行多目标检测
+                        results = multi_target_detector.process_frame(image)
+                        
+                        # 可视化结果
+                        annotated_image = multi_target_detector.visualize_results(image, results)
+                        
+                        # 保存结果图片到主目录（覆盖上一次的结果）
+                        result_path = "/root/autodl-tmp/.autodl/iot/periodic_detection_result.jpg"
+                        cv2.imwrite(result_path, annotated_image)
+                        print(f"[定时检测] 已完成并保存结果")
+                        
+                        # 清理临时文件
+                        os.remove(temp_photo_path)
+                        
+                    except Exception as e:
+                        print(f"[定时检测] 处理失败: {e}")
+                        # 清理临时文件
+                        if os.path.exists(temp_photo_path):
+                            os.remove(temp_photo_path)
+                else:
+                    print("[定时检测] 图像读取失败")
+                    # 清理临时文件
+                    if os.path.exists(temp_photo_path):
+                        os.remove(temp_photo_path)
+                        
+            elif tag == "photo":
                 img_bytes = bytes.fromhex(data["payload_hex"])
                 photo_path = save_photo(img_bytes)
                 
@@ -625,70 +1050,218 @@ async def ws_handler(ws):
                     print(f"[Srv] 独立拍照已保存: {photo_path}")
                     awaiting_photo_model = False
                     pending_text = ""
-                elif awaiting_photo_model == "food" and detect_maili_wakeup(pending_text) and ("食物识别" in pending_text or "实物识别" in pending_text):
-                     # 食品识别调用
-                     print("[info] 触发食品识别 …")
-                     food_result = food_recognizer.recognize_food(photo_path)
+                elif awaiting_photo_model == "food_recommend" and detect_maili_wakeup(pending_text) and ("食物识别" in pending_text or "实物识别" in pending_text):
+                     # 多目标食品识别调用
+                     print("[info] 触发多目标食品识别 …")
                      
-                     if food_result:
-                         dish_name = food_result.get('dish_name', '未知食品')
-                         confidence = food_result.get('confidence', 0.0)
-                         nutrients = food_result.get('nutrients', {})
+                     # 读取图像
+                     image = cv2.imread(photo_path)
+                     if image is None:
+                         resp = "抱歉，无法读取图像，请重试"
+                         print(f"[FOOD] {resp}")
+                         baidu_tts.baidu_tts_test(resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": datetime.now().strftime("%Y%m%d_%H%M%S")
+                         }))
+                         awaiting_photo_model = False
+                         pending_text = ""
+                         continue
+                     
+                     # 进行多目标检测
+                     detection_results = multi_target_detector.process_frame(image)
+                     
+                     if detection_results['total_detected'] > 0:
+                         # 生成可视化结果
+                         annotated_image = multi_target_detector.visualize_results(image, detection_results)
                          
-                         # 打印置信度top3
-                         top3_predictions = food_result.get('top3_predictions', [])
-                         if top3_predictions:
-                             print(f"[FOOD] 置信度Top3预测结果:")
-                             for i, pred in enumerate(top3_predictions, 1):
-                                 print(f"[FOOD] {i}. {pred.get('name', '未知')} - 置信度: {pred.get('confidence', 0.0):.4f}")
-                         else:
-                             print(f"[FOOD] 单一预测结果: {dish_name} - 置信度: {confidence:.4f}")
-                         
-                         # 保存食品识别结果
+                         # 保存可视化结果
                          ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                         result_image_path = os.path.join(PHOTO_DIR, f"multi_detection_{ts}.jpg")
+                         cv2.imwrite(result_image_path, annotated_image)
+                         
+                         # 获取所有检测到的食物信息
+                         all_foods = [{
+                             'dish_name': food['chinese_food_result']['dish_name'],
+                             'confidence': food['chinese_food_result']['confidence'],
+                             'nutrients': food['chinese_food_result']['nutrients']
+                         } for food in detection_results['food_detections']]
+                         
+                         # 读取健康预警数据进行推荐评估
+                         try:
+                             latest_warning_file = os.path.join(NUTRITION_DIR, "latest_warnings.json")
+                             warnings_data = {}
+                             if os.path.exists(latest_warning_file):
+                                 with open(latest_warning_file, "r", encoding="utf-8") as f:
+                                     warnings_data = json.load(f)
+                             
+                             # 评估食物推荐
+                             recommendation_text, recommendation_status = evaluate_food_recommendation(all_foods, warnings_data)
+                             
+                             # 构建检测结果描述
+                             food_names = [food['dish_name'] for food in all_foods]
+                             detection_desc = f"检测到{len(all_foods)}种食物：{', '.join(food_names)}。"
+                             
+                             full_resp = f"{detection_desc}\n\n{recommendation_text}"
+                             print(f"[FOOD_REC] {full_resp}")
+                             
+                         except Exception as e:
+                             print(f"[FOOD_REC] 推荐评估失败: {e}")
+                             food_names = [food['dish_name'] for food in all_foods]
+                             full_resp = f"检测到{len(all_foods)}种食物：{', '.join(food_names)}。建议适量食用。"
+                         
+                         baidu_tts.baidu_tts_test(full_resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": full_resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": ts,
+                             "food_result": {
+                                 "foods": all_foods,
+                                 "detection_type": "food_recommend",
+                                 "total_detected": detection_results['total_detected']
+                             }
+                         }))
+                     else:
+                         resp = "抱歉，未检测到任何食物目标，请重试"
+                         print(f"[FOOD] {resp}")
+                         baidu_tts.baidu_tts_test(resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": datetime.now().strftime("%Y%m%d_%H%M%S")
+                         }))
+                     
+                     awaiting_photo_model = False
+                     pending_text = ""
+                elif awaiting_photo_model == "food_record":
+                     # 食物记录功能
+                     print("[info] 触发食物记录功能 …")
+                     
+                     # 读取图像
+                     image = cv2.imread(photo_path)
+                     if image is None:
+                         resp = "抱歉，无法读取图像，请重试"
+                         print(f"[FOOD_RECORD] {resp}")
+                         baidu_tts.baidu_tts_test(resp)
+                         mp3 = open(TTS_FILE, "rb").read()
+                         await ws.send(json.dumps({
+                             "tag": "response",
+                             "question": pending_text,
+                             "text": resp,
+                             "payload_hex": mp3.hex(),
+                             "filename": datetime.now().strftime("%Y%m%d_%H%M%S")
+                         }))
+                         awaiting_photo_model = False
+                         pending_text = ""
+                         continue
+                     
+                     # 进行多目标检测
+                     detection_results = multi_target_detector.process_frame(image)
+                     
+                     if detection_results['total_detected'] > 0:
+                         # 生成可视化结果
+                         annotated_image = multi_target_detector.visualize_results(image, detection_results)
+                         
+                         # 保存可视化结果
+                         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                         result_image_path = os.path.join(PHOTO_DIR, f"food_record_{ts}.jpg")
+                         cv2.imwrite(result_image_path, annotated_image)
+                         
+                         # 选择要记录的食物
+                         selected_food = detection_results.get('selected_food')
+                         if selected_food:
+                             # 手势选中了食物
+                             dish_name = selected_food['chinese_food_result']['dish_name']
+                             confidence = selected_food['chinese_food_result']['confidence']
+                             nutrients = selected_food['chinese_food_result']['nutrients']
+                             
+                             resp = f"已将{dish_name}菜品记录，置信度{confidence:.2f}"
+                         else:
+                             # 没有手势选择，选择屏幕上最大的菜品（置信度最高）
+                             best_food = max(detection_results['food_detections'], 
+                                            key=lambda x: x['chinese_food_result']['confidence'])
+                             dish_name = best_food['chinese_food_result']['dish_name']
+                             confidence = best_food['chinese_food_result']['confidence']
+                             nutrients = best_food['chinese_food_result']['nutrients']
+                             
+                             if detection_results['gesture']:
+                                 resp = f"手势未指向明确菜品，已记录屏幕上最大的菜品：{dish_name}，置信度{confidence:.2f}"
+                             else:
+                                 resp = f"未检测到手势，已记录屏幕上最大的菜品：{dish_name}，置信度{confidence:.2f}"
+                         
+                         # 保存食物记录
                          food_result_path = os.path.join(FOOD_DIR, f"food_{ts}.json")
                          with open(food_result_path, "w", encoding="utf-8") as f:
                              json.dump({
                                  "timestamp": ts,
                                  "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                  "photo_path": photo_path,
+                                 "result_image_path": result_image_path,
                                  "dish_name": dish_name,
                                  "confidence": confidence,
                                  "nutrients": nutrients,
-                                 "full_result": food_result
+                                 "detection_type": "food_record",
+                                 "total_detected": detection_results['total_detected'],
+                                 "has_gesture": detection_results['gesture'] is not None,
+                                 "gesture_selected": selected_food is not None,
+                                 "full_result": {
+                                     "food_detections": [{
+                                         "dish_name": food['chinese_food_result']['dish_name'],
+                                         "confidence": food['chinese_food_result']['confidence'],
+                                         "bbox": food['bbox'],
+                                         "yolo_class": food['yolo_class']
+                                     } for food in detection_results['food_detections']]
+                                 }
                              }, f, ensure_ascii=False, indent=2)
                          
-                         # 构建营养信息摘要
+                         # 添加营养信息
                          key_nutrients = ["热量(kcal)", "蛋白质(g)", "脂肪(g)", "碳水化合物(g)"]
                          nutrient_summary = ", ".join([f"{k}:{nutrients.get(k, 0):.1f}" for k in key_nutrients if k in nutrients])
                          
-                         resp = f"识别成功！已记录到云端。食品是：{dish_name}，置信度：{confidence:.2f}，营养成分是：{nutrient_summary}"
-                         print(f"[FOOD] {resp}")
+                         full_resp = f"{resp}。营养成分：{nutrient_summary}。记录已保存。"
+                         print(f"[FOOD_RECORD] {full_resp}")
                          
-                         baidu_tts.baidu_tts_test(resp)
+                         baidu_tts.baidu_tts_test(full_resp)
                          mp3 = open(TTS_FILE, "rb").read()
                          
                          await ws.send(json.dumps({
                              "tag": "response",
                              "question": pending_text,
-                             "text": resp,
+                             "text": full_resp,
                              "payload_hex": mp3.hex(),
                              "filename": ts,
-                             "food_result": food_result
+                             "food_result": {
+                                 "dish_name": dish_name,
+                                 "confidence": confidence,
+                                 "nutrients": nutrients,
+                                 "detection_type": "food_record",
+                                 "total_detected": detection_results['total_detected']
+                             }
                          }))
                          
-                         # 自动生成营养建议
+                         # 生成营养建议
                          try:
-                             print("[Nutrition] 开始生成营养建议...")
+                             print("[Nutrition] 正在生成营养建议...")
                              nutrition_summary = get_weekly_nutrition_summary()
                              advice = generate_nutrition_advice(nutrition_summary)
                              save_nutrition_advice(advice)
-                             print("[Nutrition] 营养建议生成完成")
+                             print("[Nutrition] 营养建议已生成")
                          except Exception as e:
                              print(f"[Nutrition] 营养建议生成失败: {e}")
                      else:
-                         resp = "抱歉，食品识别失败，请重试"
-                         print(f"[FOOD] {resp}")
+                         resp = "抱歉，未检测到任何食物目标，请重试"
+                         print(f"[FOOD_RECORD] {resp}")
                          baidu_tts.baidu_tts_test(resp)
                          mp3 = open(TTS_FILE, "rb").read()
                          await ws.send(json.dumps({

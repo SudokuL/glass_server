@@ -5,6 +5,7 @@ import asyncio, json, websockets, pyaudio, os, traceback, cv2, numpy as np
 AUDIO_HOST=os.getenv("AUDIO_HOST","127.0.0.1")
 AUDIO_PORT=int(os.getenv("AUDIO_PORT",6006))
 WS_URI=f"ws://{AUDIO_HOST}:{AUDIO_PORT}/ws"
+from fake_ar_cn import fake_ar
 
 CHUNK=1024; FORMAT=pyaudio.paInt16; CHANNELS=1; RATE=16000
 
@@ -14,6 +15,11 @@ async def async_ar(text):
 
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, ar, text)
+async def async_fake_ar(text,output="ar_frame.png", fps=10):
+    import asyncio
+    from fake_ar_cn import fake_ar
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, fake_ar, text, output, fps)
 
 import socket, sys, time
 def wait_tunnel(port=6006, timeout=10):
@@ -43,36 +49,32 @@ async def send_audio(ws):
 
 # ---------- 摄像 ----------
 def _find_camera():
-    """查找可用的摄像头设备"""
-    print("[Pi] 正在检测摄像头设备...")
-    available_cameras = []
-    
-    for i in range(10):  # 检查0-9号设备
+    print("[Pi] 正在检测物理摄像头设备...")
+
+    # 仅查找 video0 和 video1（来自 USB 摄像头 LKZC-4K-AF）
+    for i in [0, 1]:
+        device_path = f"/dev/video{i}"
+        if not os.path.exists(device_path):
+            print(f"[Pi] ? 设备 {device_path} 不存在")
+            continue
+
+        print(f"[Pi] 尝试打开 {device_path} ...")
         cap = cv2.VideoCapture(i)
-        if cap.isOpened():
-            # 测试是否能读取帧
-            ret, frame = cap.read()
-            if ret:
-                # 获取摄像头信息
-                width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-                height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-                fps = cap.get(cv2.CAP_PROP_FPS)
-                print(f"[Pi] 找到可用摄像头: /dev/video{i} ({width}x{height}, {fps}fps)")
-                available_cameras.append(i)
-                cap.release()
-                return i  # 返回第一个可用的摄像头
-            else:
-                print(f"[Pi] /dev/video{i} 存在但无法读取帧")
+        if not cap.isOpened():
+            print(f"[Pi] ? 无法打开 {device_path}")
+            cap.release()
+            continue
+
+        ret, frame = cap.read()
+        if ret and frame is not None:
+            print(f"[Pi] ? 成功读取图像帧：/dev/video{i}")
+            cap.release()
+            return i
+        else:
+            print(f"[Pi] ?? 打开了 {device_path}，但无法读取图像帧")
         cap.release()
-    
-    if not available_cameras:
-        print("[Pi] 未找到任何可用的摄像头设备")
-        print("[Pi] 请检查:")
-        print("[Pi] 1. 摄像头是否正确连接")
-        print("[Pi] 2. 是否有足够的权限访问摄像头设备")
-        print("[Pi] 3. 尝试运行: ls -la /dev/video*")
-        print("[Pi] 4. 尝试运行: lsusb (查看USB摄像头)")
-    
+
+    print("[Pi] ? 没有找到可用的物理摄像头")
     return None
 
 def _snap() -> bytes:
@@ -109,7 +111,7 @@ def _snap() -> bytes:
         time.sleep(1.0)  # 初始稳定
         
         # 极速手动对焦 - 最少测试点和最短等待
-        focus_values = [80, 120]  # 只测试2个最常用对焦点
+        focus_values = [30, 80, 130]  # 只测试2个最常用对焦点
         best_focus = 80  # 默认中等对焦值
         best_clarity = 0
         
@@ -273,7 +275,8 @@ async def recv_cmd(ws):
             with open(mp3_fn, "wb") as f:
                 f.write(mp3_bytes)
             print(f"[Pi] ? Saved audio: {mp3_fn}")
-            asyncio.create_task(async_ar(answer))
+            # asyncio.create_task(async_ar(answer))
+            asyncio.create_task(async_fake_ar(answer))
             continue
 
         # 原有命令处理（拍照/视频）

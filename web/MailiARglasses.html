@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="gbk">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AR烹饪助手</title>
     
@@ -413,18 +413,7 @@
             animation: shake 0.5s ease-in-out;
         }
         
-        .pyramid-layer.overflow::after {
-            content: '?';
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            color: #fbbf24;
-            font-weight: bold;
-            z-index: 3;
-            animation: warning-bounce 1s infinite;
-        }
+
         
         @keyframes overflow-pulse {
             0%, 100% { opacity: 0.3; }
@@ -512,6 +501,140 @@
             color: #fbbf24;
             font-weight: 500;
         }
+
+        /* 预警页面样式 */
+        .warning-card {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        .warning-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .warning-card.risk-low {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .warning-card.risk-medium {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .warning-card.risk-high {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .warning-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .warning-indicator.risk-low {
+            background: linear-gradient(180deg, #22c55e, #16a34a);
+        }
+        
+        .warning-indicator.risk-medium {
+            background: linear-gradient(180deg, #fbbf24, #f59e0b);
+        }
+        
+        .warning-indicator.risk-high {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+        }
+        
+        .symptom-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 2px;
+            transition: all 0.2s ease;
+        }
+        
+        .symptom-tag:hover {
+            transform: scale(1.05);
+        }
+        
+        .symptom-tag.risk-low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .symptom-tag.risk-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .symptom-tag.risk-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .nutrition-bar {
+            height: 8px;
+            background: rgba(75, 85, 99, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .nutrition-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .nutrition-bar-fill.sufficient {
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+        }
+        
+        .nutrition-bar-fill.warning {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        }
+        
+        .nutrition-bar-fill.deficient {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        /* 预警图标动画 */
+        .warning-icon {
+            animation: warning-pulse 2s infinite;
+        }
+        
+        @keyframes warning-pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+        
+        /* 预警展开动画 */
+        .warning-expandable {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .warning-expandable.expanded {
+            max-height: 1000px;
+        }
     </style>
 </head>
 <body class="gradient-bg-dark font-sans antialiased overflow-x-hidden">
@@ -530,7 +653,7 @@
             <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-20 glass-nav border-t border-white/10 flex justify-around items-center z-20
                         lg:mx-0 lg:left-0 lg:top-0 lg:max-w-none lg:w-20 lg:h-screen lg:flex-col lg:justify-start lg:border-t-0 lg:border-r lg:border-white/10">
                 <div class="hidden lg:block text-blue-400 p-4 my-4">
-                     <img src="maili.svg" class="h-8 w-8" alt="Maili Logo">
+                     <img src="dami.svg" class="h-8 w-8" alt="Dami Logo">
                 </div>
                 <button data-page="home-page" class="nav-btn flex flex-col items-center justify-center text-blue-400 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg>
@@ -556,9 +679,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     <span class="text-xs mt-1">媒体</span>
                 </button>
+                <button data-page="warning-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+                    <span class="text-xs mt-1">预警</span>
+                </button>
                 <button data-page="chat-page" class="nav-btn flex flex-col items-center justify-center text-gray-400 hover:text-gray-200 transition-colors w-full h-full lg:w-full lg:h-20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.702A9 9 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                    <span class="text-xs mt-1">麦粒</span>
+                    <span class="text-xs mt-1">大米</span>
                 </button>
         </nav>
 
@@ -638,7 +765,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h1 class="text-2xl font-bold text-white gradient-text">麦粒智能助手</h1>
+                                    <h1 class="text-2xl font-bold text-white gradient-text">大米智能助手</h1>
                                     <p class="text-gray-400 text-sm">您的专属AI烹饪顾问</p>
                                 </div>
                             </div>
@@ -676,7 +803,7 @@
                                     </svg>
                                 </div>
                                 <h3 class="text-xl font-semibold text-gray-300 mb-2">暂无聊天记录</h3>
-                                <p class="text-gray-500">开始与麦粒智能助手对话吧！</p>
+                                <p class="text-gray-500">开始与大米智能助手对话吧！</p>
                             </div>
                             
                             <!-- 聊天消息容器 -->
@@ -826,6 +953,88 @@
                     <div id="no-foods" class="text-center text-gray-500 py-10 hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16l3-3m-3 3l-3-3" /></svg>
                         <p>今日暂无食品记录</p>
+                    </div>
+                </main>
+
+                <!-- ================================================== -->
+                <!-- ============== WARNING PAGE ====================== -->
+                <!-- ================================================== -->
+                <main id="warning-page" class="p-4 lg:p-8 space-y-6 page-hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-100">健康预警</h1>
+                        <div class="flex space-x-2">
+                            <button id="refresh-warnings" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 预警总览卡片 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div id="warning-summary-low" class="bg-green-800/30 border border-green-600/50 rounded-xl p-4 text-center">
+                            <div class="text-green-400 text-2xl font-bold" id="low-risk-count">0</div>
+                            <div class="text-green-300 text-sm">低风险</div>
+                        </div>
+                        <div id="warning-summary-medium" class="bg-yellow-800/30 border border-yellow-600/50 rounded-xl p-4 text-center">
+                            <div class="text-yellow-400 text-2xl font-bold" id="medium-risk-count">0</div>
+                            <div class="text-yellow-300 text-sm">中等风险</div>
+                        </div>
+                        <div id="warning-summary-high" class="bg-red-800/30 border border-red-600/50 rounded-xl p-4 text-center">
+                            <div class="text-red-400 text-2xl font-bold" id="high-risk-count">0</div>
+                            <div class="text-red-300 text-sm">高风险</div>
+                        </div>
+                    </div>
+
+                    <!-- 慢性病预警列表 -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-200 mb-4">慢性病风险评估</h2>
+                        <div id="warning-list" class="space-y-4">
+                            <!-- 预警项目将在这里动态生成 -->
+                        </div>
+                        
+                        <!-- 加载状态 -->
+                        <div class="text-center text-gray-500 py-10" id="loading-warnings">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                            <p>正在分析健康风险...</p>
+                        </div>
+                        
+                        <!-- 无数据状态 -->
+                        <div id="no-warnings" class="text-center text-gray-500 py-10 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p>暂无健康风险数据</p>
+                            <p class="text-xs text-gray-600 mt-1">需要更多营养数据进行分析</p>
+                        </div>
+                    </div>
+
+                    <!-- 营养建议总结 -->
+                    <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            综合健康建议
+                        </h3>
+                        <div id="health-recommendations" class="space-y-4">
+                            <div class="text-center text-gray-500 py-6" id="loading-recommendations">
+                                <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto mb-3"></div>
+                                <p class="text-sm">正在生成健康建议...</p>
+                            </div>
+                            
+                            <div id="no-recommendations" class="text-center text-gray-500 py-6 hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                                <p class="text-sm">暂无健康建议</p>
+                                <p class="text-xs text-gray-600 mt-1">识别食物后自动生成建议</p>
+                            </div>
+                            
+                            <div id="recommendations-content" class="hidden">
+                                <!-- 健康建议内容将在这里显示 -->
+                            </div>
+                        </div>
                     </div>
                 </main>
             </div>
@@ -1247,7 +1456,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                         </svg>
                                     </div>
-                                    <span class="text-xs text-gray-500">麦粒助手</span>
+                                    <span class="text-xs text-gray-500">大米助手</span>
                                 </div>
                                 <div class="relative">
                                     <div class="bg-gradient-to-br from-gray-700 to-gray-800 text-white rounded-2xl rounded-bl-md px-4 py-3 shadow-lg border border-gray-600/30">
@@ -1648,6 +1857,10 @@
                 setTimeout(() => {
                     renderFoodPage();
                 }, 50);
+            } else if (pageId === 'warning-page') {
+                setTimeout(() => {
+                    renderWarningPage();
+                }, 50);
             }
         }
 
@@ -1723,7 +1936,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                 </svg>
-                                麦粒评价
+                                大米评价
                             </h2>
                             <div id="nutrition-advice" class="space-y-4">
                                 <div class="text-center text-gray-500 py-6" id="loading-advice">
@@ -2459,6 +2672,622 @@
             }
         }
 
+        /**
+         * 慢性病风险评估标准和逻辑
+         */
+        const CHRONIC_DISEASES_CONFIG = {
+            '糖尿病': {
+                name: '糖尿病',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,13L13.5,7.5C13.1,6.4 12.6,5.4 12,4.5C11.4,5.4 10.9,6.4 10.5,7.5L9,13L3,7V9L9,15L12,22L15,15L21,9Z"/></svg>',
+                thresholds: {
+                    low: { carbs: [0, 150], fiber: [25, Infinity], sugar: [0, 25] },
+                    medium: { carbs: [151, 250], fiber: [15, 24], sugar: [26, 50] },
+                    high: { carbs: [251, Infinity], fiber: [0, 14], sugar: [51, Infinity] }
+                },
+                symptoms: {
+                    low: ['血糖略有波动', '偶有疲劳感'],
+                    medium: ['血糖控制不稳', '易疲劳', '口渴增多'],
+                    high: ['血糖显著升高', '多饮多尿', '体重下降', '视力模糊']
+                }
+            },
+            '高血压': {
+                name: '高血压',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>',
+                thresholds: {
+                    low: { sodium: [0, 2000], potassium: [3500, Infinity] },
+                    medium: { sodium: [2001, 3000], potassium: [2500, 3499] },
+                    high: { sodium: [3001, Infinity], potassium: [0, 2499] }
+                },
+                symptoms: {
+                    low: ['血压偶有升高'],
+                    medium: ['头晕头痛', '心悸'],
+                    high: ['持续性头痛', '眩晕', '耳鸣', '心悸胸闷']
+                }
+            },
+            '骨质疏松': {
+                name: '骨质疏松',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A1,1 0 0,1 13,3V4.5C15.5,4.94 17.5,6.94 17.95,9.5H19.5A1,1 0 0,1 20.5,10.5A1,1 0 0,1 19.5,11.5H17.95C17.5,14.06 15.5,16.06 13,16.5V18A1,1 0 0,1 12,19A1,1 0 0,1 11,18V16.5C8.5,16.06 6.5,14.06 6.05,11.5H4.5A1,1 0 0,1 3.5,10.5A1,1 0 0,1 4.5,9.5H6.05C6.5,6.94 8.5,4.94 11,4.5V3A1,1 0 0,1 12,2M12,6A4,4 0 0,0 8,10A4,4 0 0,0 12,14A4,4 0 0,0 16,10A4,4 0 0,0 12,6Z"/></svg>',
+                thresholds: {
+                    low: { calcium: [800, Infinity], vitamin_d: [10, Infinity], protein: [60, Infinity] },
+                    medium: { calcium: [600, 799], vitamin_d: [5, 9], protein: [40, 59] },
+                    high: { calcium: [0, 599], vitamin_d: [0, 4], protein: [0, 39] }
+                },
+                symptoms: {
+                    low: ['轻微骨密度下降'],
+                    medium: ['关节疼痛', '腰背酸痛'],
+                    high: ['骨痛明显', '容易骨折', '身高变矮', '驼背']
+                }
+            },
+            '贫血': {
+                name: '贫血',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.86,2 19,5.13 19,9C19,10.67 18.5,12.22 17.65,13.48L22.11,17.94C22.5,18.33 22.5,18.96 22.11,19.35C21.72,19.74 21.09,19.74 20.7,19.35L16.24,14.89C15,15.72 13.57,16.2 12,16.2C8.14,16.2 5,13.07 5,9.2C5,5.33 8.14,2.2 12,2.2M12,4C9.24,4 7,6.24 7,9S9.24,14 12,14S17,11.76 17,9S14.76,4 12,4Z"/></svg>',
+                thresholds: {
+                    low: { iron: [15, Infinity], vitamin_c: [90, Infinity], protein: [60, Infinity] },
+                    medium: { iron: [10, 14], vitamin_c: [60, 89], protein: [40, 59] },
+                    high: { iron: [0, 9], vitamin_c: [0, 59], protein: [0, 39] }
+                },
+                symptoms: {
+                    low: ['轻微疲劳'],
+                    medium: ['疲劳乏力', '面色苍白'],
+                    high: ['严重疲劳', '头晕心悸', '指甲苍白', '注意力不集中']
+                }
+            },
+            '心血管疾病': {
+                name: '心血管疾病',
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>',
+                thresholds: {
+                    low: { fat: [0, 65], saturated_fat: [0, 20], sodium: [0, 2000] },
+                    medium: { fat: [66, 90], saturated_fat: [21, 30], sodium: [2001, 3000] },
+                    high: { fat: [91, Infinity], saturated_fat: [31, Infinity], sodium: [3001, Infinity] }
+                },
+                symptoms: {
+                    low: ['偶有胸闷'],
+                    medium: ['胸痛胸闷', '心悸'],
+                    high: ['胸痛加重', '呼吸困难', '心律不齐', '水肿']
+                }
+            }
+        };
+
+        /**
+         * 分析用户的慢性病风险
+         */
+        function analyzeChronicDiseaseRisk(nutritionData) {
+            const results = [];
+            
+            // 转换营养数据格式，匹配分析需求
+            const dailyNutrition = {
+                carbs: nutritionData.carbs || 0,
+                fiber: nutritionData.fiber || 0,
+                sugar: nutritionData.carbs * 0.3 || 0, // 估算糖分
+                sodium: nutritionData.sodium || 0,
+                potassium: nutritionData.potassium || 0,
+                calcium: nutritionData.calcium || 0,
+                vitamin_d: nutritionData.vitamin_d || 0,
+                protein: nutritionData.protein || 0,
+                iron: nutritionData.iron || 0,
+                vitamin_c: nutritionData.vitamin_c || 0,
+                fat: nutritionData.fat || 0,
+                saturated_fat: nutritionData.fat * 0.4 || 0 // 估算饱和脂肪
+            };
+
+            Object.keys(CHRONIC_DISEASES_CONFIG).forEach(diseaseKey => {
+                const disease = CHRONIC_DISEASES_CONFIG[diseaseKey];
+                let riskLevel = 'low';
+                let matchedCriteria = [];
+
+                // 检查每个营养素阈值
+                Object.keys(disease.thresholds.high).forEach(nutrient => {
+                    const value = dailyNutrition[nutrient] || 0;
+                    const highThreshold = disease.thresholds.high[nutrient];
+                    const mediumThreshold = disease.thresholds.medium[nutrient];
+                    
+                    if (Array.isArray(highThreshold)) {
+                        if (value >= highThreshold[0] && value <= highThreshold[1]) {
+                            riskLevel = 'high';
+                            matchedCriteria.push(`${nutrient}: ${value.toFixed(1)}`);
+                        }
+                    }
+                    
+                    if (riskLevel !== 'high' && Array.isArray(mediumThreshold)) {
+                        if (value >= mediumThreshold[0] && value <= mediumThreshold[1]) {
+                            if (riskLevel !== 'high') riskLevel = 'medium';
+                            matchedCriteria.push(`${nutrient}: ${value.toFixed(1)}`);
+                        }
+                    }
+                });
+
+                results.push({
+                    disease: disease.name,
+                    icon: disease.icon,
+                    riskLevel: riskLevel,
+                    symptoms: disease.symptoms[riskLevel] || [],
+                    matchedCriteria: matchedCriteria,
+                    nutritionData: dailyNutrition
+                });
+            });
+
+            return results;
+        }
+
+        /**
+         * 生成预警分析报告
+         */
+        async function generateWarningAnalysis(warningResults) {
+            const highRiskDiseases = warningResults.filter(r => r.riskLevel === 'high');
+            const mediumRiskDiseases = warningResults.filter(r => r.riskLevel === 'medium');
+
+            if (highRiskDiseases.length === 0 && mediumRiskDiseases.length === 0) {
+                return {
+                    analysis: "根据您近期的营养摄入分析，各项营养指标基本正常，慢性病风险较低。请继续保持均衡饮食。",
+                    recommendations: "建议继续保持当前的饮食习惯，适量运动，定期体检监测健康状况。"
+                };
+            }
+
+            const riskDiseasesList = [...highRiskDiseases, ...mediumRiskDiseases];
+            const prompt = `作为专业营养师，请分析以下慢性病风险评估结果：
+
+高风险疾病：${highRiskDiseases.map(d => d.disease).join('、') || '无'}
+中等风险疾病：${mediumRiskDiseases.map(d => d.disease).join('、') || '无'}
+
+主要症状预警：
+${riskDiseasesList.map(d => `${d.disease}: ${d.symptoms.join('、')}`).join('\n')}
+
+请提供：
+1. 风险分析总结（200字以内）
+2. 针对性饮食建议（200字以内）
+
+注意：使用简洁明了的文字回答，不要使用Markdown格式。`;
+
+            try {
+                // 这里可以调用千问模型生成更详细的分析
+                // 暂时返回基础分析
+                const analysis = `检测到${highRiskDiseases.length}个高风险疾病和${mediumRiskDiseases.length}个中等风险疾病。主要风险集中在：${riskDiseasesList.slice(0, 3).map(d => d.disease).join('、')}。建议重点关注相关症状，及时调整饮食结构。`;
+                
+                const recommendations = `建议：1）减少高风险营养素摄入；2）增加缺乏的营养成分；3）定期监测相关指标；4）如出现症状请及时就医。具体可咨询专业医生制定个性化方案。`;
+
+                return { analysis, recommendations };
+            } catch (error) {
+                console.error('生成预警分析失败:', error);
+                return {
+                    analysis: "预警分析生成失败，请稍后重试。",
+                    recommendations: "建议咨询专业医生获取个性化健康建议。"
+                };
+            }
+        }
+
+        /**
+         * 渲染预警页面
+         */
+        async function renderWarningPage() {
+            const loadingWarnings = document.getElementById('loading-warnings');
+            const noWarnings = document.getElementById('no-warnings');
+            const warningList = document.getElementById('warning-list');
+            const loadingRecommendations = document.getElementById('loading-recommendations');
+            const noRecommendations = document.getElementById('no-recommendations');
+            const recommendationsContent = document.getElementById('recommendations-content');
+            
+            // 显示加载状态
+            loadingWarnings.classList.remove('hidden');
+            loadingRecommendations.classList.remove('hidden');
+            noWarnings.classList.add('hidden');
+            noRecommendations.classList.add('hidden');
+            recommendationsContent.classList.add('hidden');
+            warningList.innerHTML = '';
+            
+            try {
+                // 直接从服务器获取预警JSON文件
+                const response = await fetch('/nutrition_analysis/latest_warnings.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const warningData = await response.json();
+                
+                if (!warningData.warnings || warningData.warnings.length === 0) {
+                    loadingWarnings.classList.add('hidden');
+                    loadingRecommendations.classList.add('hidden');
+                    noWarnings.classList.remove('hidden');
+                    noRecommendations.classList.remove('hidden');
+                    return;
+                }
+                
+                const warningResults = warningData.warnings;
+                
+                // 更新统计数据
+                const summary = warningData.summary || {};
+                document.getElementById('low-risk-count').textContent = summary.low_risk_count || 0;
+                document.getElementById('medium-risk-count').textContent = summary.medium_risk_count || 0;
+                document.getElementById('high-risk-count').textContent = summary.high_risk_count || 0;
+                
+                // 渲染预警列表
+                warningResults.forEach((result, index) => {
+                    const riskLevel = result.risk_level || result.riskLevel || 'low'; // 兼容两种格式
+                    const warningCard = document.createElement('div');
+                    warningCard.className = `warning-card risk-${riskLevel} rounded-xl p-4 cursor-pointer fade-in-up`;
+                    warningCard.style.animationDelay = `${index * 0.1}s`;
+                    
+                    const riskColors = {
+                        low: { text: 'text-green-400', bg: 'bg-green-500' },
+                        medium: { text: 'text-yellow-400', bg: 'bg-yellow-500' },
+                        high: { text: 'text-red-400', bg: 'bg-red-500' }
+                    };
+                    
+                    const riskLabels = {
+                        low: '低风险',
+                        medium: '中等风险', 
+                        high: '高风险'
+                    };
+
+                    // 获取疾病图标，如果后端没有提供则使用默认图标
+                    const diseaseIcons = {
+                        '糖尿病': '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,13L13.5,7.5C13.1,6.4 12.6,5.4 12,4.5C11.4,5.4 10.9,6.4 10.5,7.5L9,13L3,7V9L9,15L12,22L15,15L21,9Z"/></svg>',
+                        '高血压': '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>',
+                        '骨质疏松': '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A1,1 0 0,1 13,3V4.5C15.5,4.94 17.5,6.94 17.95,9.5H19.5A1,1 0 0,1 20.5,10.5A1,1 0 0,1 19.5,11.5H17.95C17.5,14.06 15.5,16.06 13,16.5V18A1,1 0 0,1 12,19A1,1 0 0,1 11,18V16.5C8.5,16.06 6.5,14.06 6.05,11.5H4.5A1,1 0 0,1 3.5,10.5A1,1 0 0,1 4.5,9.5H6.05C6.5,6.94 8.5,4.94 11,4.5V3A1,1 0 0,1 12,2M12,6A4,4 0 0,0 8,10A4,4 0 0,0 12,14A4,4 0 0,0 16,10A4,4 0 0,0 12,6Z"/></svg>',
+                        '贫血': '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C15.86,2 19,5.13 19,9C19,10.67 18.5,12.22 17.65,13.48L22.11,17.94C22.5,18.33 22.5,18.96 22.11,19.35C21.72,19.74 21.09,19.74 20.7,19.35L16.24,14.89C15,15.72 13.57,16.2 12,16.2C8.14,16.2 5,13.07 5,9.2C5,5.33 8.14,2.2 12,2.2M12,4C9.24,4 7,6.24 7,9S9.24,14 12,14S17,11.76 17,9S14.76,4 12,4Z"/></svg>',
+                        '心血管疾病': '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/></svg>'
+                    };
+                    const icon = result.icon || diseaseIcons[result.disease] || '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M13,14H11V10H13M13,18H11V16H13M1,21H23L12,2L1,21Z"/></svg>';
+                    
+                    warningCard.innerHTML = `
+                        <div class="warning-indicator risk-${riskLevel}"></div>
+                        <div class="pl-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="${riskColors[riskLevel].text}">${icon}</div>
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-100">${result.disease}</h3>
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium ${riskColors[riskLevel].text} ${riskColors[riskLevel].bg}/20 border border-current/30">
+                                            ${riskLabels[riskLevel]}
+                                        </span>
+                                    </div>
+                                </div>
+                                <svg class="warning-icon ${riskColors[riskLevel].text} h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                            
+                            <div class="warning-expandable" id="warning-details-${index}">
+                                <div class="space-y-3 mt-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-300 mb-2">可能症状：</h4>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${(result.symptoms || []).map(symptom => 
+                                                `<span class="symptom-tag risk-${riskLevel}">${symptom}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-300 mb-2">相关营养指标：</h4>
+                                        <div class="text-xs text-gray-400">
+                                            ${(result.matched_criteria || result.matchedCriteria || []).join(', ') || '营养指标正常'}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="pt-2 border-t border-gray-600">
+                                        <h4 class="text-sm font-medium text-gray-300 mb-2">建议措施：</h4>
+                                        <div class="text-sm text-gray-400">
+                                            ${getHealthRecommendation(result.disease, riskLevel)}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // 添加点击展开功能
+                    warningCard.addEventListener('click', () => {
+                        const details = document.getElementById(`warning-details-${index}`);
+                        const icon = warningCard.querySelector('.warning-icon');
+                        
+                        details.classList.toggle('expanded');
+                        icon.style.transform = details.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+                    });
+                    
+                    warningList.appendChild(warningCard);
+                });
+                
+                // 使用后端生成的分析结果
+                loadingWarnings.classList.add('hidden');
+                loadingRecommendations.classList.add('hidden');
+                
+                // 解析后端分析（可能包含风险分析和建议）
+                const analysis = warningData.analysis || "暂无分析结果";
+                const analysisLines = analysis.split('\n').filter(line => line.trim());
+                
+                let riskAnalysis = analysis;
+                let healthRecommendations = "请根据具体情况调整饮食结构，必要时咨询专业医生。";
+                
+                // 尝试分离风险分析和建议（如果分析中包含建议部分）
+                if (analysisLines.length > 1) {
+                    const midPoint = Math.ceil(analysisLines.length / 2);
+                    riskAnalysis = analysisLines.slice(0, midPoint).join(' ');
+                    healthRecommendations = analysisLines.slice(midPoint).join(' ');
+                }
+                
+                // 生成菜品推荐
+                const dishRecommendations = await generateDishRecommendations(warningData.nutrition_data);
+                
+                recommendationsContent.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-gray-200 mb-2">风险分析</h4>
+                            <p class="text-sm text-gray-300 leading-relaxed">${riskAnalysis}</p>
+                        </div>
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-gray-200 mb-2">健康建议</h4>
+                            <p class="text-sm text-gray-300 leading-relaxed">${healthRecommendations}</p>
+                        </div>
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-gray-200 mb-3">推荐菜品</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                ${dishRecommendations.map(dish => `
+                                    <div class="bg-gray-600/50 rounded-lg p-3 cursor-pointer hover:bg-gray-600/70 transition-colors dish-recommendation" 
+                                         data-dish='${JSON.stringify(dish).replace(/'/g, "&apos;")}'>
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <div class="text-blue-400">${getDishIcon(dish.category)}</div>
+                                            <h5 class="font-medium text-gray-200 text-sm">${dish.name}</h5>
+                                        </div>
+                                        <p class="text-xs text-gray-400 mb-2">富含 ${dish.reason}</p>
+                                        <div class="text-xs text-blue-400">
+                                            ${dish.keyNutrients.map(n => `${n.name}: ${n.value}${n.unit}`).join(' | ')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加点击事件显示菜品详情
+                recommendationsContent.querySelectorAll('.dish-recommendation').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const dishData = JSON.parse(card.dataset.dish.replace(/&apos;/g, "'"));
+                        showDishNutritionModal(dishData);
+                    });
+                });
+                
+                recommendationsContent.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('渲染预警页面失败:', error);
+                loadingWarnings.classList.add('hidden');
+                loadingRecommendations.classList.add('hidden');
+                noWarnings.classList.remove('hidden');
+                noRecommendations.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * 获取特定疾病的健康建议
+         */
+        function getHealthRecommendation(disease, riskLevel) {
+            const recommendations = {
+                '糖尿病': {
+                    low: '控制碳水化合物摄入，增加膳食纤维',
+                    medium: '减少精制糖类，选择低升糖指数食物',
+                    high: '严格控制糖分摄入，定期监测血糖'
+                },
+                '高血压': {
+                    low: '适量减少钠盐摄入，增加钾元素',
+                    medium: '控制盐分，多吃新鲜蔬果',
+                    high: '严格低盐饮食，避免腌制食品'
+                },
+                '骨质疏松': {
+                    low: '保持钙质和维生素D摄入',
+                    medium: '增加奶制品和绿叶蔬菜',
+                    high: '补充钙剂和维生素D，适量运动'
+                },
+                '贫血': {
+                    low: '保持铁质和维生素C摄入',
+                    medium: '多吃红肉、动物肝脏',
+                    high: '补充铁剂，配合维生素C促进吸收'
+                },
+                '心血管疾病': {
+                    low: '控制饱和脂肪，增加不饱和脂肪',
+                    medium: '减少油腻食物，多吃鱼类',
+                    high: '严格低脂饮食，避免高胆固醇食物'
+                }
+            };
+            
+            return recommendations[disease]?.[riskLevel] || '请咨询专业医生';
+        }
+
+        /**
+         * 中国菜营养数据库（前100道菜，按营养价值排序）
+         */
+        const DISH_NUTRITION_DATABASE = {
+            // 高蛋白质菜品
+            '红烧肉': { protein: 16.2, fat: 20.5, carbs: 8.1, fiber: 0.8, calcium: 15, iron: 3.2, category: 'meat' },
+            '白切鸡': { protein: 23.3, fat: 9.3, carbs: 0.0, fiber: 0.0, calcium: 12, iron: 1.4, category: 'meat' },
+            '蒸蛋羹': { protein: 13.1, fat: 11.2, carbs: 1.2, fiber: 0.0, calcium: 56, iron: 2.8, category: 'egg' },
+            '鲫鱼汤': { protein: 17.1, fat: 2.7, carbs: 0.0, fiber: 0.0, calcium: 79, iron: 1.3, category: 'fish' },
+            '牛肉炖土豆': { protein: 18.6, fat: 12.4, carbs: 15.2, fiber: 2.1, calcium: 18, iron: 3.8, category: 'meat' },
+            
+            // 高钙菜品
+            '麻婆豆腐': { protein: 7.9, fat: 11.1, carbs: 6.0, fiber: 1.1, calcium: 68.6, iron: 2.2, category: 'tofu' },
+            '虾仁豆腐': { protein: 15.8, fat: 8.3, carbs: 4.2, fiber: 0.5, calcium: 156, iron: 2.1, category: 'seafood' },
+            '芝麻糊': { protein: 4.8, fat: 12.6, carbs: 22.1, fiber: 3.2, calcium: 218, iron: 4.6, category: 'dessert' },
+            '紫菜蛋花汤': { protein: 8.2, fat: 4.1, carbs: 2.8, fiber: 1.8, calcium: 89, iron: 12.8, category: 'soup' },
+            '酸奶水果': { protein: 5.2, fat: 3.8, carbs: 18.4, fiber: 2.1, calcium: 125, iron: 0.3, category: 'dairy' },
+            
+            // 高铁菜品
+            '猪肝炒菠菜': { protein: 18.2, fat: 8.9, carbs: 6.4, fiber: 2.8, calcium: 28, iron: 18.6, category: 'organ' },
+            '韭菜炒蛋': { protein: 11.8, fat: 12.3, carbs: 4.1, fiber: 2.4, calcium: 42, iron: 6.2, category: 'vegetable' },
+            '黑木耳炒肉': { protein: 13.6, fat: 9.8, carbs: 8.2, fiber: 4.2, calcium: 38, iron: 8.9, category: 'fungus' },
+            '红枣银耳汤': { protein: 2.8, fat: 0.4, carbs: 28.6, fiber: 5.1, calcium: 45, iron: 4.8, category: 'dessert' },
+            '芝麻菠菜': { protein: 6.2, fat: 8.4, carbs: 9.1, fiber: 3.8, calcium: 86, iron: 7.2, category: 'vegetable' },
+            
+            // 高纤维菜品
+            '蒜蓉西兰花': { protein: 4.3, fat: 2.1, carbs: 6.6, fiber: 4.2, calcium: 47, iron: 1.2, category: 'vegetable' },
+            '凉拌芹菜': { protein: 2.2, fat: 0.8, carbs: 4.8, fiber: 3.2, calcium: 80, iron: 2.5, category: 'vegetable' },
+            '木耳菜': { protein: 2.8, fat: 0.5, carbs: 5.4, fiber: 2.8, calcium: 166, iron: 3.2, category: 'vegetable' },
+            '冬瓜汤': { protein: 1.2, fat: 0.2, carbs: 2.9, fiber: 1.8, calcium: 19, iron: 0.3, category: 'soup' },
+            '萝卜丝汤': { protein: 1.6, fat: 0.3, carbs: 4.1, fiber: 2.4, calcium: 24, iron: 0.8, category: 'soup' },
+            
+            // 低脂低糖菜品
+            '蒸蛋羹': { protein: 13.1, fat: 11.2, carbs: 1.2, fiber: 0.0, calcium: 56, iron: 2.8, category: 'egg' },
+            '清蒸鲈鱼': { protein: 18.6, fat: 3.4, carbs: 0.0, fiber: 0.0, calcium: 138, iron: 1.2, category: 'fish' },
+            '白灼菜心': { protein: 2.8, fat: 0.4, carbs: 3.2, fiber: 1.8, calcium: 108, iron: 1.8, category: 'vegetable' },
+            '蒸南瓜': { protein: 1.2, fat: 0.1, carbs: 5.3, fiber: 1.4, calcium: 16, iron: 0.4, category: 'vegetable' },
+            '黄瓜汤': { protein: 0.8, fat: 0.2, carbs: 2.0, fiber: 0.8, calcium: 15, iron: 0.3, category: 'soup' }
+        };
+
+        /**
+         * 获取菜品图标
+         */
+        function getDishIcon(category) {
+            const icons = {
+                meat: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4V2C7 1.45 7.45 1 8 1S9 1.55 9 2V4H15V2C15 1.45 15.45 1 16 1S17 1.55 17 2V4H19C20.1 4 21 4.9 21 6V20C21 21.1 20.1 22 19 22H5C3.9 22 3 21.1 3 20V6C3 4.9 3.9 4 5 4H7M5 8V20H19V8H5Z"/></svg>',
+                fish: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2,21L7,16C7.53,16.63 8.25,17 9,17H11V19H13V17H15C15.75,17 16.47,16.63 17,16L22,21H2M20,8V10H18V8H20M20,4V6H18V4H20M16,2V4H14V2H16M4,10V8H6V10H4M4,6V4H6V6H4M8,4V2H10V4H8M13,12A1,1 0 0,1 12,11A1,1 0 0,1 13,10A1,1 0 0,1 14,11A1,1 0 0,1 13,12M18,14H6A2,2 0 0,1 4,12V8A2,2 0 0,1 6,6H18A2,2 0 0,1 20,8V12A2,2 0 0,1 18,14Z"/></svg>',
+                seafood: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,13L13.5,7.5C13.1,6.4 12.6,5.4 12,4.5C11.4,5.4 10.9,6.4 10.5,7.5L9,13L3,7V9L9,15L12,22L15,15L21,9Z"/></svg>',
+                egg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C8.5,3 6,7.58 6,12C6,16.42 8.5,21 12,21C15.5,21 18,16.42 18,12C18,7.58 15.5,3 12,3Z"/></svg>',
+                tofu: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3,3V21H21V3H3M19,19H5V5H19V19Z"/></svg>',
+                vegetable: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17 7,17C10.25,17 10.25,20 17,20C22,20 22,18 22,18C21,17 20,16 17,8Z"/></svg>',
+                fungus: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A9,9 0 0,0 3,11C3,11.34 3.04,11.67 3.1,12H3A1,1 0 0,0 2,13A1,1 0 0,0 3,14H3.1C3.04,14.33 3,14.66 3,15A7,7 0 0,0 10,22H14A7,7 0 0,0 21,15C21,14.66 20.96,14.33 20.9,14H21A1,1 0 0,0 22,13A1,1 0 0,0 21,12H20.9C20.96,11.67 21,11.34 21,11A9,9 0 0,0 12,2Z"/></svg>',
+                soup: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5,1.5C10.73,1.5 9.5,3.41 9.5,5.31V6.44C8.61,6.94 8,7.83 8,8.77V20.18C8,21.03 8.63,21.75 9.41,21.75H15.09C15.87,21.75 16.5,21.03 16.5,20.18V8.77C16.5,7.83 15.89,6.94 15,6.44V5.31C15,3.41 13.77,1.5 12.5,1.5M12.5,3C12.77,3 13,3.47 13,4.06V6H12V6V4.06C12,3.47 12.23,3 12.5,3M14,8V20H10V8H14M6,9V11H4V9H6M19,9V11H17V9H19M6,12V14H4V12H6M19,12V14H17V12H19Z"/></svg>',
+                dairy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7,2V4H9V2A1,1 0 0,1 10,1H14A1,1 0 0,1 15,2V4H17V2A3,3 0 0,0 14,5H10A3,3 0 0,0 7,2M19,7V9H5V7H19M6,10H18V21A1,1 0 0,1 17,22H7A1,1 0 0,1 6,21V10Z"/></svg>',
+                organ: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2L13.09,8.26L22,9L13.09,9.74L12,16L10.91,9.74L2,9L10.91,8.26L12,2Z"/></svg>',
+                dessert: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.25,2C17.78,2 19,3.22 19,4.75C19,5.45 18.71,6.08 18.25,6.56L12,11.5L5.75,6.56C5.29,6.08 5,5.45 5,4.75C5,3.22 6.22,2 7.75,2C8.45,2 9.08,2.29 9.56,2.75L12,5.33L14.44,2.75C14.92,2.29 15.55,2 16.25,2M12,13.5L18.25,8.56C18.71,8.08 19,8.71 19,9.41V18.75C19,20.28 17.78,21.5 16.25,21.5H7.75C6.22,21.5 5,20.28 5,18.75V9.41C5,8.71 5.29,8.08 5.75,8.56L12,13.5Z"/></svg>'
+            };
+            return icons[category] || '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8.1,13.34L3.91,9.16C2.35,7.59 2.35,5.06 3.91,3.5L10.93,10.5L8.1,13.34M14.88,11.53C16.32,12.97 16.32,15.24 14.88,16.68C13.44,18.12 11.17,18.12 9.73,16.68L5.55,12.5L2.73,15.32C1.17,16.88 1.17,19.4 2.73,20.96C4.29,22.53 6.82,22.53 8.38,20.96L9.73,19.62L11.17,21.06C12.61,22.5 14.88,22.5 16.32,21.06L18.04,19.35L21.27,16.13L16.32,11.17L14.88,11.53Z"/></svg>';
+        }
+
+        /**
+         * 根据营养缺乏生成菜品推荐
+         */
+        async function generateDishRecommendations(nutritionData) {
+            const recommendations = [];
+            
+            // 分析缺乏的营养素
+            const deficiencies = [];
+            if (nutritionData.protein < 10) deficiencies.push({ nutrient: 'protein', name: '蛋白质', threshold: 10 });
+            if (nutritionData.calcium < 100) deficiencies.push({ nutrient: 'calcium', name: '钙', threshold: 100 });
+            if (nutritionData.iron < 3) deficiencies.push({ nutrient: 'iron', name: '铁', threshold: 3 });
+            if (nutritionData.fiber < 5) deficiencies.push({ nutrient: 'fiber', name: '膳食纤维', threshold: 5 });
+            
+            // 如果没有明显缺乏，推荐均衡菜品
+            if (deficiencies.length === 0) {
+                deficiencies.push(
+                    { nutrient: 'protein', name: '蛋白质', threshold: 10 },
+                    { nutrient: 'calcium', name: '钙', threshold: 100 },
+                    { nutrient: 'fiber', name: '膳食纤维', threshold: 5 }
+                );
+            }
+            
+            // 为每个缺乏的营养素推荐最佳菜品
+            deficiencies.slice(0, 3).forEach(deficiency => {
+                const dishes = Object.entries(DISH_NUTRITION_DATABASE)
+                    .sort((a, b) => b[1][deficiency.nutrient] - a[1][deficiency.nutrient])
+                    .slice(0, 1); // 取最佳的一道菜
+                
+                if (dishes.length > 0) {
+                    const [dishName, nutrition] = dishes[0];
+                    recommendations.push({
+                        name: dishName,
+                        reason: deficiency.name,
+                        category: nutrition.category,
+                        nutrition: nutrition,
+                        keyNutrients: [
+                            { name: deficiency.name, value: nutrition[deficiency.nutrient].toFixed(1), unit: getUnit(deficiency.nutrient) }
+                        ]
+                    });
+                }
+            });
+            
+            return recommendations;
+        }
+
+        /**
+         * 获取营养素单位
+         */
+        function getUnit(nutrient) {
+            const units = {
+                protein: 'g', fat: 'g', carbs: 'g', fiber: 'g',
+                calcium: 'mg', iron: 'mg'
+            };
+            return units[nutrient] || 'g';
+        }
+
+        /**
+         * 显示菜品营养详情模态框
+         */
+        function showDishNutritionModal(dish) {
+            // 创建模态框
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 modal-overlay modal-visible';
+            modal.innerHTML = `
+                <div class="bg-gray-800 text-white p-6 rounded-xl shadow-2xl w-full max-w-lg modal-content">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="text-blue-400">${getDishIcon(dish.category)}</div>
+                            <h3 class="text-xl font-semibold">${dish.name}</h3>
+                        </div>
+                        <button class="close-modal text-gray-400 hover:text-white transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-gray-200 mb-3">营养成分（每100g）</h4>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">蛋白质：</span>
+                                    <span class="text-blue-400 font-medium">${dish.nutrition.protein}g</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">脂肪：</span>
+                                    <span class="text-yellow-400 font-medium">${dish.nutrition.fat}g</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">碳水化合物：</span>
+                                    <span class="text-green-400 font-medium">${dish.nutrition.carbs}g</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">膳食纤维：</span>
+                                    <span class="text-purple-400 font-medium">${dish.nutrition.fiber}g</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">钙：</span>
+                                    <span class="text-orange-400 font-medium">${dish.nutrition.calcium}mg</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-300">铁：</span>
+                                    <span class="text-red-400 font-medium">${dish.nutrition.iron}mg</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-700/30 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-gray-200 mb-2">推荐理由</h4>
+                            <p class="text-sm text-gray-300">此菜品富含<span class="text-blue-400 font-medium">${dish.reason}</span>，有助于补充您当前缺乏的营养素，改善饮食结构。</p>
+                        </div>
+                        
+                        <div class="bg-blue-600/20 border border-blue-500/30 rounded-lg p-3">
+                            <p class="text-xs text-blue-300">
+                                [提示] 建议：将此菜品加入您的膳食计划中，搭配其他营养均衡的食物，有助于改善健康状况。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 添加关闭功能
+            modal.querySelector('.close-modal').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            });
+            
+            document.body.appendChild(modal);
+        }
+
         // --- Initial Application Setup ---
         function initApp() {
             // Initialize chat page
@@ -2469,14 +3298,20 @@
             document.getElementById('refresh-meetings').addEventListener('click', loadMeetingRecords);
             document.getElementById('clear-meetings').addEventListener('click', clearMeetingRecords);
 
+            // Initialize warning page
+            document.getElementById('refresh-warnings').addEventListener('click', renderWarningPage);
+
             // Load chat history when chat page is navigated to
             // Load meeting records when meeting page is navigated to
+            // Load warnings when warning page is navigated to
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     if (btn.dataset.page === 'chat-page') {
                         loadChatHistory();
                     } else if (btn.dataset.page === 'meeting-page') {
                         loadMeetingRecords();
+                    } else if (btn.dataset.page === 'warning-page') {
+                        renderWarningPage();
                     }
                 });
             });

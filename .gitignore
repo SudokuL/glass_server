@@ -1,4 +1,4 @@
-# ???????????
+# 大文件和模型目录
 qwen_7b_vl_offline/
 model/
 __pycache__/
@@ -7,13 +7,86 @@ video_frames/
 videos/
 photos/
 food_cv/
-# ????????????
+
+# 模型和压缩文件
 *.pt
 *.gz
+*.tar.gz
+*.zip
+*.safetensors
 
-# ???? IDE ???????
+# 音频和视频文件
+*.mp3
+*.mp4
+*.wav
+*.avi
+*.mov
+
+# 图片文件（保留必要的小图片）
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+!web/*.png
+!web/*.svg
+!web/*.jpg
+
+# IDE 和编辑器文件
 .idea/
 *.iml
+.vscode/
+*.swp
+*.swo
+*~
 
-# ??????????????
+# 日志和临时文件
 *.log
+*.tmp
+*.temp
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Python 相关
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 环境变量和配置
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 数据文件（保留必要的配置文件）
+*.db
+*.sqlite
+*.sqlite3
+
+# 缓存目录
+.cache/
+.pytest_cache/
